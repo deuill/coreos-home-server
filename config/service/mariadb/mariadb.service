@@ -1,0 +1,21 @@
+[Unit]
+Description=MariaDB SQL Database
+Wants=container-build@%N.service container-network@%N.service container-network@internal.service
+After=container-build@%N.service container-network@%N.service container-network@internal.service
+
+[Service]
+Restart=always
+EnvironmentFile=/etc/container-service/%N/%N.env
+ExecStartPre=/bin/install --owner 999 --group 999 -d /var/lib/container-service/%N
+ExecStartPre=/bin/podman create --replace --pull never --net internal,%N --env-file /etc/container-service/%N/%N.env \
+                                --volume /var/lib/container-service/%N:/var/lib/mysql:z \
+                                --name %N localhost/%N:latest
+ExecStart=/bin/podman start --attach %N
+ExecStartPost=/bin/podman run --replace --pull never --rm --net %N --entrypoint mariadb-admin \
+                              --volume /var/lib/container-service/%N:/var/lib/mysql:z \
+                              --name %N-wait localhost/%N:latest \
+                              --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait=10 ping
+ExecStop=/bin/podman stop --time 10 %N
+
+[Install]
+WantedBy=multi-user.target

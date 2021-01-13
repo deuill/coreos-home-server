@@ -1,0 +1,14 @@
+FROM docker.io/debian:stable-slim
+
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends git openssh-server ca-certificates
+
+RUN addgroup --system --gid 10000 git
+RUN adduser --system --uid 10000 --ingroup git --shell /usr/bin/git-shell --home /home/git git
+RUN mkdir -p /var/run/sshd
+
+COPY container/config /etc/ssh
+COPY container/run-git-server /run-git-server
+
+EXPOSE 22
+CMD ["/run-git-server"]

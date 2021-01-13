@@ -1,0 +1,8 @@
+[Unit]
+Description="Let's Encrypt DNS01 scheduled certificate renewal for %I"
+
+[Timer]
+OnUnitActiveSec=7d
+
+[Install]
+WantedBy=timers.target

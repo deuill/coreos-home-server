@@ -1,0 +1,12 @@
+[Unit]
+Description=Container network for %I
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=!/etc/cni/net.d/%i.conflist
+
+[Service]
+Type=oneshot
+ExecStart=/bin/podman network create %i
+
+[Install]
+WantedBy=multi-user.target

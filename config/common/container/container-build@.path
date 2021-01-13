@@ -1,0 +1,9 @@
+[Unit]
+Description=Container build for %I
+
+[Path]
+PathModified=/etc/container-service/%i/Containerfile
+Unit=container-build@%i.service
+
+[Install]
+WantedBy=multi-user.target

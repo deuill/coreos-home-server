@@ -1,0 +1,18 @@
+[Unit]
+Description=Git server over SSH
+Wants=container-build@%N.service container-network@%N.service container-network@internal.service
+After=container-build@%N.service container-network@%N.service container-network@internal.service
+
+[Service]
+Restart=always
+ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/%N
+ExecStartPre=/bin/podman create --replace --pull never --net internal,%N \
+                                --cap-add AUDIT_WRITE \
+                                --publish 468:22 \
+                                --volume /var/lib/container-service/%N:/home/git:z \
+                                --name %N localhost/%N:latest
+ExecStart=/bin/podman start --attach %N
+ExecStop=/bin/podman stop --time 10 %N
+
+[Install]
+WantedBy=multi-user.target

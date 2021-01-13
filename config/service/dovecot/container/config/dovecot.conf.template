@@ -1,0 +1,135 @@
+# Custom Dovecot configuration.
+
+# ----------------------
+# Generic configuration.
+# ----------------------
+
+# Logging & debugging.
+log_path = /dev/stderr
+auth_verbose = yes
+
+# Mail directory.
+mail_location = maildir:/var/mail/virtual/%u
+mail_privileged_group = virtual
+mail_uid = 5000
+mail_gid = 5000
+
+# Simplify log messages.
+login_log_format_elements = user=<%u> method=%m rip=%r lip=%l mpid=%e %c
+mail_log_prefix = "%s(%u)<%{pid}>: "
+
+# ----------------------
+# Mailbox configuration.
+# ----------------------
+
+namespace inbox {
+	separator = .
+	prefix = INBOX.
+	inbox = yes
+
+	mailbox Drafts {
+		auto = subscribe
+		special_use = \Drafts
+	}
+
+	mailbox Junk {
+		auto = create
+		special_use = \Junk
+	}
+
+	mailbox Sent {
+		auto = subscribe
+		special_use = \Sent
+	}
+
+	mailbox "Sent Messages" {
+		auto = no
+		special_use = \Sent
+	}
+
+	mailbox Trash {
+		auto = subscribe
+		special_use = \Trash
+	}
+}
+
+# ----------------------
+# Protocol configuration.
+# ----------------------
+
+# Enabled protocols.
+protocols = imap lmtp sieve
+
+# Enable SSL and STARTTLS.
+ssl = yes
+ssl_cert = </etc/ssl/private/${DOVECOT_HOST}/tls.crt
+ssl_key = </etc/ssl/private/${DOVECOT_HOST}/tls.key
+
+protocol lmtp {
+	mail_plugins = $mail_plugins sieve
+}
+
+service lmtp {
+	user = virtual
+	group = virtual
+
+	inet_listener lmtp {
+		port = 24
+	}
+}
+
+protocol imap {
+	mail_max_userip_connections = 25
+}
+
+service imap-login {
+	inet_listener imap {
+		port = 143
+	}
+
+	inet_listener imaps {
+		port = 993
+	}
+}
+
+# Disable POP3.
+service pop3-login {
+	inet_listener pop3 {
+		port = 0
+	}
+
+	inet_listener pop3s {
+		port = 0
+	}
+}
+
+# ----------------------
+# Auth configuration.
+# ----------------------
+
+auth_mechanisms = plain login
+disable_plaintext_auth = yes
+
+# Enable SASL authentication on specific TCP port.
+service auth {
+	inet_listener {
+		port = 3659
+	}
+}
+
+# Enable SQL authentication.
+userdb {
+	driver = sql
+	args = /etc/dovecot/dovecot-sql.conf.local
+}
+
+passdb {
+	driver = sql
+	args = /etc/dovecot/dovecot-sql.conf.local
+}
+
+# -------------------------
+# Additional configuration.
+# -------------------------
+
+!include conf.d/*.conf

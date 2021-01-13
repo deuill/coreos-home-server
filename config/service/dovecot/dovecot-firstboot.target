@@ -1,0 +1,9 @@
+[Unit]
+Description=Initialize Dovecot POP3/IMAP server
+Wants=first-boot-complete.target mariadb-migrate@dovecot.service dovecot.service
+After=mariadb-migrate@dovecot.service
+Before=first-boot-complete.target dovecot.service
+ConditionFirstBoot=true
+
+[Install]
+WantedBy=multi-user.target

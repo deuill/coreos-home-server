@@ -1,0 +1,18 @@
+[Unit]
+Description="Let's Encrypt DNS01 certificate renewal for %I"
+Wants=container-build@letsencrypt.service
+After=container-build@letsencrypt.service
+ConditionPathExists=/var/lib/container-service/letsencrypt/private/%i/tls.key
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/container-service/letsencrypt/letsencrypt.env
+ExecStart=/bin/podman run --replace --pull never --rm --env-file /etc/container-service/letsencrypt/letsencrypt.env \
+                          --volume /var/lib/container-service/letsencrypt:/var/lib/letsencrypt:z \
+                          --name letsencrypt-renew-%i localhost/letsencrypt:latest --pem --path /var/lib/letsencrypt \
+                          --domains "%i" --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} renew
+ExecStartPost=/bin/install -m 0644 /var/lib/container-service/letsencrypt/certificates/%i.crt /var/lib/container-service/letsencrypt/private/%i/tls.crt
+ExecStartPost=/bin/install -m 0644 /var/lib/container-service/letsencrypt/certificates/%i.key /var/lib/container-service/letsencrypt/private/%i/tls.key
+
+[Install]
+WantedBy=multi-user.target

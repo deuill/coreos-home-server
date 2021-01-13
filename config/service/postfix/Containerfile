@@ -1,0 +1,15 @@
+FROM docker.io/debian:stable-slim
+ARG VERSION=3.4.14
+
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core gettext ca-certificates
+
+COPY container/config /etc/postfix
+COPY container/run-postfix /run-postfix
+
+RUN addgroup --system --gid 5000 virtual
+RUN adduser --system --uid 5000 --ingroup virtual --home /var/mail/virtual virtual
+
+EXPOSE 25 465 587
+ENTRYPOINT ["/run-postfix"]

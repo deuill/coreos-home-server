@@ -1,0 +1,20 @@
+FROM docker.io/debian:stable-slim
+ARG VERSION=2.7
+
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends curl gnupg ca-certificates
+
+RUN echo "deb https://rspamd.com/apt-stable/ buster main" > /etc/apt/sources.list.d/rspamd.list && \
+    echo "deb-src https://rspamd.com/apt-stable/ buster main" >> /etc/apt/sources.list.d/rspamd.list && \
+    curl -o - https://rspamd.com/apt-stable/gpg.key | apt-key add - && \
+    apt-get update && apt-get install -y --no-install-recommends rspamd="${VERSION}*"
+
+RUN addgroup --system --gid 11332 rspamd
+RUN adduser --system --uid 11332 --ingroup rspamd --home /var/lib/rspamd rspamd
+
+COPY container/config /etc/rspamd
+COPY container/run-rspamd /run-rspamd
+RUN chown -R rspamd:rspamd /etc/rspamd
+
+EXPOSE 11332 11333 11334
+ENTRYPOINT ["/run-rspamd"]

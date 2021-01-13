@@ -1,0 +1,13 @@
+[Unit]
+Description=Container build for %I
+Wants=network-online.target container-environment@%i.service container-build@%i.path
+After=network-online.target container-environment@%i.service
+ConditionPathExists=/etc/container-service/%i/Containerfile
+
+[Service]
+Type=oneshot
+Environment=PODMAN_BUILD_OPTIONS=
+ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file /etc/container-service/%i/Containerfile --tag %i /etc/container-service/%i
+
+[Install]
+WantedBy=multi-user.target

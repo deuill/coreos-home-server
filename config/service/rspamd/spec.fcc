@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.3.0
+storage:
+  files:
+    - path: /etc/systemd/system/rspamd.service
+      contents:
+        local: service/rspamd/rspamd.service
+    - path: /etc/systemd/system/rspamd-dkim-generate@.service
+      contents:
+        local: service/rspamd/rspamd-dkim-generate@.service
+systemd:
+  units:
+    - name: rspamd.service
+      enabled: true
+    - name: rspamd-dkim-generate@.service
+      enabled: true

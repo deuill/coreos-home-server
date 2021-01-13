@@ -1,0 +1,173 @@
+variant: fcos
+version: 1.3.0
+ignition:
+  config:
+    merge:
+      - local: common/logging.ign
+      - local: common/container.ign
+      - local: service/redis/spec.ign
+      - local: service/mariadb/spec.ign
+      - local: service/nginx/spec.ign
+      - local: service/letsencrypt/spec.ign
+      - local: service/git/spec.ign
+      - local: service/dovecot/spec.ign
+      - local: service/postfix/spec.ign
+      - local: service/rspamd/spec.ign
+      - local: service/prosody/spec.ign
+      - local: service/radicale/spec.ign
+
+passwd:
+  users:
+    - name: core
+      # Add SSH keys here if wanted.
+      # ssh_authorized_keys:
+      #  - ecdsa-sha2-nistp521 AAAAE2VjZH...
+
+systemd:
+  units:
+    # Enable auto-login for 'core' user.
+    - name: serial-getty@ttyS0.service
+      dropins:
+      - name: autologin-core.conf
+        contents: |
+          [Service]
+          ExecStart=
+          ExecStart=-/usr/sbin/agetty --autologin core --noclear %I $TERM
+          TTYVTDisallocate=no
+
+    # Enable default web services.
+    - name: container-build@static.localhost.service
+      enabled: true
+      dropins:
+        - name: wait-for-nginx.conf
+          contents: |
+            [Unit]
+            After=container-build@nginx.service
+    - name: nginx-static@static.localhost.service
+      enabled: true
+    - name: nginx-ingress-http@static.localhost.service
+      enabled: true
+      dropins:
+        - name: wait-for-service.conf
+          contents: |
+            [Service]
+            After=nginx-static@static.localhost.service
+        - name: use-localhost-cert.conf
+          contents: |
+            [Service]
+            Environment=SSL_CERT_NAME=localhost
+
+    - name: nginx-php@php.localhost.service
+      enabled: true
+    - name: nginx-ingress-http@php.localhost.service
+      enabled: true
+      dropins:
+        - name: wait-for-service.conf
+          contents: |
+            [Service]
+            After=nginx-php@php.localhost.service
+        - name: use-localhost-cert.conf
+          contents: |
+            [Service]
+            Environment=SSL_CERT_NAME=localhost
+
+storage:
+  files:
+    # Hostname for virtual host.
+    - path: /etc/hostname
+      mode: 0644
+      contents:
+        inline: core-virtual
+
+    # Load host-wide environment into default location.
+    - path: /etc/container-service.env
+      mode: 0600
+      contents:
+        local: virtual.env
+
+    # Tell systemd to not use a pager when printing information
+    - path: /etc/profile.d/systemd-pager.sh
+      mode: 0644
+      contents:
+        inline: |
+          export SYSTEMD_PAGER=cat
+
+    # Example sites for static and PHP setups.
+    - path: /etc/container-service/static.localhost/Containerfile
+      mode: 0644
+      contents:
+        inline: |
+          FROM localhost/nginx:latest
+          RUN /bin/echo "Hello Static World!" > /srv/index.html
+
+    - path: /etc/container-service/php.localhost/Containerfile
+      mode: 0644
+      contents:
+        inline: |
+          FROM docker.io/php:7.4-fpm
+          RUN /bin/echo "<?php phpinfo();" > /srv/index.php
+          VOLUME /data /srv
+
+    - path: /etc/container-service/php.localhost/php.localhost.env
+      mode: 0644
+      contents:
+        inline: |
+          TEST_ENV=foobar
+
+    # Include pre-generated certificates for localhost domain, as we're not using Let's Encrypt in
+    # generating certificates for the virtual host.
+    - path: /var/lib/container-service/letsencrypt/private/localhost/tls.crt
+      mode: 0644
+      contents:
+        inline: |
+          -----BEGIN CERTIFICATE-----
+          MIIC/TCCAeWgAwIBAgIUSQ3T7OACEnUXpaTWZuJS0ckbePAwDQYJKoZIhvcNAQEL
+          BQAwFDESMBAGA1UEAwwJbG9jYWxob3N0MB4XDTIxMDEyMzIwMTI1N1oXDTIxMDIy
+          MjIwMTI1N1owFDESMBAGA1UEAwwJbG9jYWxob3N0MIIBIjANBgkqhkiG9w0BAQEF
+          AAOCAQ8AMIIBCgKCAQEA93omV3VBOt1d3fh/XlTRR2r1e7wy2XYTgWwleFu/uQkC
+          sG/v6KWf90FS9pXqWBzfbL/T85pahU9CsseMS34rXVxO7pZfzyoTjtKe1LNTWOrl
+          1MZSaljZScMQrL2QyfHkYaAbsOwdzk0A3n4G2o4+herlvhfWzH+W/qRfRdN4vCqK
+          U23Bq18qjRmhchAC4hGMhmxIRTS8vMnt6m9doNEoWh088fOb/DjANtrJXQJpN/VM
+          uvDo4qdV/Jd5RQI61Mgiq6f24cFrIGZoCp2AB25AMGSXQIemXXFrwYqO4P7+zz2W
+          /YHvASW4OhKHOOjPNtwr9BvU7riOXgXN7Kbw9uumdwIDAQABo0cwRTAhBgNVHREE
+          GjAYggsqLmxvY2FsaG9zdIIJbG9jYWxob3N0MAsGA1UdDwQEAwIHgDATBgNVHSUE
+          DDAKBggrBgEFBQcDATANBgkqhkiG9w0BAQsFAAOCAQEA7zjQv5h2DmZ+iJLCiGiy
+          hWjulAtDqn3Ibgx3mw+GbtQBpDxk6gq+LQt8MqXup/zLViB7EkCGejXnLkGa9VLl
+          331L/OraO6Jnib3EbEBR8n5vGI0lzB7ovLcik5XlCTIRHvO7EHPcXWvdEZYw7h2O
+          ioo64JZidYZ8TEWSFaYC15HCqCpgq2byPgNqvp2OI2sNPo/+BqwhXiz4JIugWul2
+          THC3J9+qGzxpCUKj4jyoky0Lzl/F3AUpydQLzncyNmSNhBxHXItb3JI2t2D3dM+C
+          NlbOWu19BUaupdkc8nOAmDZPzSzZkc/qpiDeq9pE86KcfadgM3RElXOKXkL5TvlZ
+          7g==
+          -----END CERTIFICATE-----
+    - path: /var/lib/container-service/letsencrypt/private/localhost/tls.key
+      mode: 0644
+      contents:
+        inline: |
+          -----BEGIN PRIVATE KEY-----
+          MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD3eiZXdUE63V3d
+          +H9eVNFHavV7vDLZdhOBbCV4W7+5CQKwb+/opZ/3QVL2lepYHN9sv9PzmlqFT0Ky
+          x4xLfitdXE7ull/PKhOO0p7Us1NY6uXUxlJqWNlJwxCsvZDJ8eRhoBuw7B3OTQDe
+          fgbajj6F6uW+F9bMf5b+pF9F03i8KopTbcGrXyqNGaFyEALiEYyGbEhFNLy8ye3q
+          b12g0ShaHTzx85v8OMA22sldAmk39Uy68Ojip1X8l3lFAjrUyCKrp/bhwWsgZmgK
+          nYAHbkAwZJdAh6ZdcWvBio7g/v7PPZb9ge8BJbg6Eoc46M823Cv0G9TuuI5eBc3s
+          pvD266Z3AgMBAAECggEBAM/iYArfiGf2RD+N2xBWl2Yyxvul3+EkesYhHmi4SZkZ
+          pJSpsxHu7y04RoS08iIKPvSPP3BGnPuW1SRw070mwy6tt/BbiSfw5HT5IEr0SHNM
+          /rt5zQlgkUaRAZTZuKKq+3m2kQxRi8gcjzpXC1LUYlkENPE1/U3Tb/eABDgXqDgG
+          rTw73qbGwM4YsfLZ0G9pDr1khT18SrvyJBTHI0MzmBULyFBr61AGNNTnTijEhaW1
+          LQhuv9xXFJglFuf5I9x+V+eRYCOPfgytlNjbEy/WndfD55ikNc+sd2n5DC9uTN+g
+          txkLBC8KIO1DIwzVmH2067Nc1sWkF8d79fMZbffXDCECgYEA/sZcELImj5+v5z51
+          7Km1PwK0Mfzi13FjXyF/51LCU+qVjMZ63/XOBXsNNYyDnJ7FrDizw0SChU6DO0Uq
+          CEBsVkoQFizZwTrOdKCFBtxuaoYP+zfygd2lxbTZP5sPqhxA6cPh/jyiK13HjE/A
+          Sra5ybi6l+600N85ajiDmY6JtU0CgYEA+KrOawqksfg2hQsNv6W03mudvIG21xBg
+          eajfIXAoe767ZDj+QDN/aMiUvQOwtkRtuLzjNjHy9hIftF5fXm6gVvci2BvcZx6y
+          +GzeETbbr5QwCzAqYeG3kHFk42y5Y0Ek3CCr6eA3zwtVYFvKbfp7gt/rDwuIncPA
+          g/+oy7YcGNMCgYAtYvLluobqER2KCXOCjJ0QM5AcU5upm7aDLPmXIQQjZOftYzJi
+          kWx5R3mL75NGpHY8fwFvKNZDnz/7oA+j1q42FQ2WlbjZFnvPBQWNulklOuq/6zCV
+          eAHfHZ+SGDKLMGtT+aRZ4T1WkmdJFLAB31lrmTAMfubRSuL0jErNYTohBQKBgF2c
+          79icSSQ2rU+ouaRMXareGKO+sXaFU8x5JocQEi2DwEgarJy+xlhMKrJ9kSkM2cGS
+          WncslqrMZ+MfJAgI3ZPftd5lnrOzeuzLD06ruEiBIRUVLN9seg6GodR8Oc6D17yH
+          EDEbl+b5/UopRCvjAFxkr7kaPnQmHXOT65fFFw7BAoGBAPoDeifFaLUF+PASwlTH
+          RNnDVvCu27ccJnozN5hgpsSdvctIBRkNJUIOz89kyrLyMNeSckNAQevn3+42b89X
+          qsZR3omGmdiypNch9NCNS/rcnGeviaBOBtw2/UNXnxLi6kegsLVQZjn8umI1jwHR
+          H8vBnuAgXEBcjqHwVUZvwk7R
+          -----END PRIVATE KEY-----

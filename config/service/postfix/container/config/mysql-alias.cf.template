@@ -1,0 +1,8 @@
+hosts = ${PROSODY_DATABASE_HOST}
+user = ${PROSODY_DATABASE_USERNAME}
+password = ${PROSODY_DATABASE_PASSWORD}
+dbname = ${PROSODY_DATABASE_NAME}
+table = aliases
+select_field = destination
+where_field = mail
+additional_conditions = AND enabled = 1

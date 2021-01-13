@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.3.0
+storage:
+  files:
+    - path: /etc/systemd/system/prosody-firstboot.target
+      contents:
+        local: service/prosody/prosody-firstboot.target
+    - path: /etc/systemd/system/prosody.service
+      contents:
+        local: service/prosody/prosody.service
+systemd:
+  units:
+    - name: prosody-firstboot.target
+      enabled: true
+    - name: prosody.service
+      enabled: true

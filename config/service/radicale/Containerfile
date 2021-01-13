@@ -1,0 +1,20 @@
+FROM docker.io/debian:stable-slim
+ARG VERSION=3.0.6
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends python3 python3-pip python3-setuptools gettext
+
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install radicale==$VERSION https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
+
+RUN addgroup --system --gid 15232 radicale
+RUN adduser --system --uid 15232 --ingroup radicale --home /var/lib/radicale radicale
+
+COPY container/config /etc/radicale
+COPY container/run-radicale /run-radicale
+RUN chown -R radicale:radicale /etc/radicale
+
+USER radicale
+EXPOSE 5232
+
+ENTRYPOINT ["/run-radicale"]

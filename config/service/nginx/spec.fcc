@@ -1,0 +1,26 @@
+variant: fcos
+version: 1.3.0
+storage:
+  files:
+    - path: /etc/systemd/system/nginx-ingress.service
+      contents:
+        local: service/nginx/nginx-ingress.service
+    - path: /etc/systemd/system/nginx-ingress-http@.service
+      contents:
+        local: service/nginx/nginx-ingress-http@.service
+    - path: /etc/systemd/system/nginx-static@.service
+      contents:
+        local: service/nginx/nginx-static@.service
+    - path: /etc/systemd/system/nginx-php@.service
+      contents:
+        local: service/nginx/nginx-php@.service
+systemd:
+  units:
+    - name: nginx-ingress.service
+      enabled: true
+    - name: nginx-ingress-http@.service
+      enabled: true
+    - name: nginx-static@.service
+      enabled: true
+    - name: nginx-php@.service
+      enabled: true

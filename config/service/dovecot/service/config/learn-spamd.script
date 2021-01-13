@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if test "${1}" != "ham" -a "${1}" != "spam"; then
+    echo "Invalid action type '${1}', want 'ham' or 'spam'" >&2
+    exit 1
+fi
+
+source /etc/dovecot/rspamd/rspamd.env
+curl --silent -H "Deliver-To: ${USER}" -H "password: ${RSPAMD_CONTROLLER_PASSWORD}" --data-binary @- "${RSPAMD_CONTROLLER_HOST}:${RSPAMD_CONTROLLER_PORT}/learn${1}"

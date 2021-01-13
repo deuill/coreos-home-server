@@ -1,0 +1,11 @@
+variant: fcos
+version: 1.3.0
+storage:
+  files:
+    - path: /etc/systemd/system/radicale.service
+      contents:
+        local: service/radicale/radicale.service
+systemd:
+  units:
+    - name: radicale.service
+      enabled: true

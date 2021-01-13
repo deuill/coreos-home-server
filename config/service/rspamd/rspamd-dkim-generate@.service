@@ -1,0 +1,12 @@
+[Unit]
+Description=DKIM key for %I
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/install -d /var/lib/container-service/rspamd/dkim
+ExecStart=/bin/openssl genrsa -out /var/lib/container-service/rspamd/dkim/%i.dkim.key 1024
+ExecStartPost=/bin/chmod 644 /var/lib/container-service/rspamd/dkim/%i.dkim.key
+ExecStartPost=/bin/sh -c 'echo "Public DKIM key:"; openssl rsa -in /var/lib/container-service/rspamd/dkim/%i.dkim.key -pubout -outform der 2> /dev/null | openssl base64 -A'
+
+[Install]
+WantedBy=multi-user.target

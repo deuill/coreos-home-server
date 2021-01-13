@@ -1,0 +1,7 @@
+# Ignore various common temporary files.
+.DS_Store
+.idea
+tmp/
+
+# Ignore files in private directory.
+config/private/

@@ -1,0 +1,17 @@
+FROM docker.io/debian:stable-slim
+ARG VERSION=2.3.4
+
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    dovecot-imapd=1:${VERSION}* dovecot-lmtpd=1:${VERSION}* dovecot-mysql=1:${VERSION}* \
+    dovecot-sieve=1:${VERSION}* dovecot-managesieved=1:${VERSION}* \
+    gettext ca-certificates curl
+
+COPY container/config /etc/dovecot
+COPY container/run-dovecot /run-dovecot
+
+RUN addgroup --system --gid 5000 virtual
+RUN adduser --system --uid 5000 --ingroup virtual --home /var/mail/virtual virtual
+
+EXPOSE 24 143 993 3659
+ENTRYPOINT ["/run-dovecot"]

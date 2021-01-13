@@ -1,0 +1,21 @@
+server {
+    listen 8080;
+    server_name ${SERVER_NAME};
+
+    root /srv;
+    include server.conf;
+
+    charset utf-8;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$uri&$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass  localhost:9000;
+        fastcgi_index index.php;
+        include       fastcgi.conf;
+        fastcgi_param HTTPS 'on';
+    }
+}

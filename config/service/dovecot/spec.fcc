@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.3.0
+storage:
+  files:
+    - path: /etc/systemd/system/dovecot-firstboot.target
+      contents:
+        local: service/dovecot/dovecot-firstboot.target
+    - path: /etc/systemd/system/dovecot.service
+      contents:
+        local: service/dovecot/dovecot.service
+systemd:
+  units:
+    - name: dovecot-firstboot.target
+      enabled: true
+    - name: dovecot.service
+      enabled: true

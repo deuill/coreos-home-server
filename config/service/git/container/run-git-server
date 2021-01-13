@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Correct permissions where needed.
+chown -R git:git /home/git
+chmod -R u+rwX,go-rwxX /home/git/.ssh
+
+# Run SSH daemon.
+/usr/sbin/sshd -D -e

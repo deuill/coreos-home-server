@@ -1,0 +1,13 @@
+[server]
+hosts = 0.0.0.0:5232
+
+[web]
+type = none
+
+[auth]
+type = radicale_imap
+imap_host = ${RADICALE_IMAP_AUTH_HOST}:${RADICALE_IMAP_AUTH_PORT}
+imap_security = starttls
+
+[logging]
+level = info

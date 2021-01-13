@@ -1,0 +1,21 @@
+[Unit]
+Description="Let's Encrypt DNS01 certificate register for %I"
+Wants=container-build@letsencrypt.service letsencrypt-dns-renew@%i.timer
+After=container-build@letsencrypt.service
+Before=letsencrypt-dns-renew@%i.timer
+ConditionPathExists=!/var/lib/container-service/letsencrypt/private/%i/tls.key
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/container-service/letsencrypt/letsencrypt.env
+ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/letsencrypt
+ExecStart=/bin/podman run --replace --pull never --rm --env-file /etc/container-service/letsencrypt/letsencrypt.env \
+                          --volume /var/lib/container-service/letsencrypt:/var/lib/letsencrypt:z \
+                          --name letsencrypt-register-%i localhost/letsencrypt:latest --accept-tos --pem --path /var/lib/letsencrypt \
+                          --domains "%i" --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} run
+ExecStartPost=/bin/install -d /var/lib/container-service/letsencrypt/private/%i
+ExecStartPost=/bin/install -m 0644 /var/lib/container-service/letsencrypt/certificates/%i.crt /var/lib/container-service/letsencrypt/private/%i/tls.crt
+ExecStartPost=/bin/install -m 0644 /var/lib/container-service/letsencrypt/certificates/%i.key /var/lib/container-service/letsencrypt/private/%i/tls.key
+
+[Install]
+WantedBy=multi-user.target

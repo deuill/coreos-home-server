@@ -1,0 +1,55 @@
+variant: fcos
+version: 1.3.0
+ignition:
+  config:
+    merge:
+      - local: common/logging.ign
+      - local: common/container.ign
+      - local: service/redis/spec.ign
+      - local: service/mariadb/spec.ign
+      - local: service/nginx/spec.ign
+      - local: service/letsencrypt/spec.ign
+      - local: service/git/spec.ign
+      - local: service/dovecot/spec.ign
+      - local: service/postfix/spec.ign
+      - local: service/rspamd/spec.ign
+      - local: service/prosody/spec.ign
+      - local: service/radicale/spec.ign
+      - local: private/spec.ign
+
+passwd:
+  users:
+    - name: core
+      password_hash: $y$j9T$h28ThC2Upu/T1K8P1zPO5.$I4HAWmgmmhWPAhrSfAiGUv8aHHiS6cM3tXJibHC1WNA
+      ssh_authorized_keys:
+        - ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAD46O1S/DSegplXd2Py5loFW2ZYahNvmUYGaFesR8Bo+A+vdmNur7eJ2Ke18j86E2VrVCnzze7EL3dqG1WmseektgClfyeDau+wSvvL8DPNc8JZFdoSd//Kk/OGmJcFfZjag0EXYqYuO/sgHE6yystnwB5ya5PaChNCDr7nG6j5qBJtYw==
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDkzmZlPFoz3pN5S0J4z+OIuEx/vyXySfm1Y+KJzPt5kS7CGQ5SvJG8LItssmT5WRsflfEvGtlqKFPwpx3HXeiGpBonAmRnwPIZjmi0oP1SoiB2HIyiErL1pxq5Eodno9AVTEjDjau6/W3SpXlxEzunqDG0VnihTzFYa/p7K/8MiwNk6vaiLcdNjK0wsaFo4yWaN7kqyk2EGspdT0hzqENwQy/x/hdsQxZxAScatgVz5OXW626eoHd9PtmYppwj/WLa5nORoi63UCdlwhFKgJ55eTxeRMCiq9HHwlAvCe4IZ+dRbypg0gO2TNvHvvue2uVvT8BwMEujW62nx4Qen5kI9JvxiZt5aifKLCwyOgBsb/DIUP+ZcN51vwAmp/bCLW6IQqXMGH3BxIpml+bW/qxtmjAoh1+osWngsgtpZkhqRf+hTTJ5Om4QII4jDZxkBv0pysUl1W/krOr2a2DjfHGPyc11GqEPGb0FaFv3Q1SWuh3HTnr5YsA1Ig58UJQWhTm3bJKlH/Unl1+vwAU25Ger0j/JFsjJHVZF5Lkmu5hr84EhZ5S51FhEzRBVjhKBcZpKGRauCmO+SENFXnuTDPauiA3myEgTrVYSVTCbX9/RSz6pvVTkrBz/L1r6G7F8E+4DOL5/niXr+koBWsSiF3C8PNICT8gLsCD/d0mQo2nSsw==
+
+storage:
+  files:
+    - path: /etc/hostname
+      mode: 0644
+      contents:
+        inline: lhr01nuc
+
+    - path: /etc/container-service.env
+      mode: 0600
+      contents:
+        local: lhr01nuc.env.gpg
+
+    - path: /etc/NetworkManager/system-connections/enp1s0.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=enp1s0
+          type=ethernet
+          interface-name=enp1s0
+
+          [ipv4]
+          address1=192.168.3.2/24,192.168.3.1
+          dhcp-hostname=lhr01nuc
+          dns=1.1.1.1;1.0.0.1;8.8.8.8;
+          dns-search=
+          may-fail=false
+          method=manual

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Prepare configuration files for environment variable substitution.
+ENV_NAMES="`env | awk -F '=' '{printf "$%s ", $1}'`"
+for file in /etc/dovecot/*.template; do
+	envsubst "$ENV_NAMES" < "$file" > "`echo $file | awk -F '.template$' '{print $1}'`"
+done
+
+# Prepare other configuration.
+mkdir -p /var/lib/dovecot/script /var/lib/dovecot/sieve
+install -m 0755 /etc/dovecot/conf.d/*.script /var/lib/dovecot/script
+install -m 0644 /etc/dovecot/conf.d/*.sieve /var/lib/dovecot/sieve
+
+# Compile Sieve scripts.
+find /etc/dovecot/sieve.* -name '*.sieve' | xargs -I@ sievec @
+find /var/lib/dovecot/sieve -name '*.sieve' | xargs -I@ sievec @
+
+# Set up environment variables for Rspamd.
+mkdir -p /etc/dovecot/rspamd
+env | awk -F '_' '$1 == "RSPAMD" {print $0}' > /etc/dovecot/rspamd/rspamd.env
+
+# Run Dovecot daemon.
+/usr/sbin/dovecot -F

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Log to standard error.
+(syslog-ng --no-caps --foreground) &
+(tail -F /var/log/mail.log) &
+
+# Prepare configuration files for environment variable substitution.
+ENV_NAMES="`env | awk -F '=' '{printf "$%s ", $1}'`"
+for file in /etc/postfix/*.template; do
+	envsubst "${ENV_NAMES}" < "$file" > "`echo $file | awk -F '.template$' '{print $1}'`"
+done
+
+# Generate local aliases and virtual maps.
+postalias /etc/postfix/aliases
+
+# Ensure local files are correctly configured.
+postfix set-permissions
+
+# Run master daemon for Postfix.
+/usr/lib/postfix/sbin/master -c /etc/postfix -d

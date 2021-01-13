@@ -1,0 +1,3 @@
+FROM docker.io/redis:6.0-alpine
+USER redis
+CMD ["redis-server", "--appendonly", "yes"]
