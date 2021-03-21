@@ -1,8 +1,8 @@
 FROM docker.io/debian:stable-slim
 ARG VERSION=2.7
 
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends curl gnupg ca-certificates
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates curl gnupg
 
 RUN echo "deb https://rspamd.com/apt-stable/ buster main" > /etc/apt/sources.list.d/rspamd.list && \
     echo "deb-src https://rspamd.com/apt-stable/ buster main" >> /etc/apt/sources.list.d/rspamd.list && \

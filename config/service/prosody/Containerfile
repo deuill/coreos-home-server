@@ -1,14 +1,14 @@
 FROM docker.io/debian:stable-slim
 ARG VERSION=0.11.8
 
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends curl mercurial gnupg ca-certificates apt-transport-https
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl mercurial gnupg ca-certificates apt-transport-https
 
 RUN echo "deb https://packages.prosody.im/debian stable main" > /etc/apt/sources.list.d/prosody.list && \
     echo "deb-src https://packages.prosody.im/debian stable main" >> /etc/apt/sources.list.d/prosody.list && \
     curl -o - https://prosody.im/files/prosody-debian-packages.key | apt-key add - && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends lua-dbi-mysql lua-event lua-zlib lua-sec lua-bitop prosody=${VERSION}*
+    apt-get update -y && apt-get install -y --no-install-recommends \
+    lua-dbi-mysql lua-event lua-zlib lua-sec lua-bitop prosody=${VERSION}*
 
 RUN mkdir -p /usr/lib/prosody/community-modules && \
     hg clone https://hg.prosody.im/prosody-modules /usr/lib/prosody/community-modules

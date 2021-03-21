@@ -1,8 +1,7 @@
 FROM docker.io/debian:stable-slim
 ARG VERSION=2.3.4
 
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
     dovecot-imapd=1:${VERSION}* dovecot-lmtpd=1:${VERSION}* dovecot-mysql=1:${VERSION}* \
     dovecot-sieve=1:${VERSION}* dovecot-managesieved=1:${VERSION}* \
     gettext ca-certificates curl

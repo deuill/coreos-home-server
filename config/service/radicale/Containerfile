@@ -1,8 +1,8 @@
 FROM docker.io/debian:stable-slim
 ARG VERSION=3.0.6
 
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends python3 python3-pip python3-setuptools gettext
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-setuptools gettext
 
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install radicale==$VERSION https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
