@@ -1,7 +1,7 @@
-hosts = ${PROSODY_DATABASE_HOST}
-user = ${PROSODY_DATABASE_USERNAME}
-password = ${PROSODY_DATABASE_PASSWORD}
-dbname = ${PROSODY_DATABASE_NAME}
+hosts = ${POSTFIX_DATABASE_HOST}
+user = ${POSTFIX_DATABASE_USERNAME}
+password = ${POSTFIX_DATABASE_PASSWORD}
+dbname = ${POSTFIX_DATABASE_NAME}
 table = users
 select_field = maildir
 where_field = username
