@@ -1,0 +1,16 @@
+[Unit]
+Description=Biboumi IRC gateway for XMPP
+Wants=container-build@%N.service prosody.service
+After=container-build@%N.service prosody.service
+
+[Service]
+Restart=always
+ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/%N
+ExecStartPre=/bin/podman create --replace --pull never --net prosody --env-file /etc/container-service/%N/%N.env \
+                                --volume /var/lib/container-service/%N:/var/lib/%N:z \
+                                --name %N localhost/%N:latest
+ExecStart=/bin/podman start --attach %N
+ExecStop=/bin/podman stop --time 10 %N
+
+[Install]
+WantedBy=multi-user.target

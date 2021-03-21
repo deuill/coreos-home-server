@@ -1,0 +1,25 @@
+FROM docker.io/debian:stable-slim
+
+ENV BUILD_DEPS="build-essential git cmake python"
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext libexpat1-dev libidn11-dev uuid-dev libsqlite3-dev libudns-dev \
+    libbotan-2-dev ${BUILD_DEPS}
+
+ARG BIBOUMI_VERSION=9.0
+RUN git clone --branch ${BIBOUMI_VERSION} --depth 1 https://lab.louiz.org/louiz/biboumi /biboumi && \
+    mkdir /biboumi/build && cd /biboumi/build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DWITH_BOTAN=1 -DWITH_SQLITE3=1 \
+             -DWITH_LIBIDN=1 -DWITHOUT_SYSTEMD=1 && \
+    make && make install && rm -Rf /biboumi
+
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${BUILD_DEPS}
+
+RUN addgroup --system --gid 10000 biboumi
+RUN adduser --system --uid 10000 --ingroup biboumi --home /var/lib/biboumi biboumi
+
+COPY container/config /etc/biboumi
+COPY container/run-biboumi /run-biboumi
+RUN chown -R biboumi:biboumi /etc/biboumi
+
+USER biboumi
+ENTRYPOINT ["/run-biboumi"]

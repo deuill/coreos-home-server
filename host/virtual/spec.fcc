@@ -14,6 +14,7 @@ ignition:
       - local: service/postfix/spec.ign
       - local: service/rspamd/spec.ign
       - local: service/prosody/spec.ign
+      - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
 
 passwd:

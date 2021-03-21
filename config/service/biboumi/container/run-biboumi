@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Prepare configuration files for environment variable substitution.
+ENV_NAMES="`env | awk -F '=' '{printf "$%s ", $1}'`"
+for file in /etc/biboumi/*.template; do
+	envsubst "${ENV_NAMES}" < "$file" > "`echo $file | awk -F '.template$' '{print $1}'`"
+done
+
+/usr/bin/biboumi /etc/biboumi/biboumi.cfg "$@"
