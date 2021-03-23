@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Prepare configuration files for environment variable substitution.
+ENV_NAMES="`env | awk -F '=' '{printf "$%s ", $1}'`"
+for file in /etc/rdircd/*.template; do
+	envsubst "${ENV_NAMES}" < "$file" > "`echo $file | awk -F '.template$' '{print $1}'`"
+done
+
+# Ensure state file exists before starting service.
+touch /var/lib/rdircd/state.conf
+
+/usr/bin/rdircd --conf /etc/rdircd/rdircd.conf --conf /var/lib/rdircd/state.conf "$@"

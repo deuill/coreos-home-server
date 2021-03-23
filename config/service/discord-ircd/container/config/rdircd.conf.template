@@ -1,0 +1,10 @@
+[auth-main]
+email = ${DISCORD_IRCD_AUTH_EMAIL}
+password = ${DISCORD_IRCD_AUTH_PASSWORD}
+token = ${DISCORD_IRCD_AUTH_TOKEN}
+token-manual = no
+
+[irc]
+host = 0.0.0.0
+password = ${DISCORD_IRCD_PASSWORD}
+chan-auto-join-re = ^me\.
