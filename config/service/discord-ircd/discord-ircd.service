@@ -1,0 +1,16 @@
+[Unit]
+Description=Reliable Discord-Client IRC Daemon
+Wants=container-build@%N.service container-network@prosody.service
+After=container-build@%N.service container-network@prosody.service
+
+[Service]
+Restart=always
+ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/%N
+ExecStartPre=/bin/podman create --replace --pull never --net prosody --env-file /etc/container-service/%N/%N.env \
+                                --volume /var/lib/container-service/%N:/var/lib/rdircd:z \
+                                --name %N localhost/%N:latest
+ExecStart=/bin/podman start --attach %N
+ExecStop=/bin/podman stop --time 10 %N
+
+[Install]
+WantedBy=multi-user.target

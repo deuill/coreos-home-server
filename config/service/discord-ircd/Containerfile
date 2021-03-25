@@ -1,0 +1,20 @@
+FROM docker.io/debian:stable-slim
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates python3 python3-aiohttp gettext git
+
+RUN git clone --depth 1 https://github.com/mk-fg/reliable-discord-client-irc-daemon.git /rdircd && \
+    cp /rdircd/rdircd /usr/bin && chmod 0755 /usr/bin/rdircd && \
+    rm -Rf /rdircd
+
+RUN addgroup --system --gid 10000 rdircd
+RUN adduser --system --uid 10000 --ingroup rdircd --home /var/lib/rdircd rdircd
+
+COPY container/config /etc/rdircd
+COPY container/run-rdircd /run-rdircd
+RUN chown -R rdircd:rdircd /etc/rdircd
+
+USER rdircd
+EXPOSE 6667
+
+ENTRYPOINT ["/run-rdircd"]
