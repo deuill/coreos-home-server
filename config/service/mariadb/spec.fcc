@@ -1,13 +1,9 @@
 variant: fcos
 version: 1.3.0
 storage:
-  files:
-    - path: /etc/systemd/system/mariadb.service
-      contents:
-        local: service/mariadb/mariadb.service
-    - path: /etc/systemd/system/mariadb-migrate@.service
-      contents:
-        local: service/mariadb/mariadb-migrate@.service
+  trees:
+    - path: /etc/systemd/system
+      local: service/mariadb/systemd/
 systemd:
   units:
     - name: mariadb.service

@@ -1,10 +1,9 @@
 variant: fcos
 version: 1.3.0
 storage:
-  files:
-    - path: /etc/systemd/system/discord-ircd.service
-      contents:
-        local: service/discord-ircd/discord-ircd.service
+  trees:
+    - path: /etc/systemd/system
+      local: service/discord-ircd/systemd/
 systemd:
   units:
     - name: discord-ircd.service

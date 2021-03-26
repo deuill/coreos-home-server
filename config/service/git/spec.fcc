@@ -1,16 +1,9 @@
 variant: fcos
 version: 1.3.0
 storage:
-  files:
-    - path: /etc/systemd/system/git.service
-      contents:
-        local: service/git/git.service
-    - path: /etc/systemd/system/git-ssh-pubkey@.service
-      contents:
-        local: service/git/git-ssh-pubkey@.service
-    - path: /etc/systemd/system/git-ssh-ed25519@.service
-      contents:
-        local: service/git/git-ssh-ed25519@.service
+  trees:
+    - path: /etc/systemd/system
+      local: service/git/systemd/
 systemd:
   units:
     - name: git.service

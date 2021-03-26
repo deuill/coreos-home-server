@@ -1,16 +1,9 @@
 variant: fcos
 version: 1.3.0
 storage:
-  files:
-    - path: /etc/systemd/system/letsencrypt-dns-register@.service
-      contents:
-        local: service/letsencrypt/letsencrypt-dns-register@.service
-    - path: /etc/systemd/system/letsencrypt-dns-renew@.service
-      contents:
-        local: service/letsencrypt/letsencrypt-dns-renew@.service
-    - path: /etc/systemd/system/letsencrypt-dns-renew@.timer
-      contents:
-        local: service/letsencrypt/letsencrypt-dns-renew@.timer
+  trees:
+    - path: /etc/systemd/system
+      local: service/letsencrypt/systemd/
 systemd:
   units:
     - name: letsencrypt-dns-register@.service

@@ -1,22 +1,11 @@
 variant: fcos
 version: 1.3.0
 storage:
-  files:
-    - path: /etc/systemd/system/container-build@.service
-      contents:
-        local: common/container/container-build@.service
-    - path: /etc/systemd/system/container-build@.path
-      contents:
-        local: common/container/container-build@.path
-    - path: /etc/systemd/system/container-network@.service
-      contents:
-        local: common/container/container-network@.service
-    - path: /etc/systemd/system/container-environment@.service
-      contents:
-        local: common/container/container-environment@.service
   trees:
-    - local: service/
-      path: /etc/container-service
+    - path: /etc/container-service
+      local: service/
+    - path: /etc/systemd/system
+      local: common/systemd/
   directories:
     - path: /etc/container-service
       mode: 0700
