@@ -1,7 +1,7 @@
 [Unit]
 Description=Nginx PHP web service for %I
-Wants=container-build@nginx.service container-build@%i.service container-network@ingress.service container-network@internal.service
-After=container-build@nginx.service container-build@%i.service container-network@ingress.service container-network@internal.service
+Wants=container-build@nginx.service container-build@%i.service container-network@nginx-ingress.service container-network@internal.service
+After=container-build@nginx.service container-build@%i.service container-network@nginx-ingress.service container-network@internal.service
 Before=nginx-ingress-http@%i.service
 
 [Service]
@@ -12,7 +12,7 @@ Environment=NGINX_CONF=/etc/container-service/nginx/service/%p.conf.template
 ExecStartPre=/bin/install --owner 33 --group 33 -d /var/lib/container-service/%i
 ExecStartPre=/bin/install -d /tmp/conf.d
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/conf.d/%i.conf"
-ExecStartPre=/bin/podman pod create --replace --net internal,ingress --name %i
+ExecStartPre=/bin/podman pod create --replace --net internal,nginx-ingress --name %i
 ExecStartPre=/bin/podman create --replace --pull never --pod %i \
                                 --env-file /etc/container-service/%i/%i.env \
                                 --volume /var/lib/container-service/%i:/data:z \
