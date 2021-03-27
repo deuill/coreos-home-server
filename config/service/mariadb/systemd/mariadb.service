@@ -7,15 +7,15 @@ After=container-build@%N.service container-network@%N.service container-network@
 Restart=always
 EnvironmentFile=/etc/container-service/%N/%N.env
 ExecStartPre=/bin/install --owner 999 --group 999 -d /var/lib/container-service/%N
-ExecStartPre=/bin/podman create --replace --pull never --net internal,%N --env-file /etc/container-service/%N/%N.env \
-                                --volume /var/lib/container-service/%N:/var/lib/mysql:z \
-                                --name %N localhost/%N:latest
-ExecStart=/bin/podman start --attach %N
+ExecStart=/bin/podman run --replace --pull never --net internal,%N --env-file /etc/container-service/%N/%N.env \
+                          --volume /var/lib/container-service/%N:/var/lib/mysql:z \
+                          --name %N localhost/%N:latest
 ExecStartPost=/bin/podman run --replace --pull never --rm --net %N --entrypoint mariadb-admin \
                               --volume /var/lib/container-service/%N:/var/lib/mysql:z \
                               --name %N-wait localhost/%N:latest \
                               --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait=10 ping
 ExecStop=/bin/podman stop --time 10 %N
+ExecStopPost=/bin/podman rm --force %N
 
 [Install]
 WantedBy=multi-user.target

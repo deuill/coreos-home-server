@@ -7,21 +7,21 @@ Before=nginx-ingress-http@%i.service
 [Service]
 Restart=always
 Environment=SERVER_NAME=%i
+Environment=SERVICE_DATA_DIRECTORY=/data
 Environment=NGINX_CONF=/etc/container-service/nginx/service/%p.conf.template
 ExecStartPre=/bin/install --owner 33 --group 33 -d /var/lib/container-service/%i
-ExecStartPre=/bin/podman pod create --replace --net mariadb,nginx-ingress --name %i
-ExecStartPre=/bin/podman create --replace --pull never --pod %i \
-                                --env-file /etc/container-service/%i/%i.env \
-                                --volume /var/lib/container-service/%i:/data:z \
+ExecStartPre=/bin/podman pod create --replace --net internal,nginx-ingress --name %i
+ExecStartPre=/bin/podman create --replace --pull never --pod %i --env-file /etc/container-service/%i/%i.env \
+                                --volume /var/lib/container-service/%i:${SERVICE_DATA_DIRECTORY}:z,shared \
                                 --name %i-php localhost/%i:latest
 ExecStartPre=/bin/podman create --replace --pull never --pod %i \
                                 --volumes-from=%i-php:z,ro \
                                 --name %i-nginx localhost/nginx:latest
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%i.conf"
-ExecStartPre=/bin/podman cp /tmp/%i.conf %i-nginx:/etc/nginx/conf.d
-ExecStartPre=/bin/rm -f /tmp/%i.conf
+ExecStartPre=/bin/sh -c "podman cp /tmp/%i.conf %i-nginx:/etc/nginx/conf.d && rm -f /tmp/%i.conf"
 ExecStart=/bin/sh -c 'podman pod start %i && podman wait %i-php && podman attach --no-stdin %i-php'
 ExecStop=/bin/podman pod stop --time 10 %i
+ExecStopPost=/bin/podman pod rm --force %i
 
 [Install]
 Alias=%i.service

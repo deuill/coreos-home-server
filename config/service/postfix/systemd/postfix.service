@@ -6,13 +6,13 @@ After=container-build@%N.service container-network@mail.service container-networ
 [Service]
 Restart=always
 ExecStartPre=/bin/install --owner 5000 --group 5000 -d /var/lib/container-service/mail
-ExecStartPre=/bin/podman create --replace --pull never --net internal,mail --env-file /etc/container-service/%N/%N.env \
-                                --publish 25:25 --publish 465:465 --publish 587:587 \
-                                --volume /var/lib/container-service/mail:/var/mail:z \
-                                --volume /var/lib/container-service/letsencrypt/private:/etc/ssl/private:z \
-                                --name %N localhost/%N:latest
-ExecStart=/bin/podman start --attach %N
+ExecStart=/bin/podman run --replace --pull never --net internal,mail --env-file /etc/container-service/%N/%N.env \
+                          --publish 25:25 --publish 465:465 --publish 587:587 \
+                          --volume /var/lib/container-service/mail:/var/mail:z \
+                          --volume /var/lib/container-service/letsencrypt/private:/etc/ssl/private:z \
+                          --name %N localhost/%N:latest
 ExecStop=/bin/podman stop --time 10 %N
+ExecStopPost=/bin/podman rm --force %N
 
 [Install]
 WantedBy=multi-user.target

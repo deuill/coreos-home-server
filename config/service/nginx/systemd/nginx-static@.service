@@ -10,10 +10,10 @@ Environment=SERVER_NAME=%i
 Environment=NGINX_CONF=/etc/container-service/nginx/service/%p.conf.template
 ExecStartPre=/bin/podman create --replace --pull never --net nginx-ingress --name %i localhost/%i:latest
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%i.conf"
-ExecStartPre=/bin/podman cp /tmp/%i.conf %i:/etc/nginx/conf.d
-ExecStartPre=/bin/rm -f /tmp/%i.conf
+ExecStartPre=/bin/sh -c "podman cp /tmp/%i.conf %i:/etc/nginx/conf.d && rm -f /tmp/%i.conf"
 ExecStart=/bin/podman start --attach %i
 ExecStop=/bin/podman stop --time 10 %i
+ExecStopPost=/bin/podman rm --force %i
 
 [Install]
 Alias=%i.service

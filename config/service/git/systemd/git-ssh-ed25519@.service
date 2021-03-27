@@ -12,8 +12,8 @@ ExecStart=/bin/sh -c "echo 'ssh-ed25519 %I' > ${GIT_HOME}/.ssh/authorized_keys.d
 ExecStartPost=/bin/sh -c "cat ${GIT_HOME}/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
 ExecStartPost=/bin/install --owner 10000 --group 10000 -m 0600 /tmp/authorized_keys ${GIT_HOME}/.ssh/authorized_keys
 ExecStop=/bin/rm -f ${GIT_HOME}/.ssh/authorized_keys.d/%i
-ExecStartPost=/bin/sh -c "cat ${GIT_HOME}/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
-ExecStartPost=/bin/install --owner 10000 --group 10000 -m 0600 /tmp/authorized_keys ${GIT_HOME}/.ssh/authorized_keys
+ExecStopPost=/bin/sh -c "cat ${GIT_HOME}/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
+ExecStopPost=/bin/install --owner 10000 --group 10000 -m 0600 /tmp/authorized_keys ${GIT_HOME}/.ssh/authorized_keys
 
 [Install]
 WantedBy=multi-user.target

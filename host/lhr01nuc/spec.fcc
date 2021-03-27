@@ -15,6 +15,7 @@ ignition:
       - local: service/rspamd/spec.ign
       - local: service/prosody/spec.ign
       - local: service/biboumi/spec.ign
+      - local: service/discord-ircd/spec.ign
       - local: service/radicale/spec.ign
       - local: private/spec.ign
 
