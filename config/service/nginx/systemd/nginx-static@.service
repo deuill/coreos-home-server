@@ -7,8 +7,12 @@ Before=nginx-ingress-http@%i.service
 [Service]
 Restart=always
 Environment=SERVER_NAME=%i
+Environment=SERVICE_DATA_DIRECTORY=/data
 Environment=NGINX_CONF=/etc/container-service/nginx/service/%p.conf.template
-ExecStartPre=/bin/podman create --replace --pull never --net nginx-ingress --name %i localhost/%i:latest
+ExecStartPre=/bin/install -d /var/lib/container-service/%i
+ExecStartPre=/bin/podman create --replace --pull never --net nginx-ingress \
+                                --volume /var/lib/container-service/%i:${SERVICE_DATA_DIRECTORY}:z,shared \
+                                --name %i localhost/%i:latest
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%i.conf"
 ExecStartPre=/bin/sh -c "podman cp /tmp/%i.conf %i:/etc/nginx/conf.d && rm -f /tmp/%i.conf"
 ExecStart=/bin/podman start --attach %i

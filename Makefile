@@ -31,9 +31,9 @@ deploy-%: $(TMPDIR)host/%/spec.ign
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment...\n"
 	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora32 \
-                      --graphics=none --vcpus=2 --memory=2048 \
-                      --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
-                      --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)host/$(HOST)/spec.ign"
+	                  --graphics=none --vcpus=2 --memory=2048 \
+	                  --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
+	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)host/$(HOST)/spec.ign"
 
 ## Stop and remove virtual environment for CoreOS.
 destroy-virtual:
@@ -94,7 +94,7 @@ $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
 $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.fcc' -type f 2>/dev/null)
 	@printf "# Automatic prerequisites for Fedora CoreOS configuration." > $@
 	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.fcc,$(TMPDIR)%.ign, \
-             $(i)): $(addprefix $(TMPDIR)config/, $(shell awk -F '[ ]+local:[ ]*' '/[ ]+local:/ {print $$2}' $(i))))" >> $@
+	         $(i)): $(addprefix $(TMPDIR)config/, $(shell awk -F '[ ]+local:[ ]*' '/[ ]+local:/ {print $$2}' $(i))))" >> $@
 
 # Show help if empty or invalid target has been given.
 .DEFAULT:
