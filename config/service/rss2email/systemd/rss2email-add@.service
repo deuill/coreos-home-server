@@ -1,0 +1,16 @@
+[Unit]
+Description=RSS-to-Email conversion for %I
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/%N
+ExecStart=/bin/podman run --replace --pull never --rm \
+                          --volume /var/lib/container-service/rss2email:/var/lib/rss2email:z \
+                          --name rss2email-add localhost/rss2email:latest add "%I"
+ExecStop=/bin/podman run --replace --pull never --rm \
+                         --volume /var/lib/container-service/rss2email:/var/lib/rss2email:z \
+                         --name rss2email-delete localhost/rss2email:latest delete "%I"
+
+[Install]
+WantedBy=multi-user.target

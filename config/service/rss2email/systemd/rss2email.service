@@ -1,0 +1,15 @@
+[Unit]
+Description=RSS-to-Email converter
+Wants=container-build@%N.service postfix.service
+After=container-build@%N.service postfix.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/container-service/%N/%N.env
+ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/%N
+ExecStart=/bin/podman run --replace --pull never --net mail --env-file /etc/container-service/%N/%N.env \
+                          --volume /var/lib/container-service/%N:/var/lib/%N:z \
+                          --name %N localhost/%N:latest cron ${RSS2EMAIL_FROM}
+
+[Install]
+WantedBy=multi-user.target

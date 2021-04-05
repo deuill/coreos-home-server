@@ -1,0 +1,14 @@
+variant: fcos
+version: 1.3.0
+storage:
+  trees:
+    - path: /etc/systemd/system
+      local: service/rss2email/systemd/
+systemd:
+  units:
+    - name: rss2email.service
+      enabled: true
+    - name: rss2email.timer
+      enabled: true
+    - name: rss2email-add@.service
+      enabled: true
