@@ -1,6 +1,6 @@
 # CoreOS options.
 STREAM    := stable
-VERSION   := 33.20210301.3.1
+VERSION   := 33.20210426.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
@@ -8,10 +8,10 @@ HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
 # Default Makefile options.
 VERBOSE :=
 ROOTDIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-TMPDIR  := $(shell ls -d /tmp/fcos-build.???? 2>/dev/null || mktemp -d /tmp/fcos-build.XXXX && chmod 0755 /tmp/fcos-build.????)/
+TMPDIR  := $(shell ls -d /var/tmp/fcos-build.???? 2>/dev/null || mktemp -d /var/tmp/fcos-build.XXXX && chmod 0755 /var/tmp/fcos-build.????)/
 
 # Build-time dependencies.
-FCCT        ?= $(call find-cmd,fcct)
+BUTANE      ?= $(call find-cmd,butane)
 CURL        ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar)
 GPG         ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
 VIRSH       ?= $(call find-cmd,virsh) --connect=qemu:///system $(if $(VERBOSE),,-q)
@@ -30,7 +30,7 @@ deploy-%: $(TMPDIR)host/%/spec.ign
 ## Prepares and deploys CoreOS release for local, virtual environment.
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment...\n"
-	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora32 \
+	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora33 \
 	                  --graphics=none --vcpus=2 --memory=2048 \
 	                  --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
 	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)host/$(HOST)/spec.ign"
@@ -75,10 +75,10 @@ $(TMPDIR)config/%/: $(shell find $(ROOTDIR)config/$* -type f -newer $(TMPDIR)con
 $(TMPDIR)config/%: $(ROOTDIR)config/%
 	$Q install $(if $(VERBOSE),-v) -D $< $@
 
-# Compile Ignition file from FCCT file.
-$(TMPDIR)%.ign: $(ROOTDIR)%.fcc
+# Compile Ignition file from Butane configuration file.
+$(TMPDIR)%.ign: $(ROOTDIR)%.bu
 	$Q install -d $(@D)
-	$Q $(FCCT) --pretty --strict --files-dir $(TMPDIR)config -o $@ $<
+	$Q $(BUTANE) --pretty --strict --files-dir $(TMPDIR)config -o $@ $<
 
 # Download and, optionally, extract Fedora CoreOS installation image.
 $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
@@ -90,10 +90,10 @@ $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
 	$Q test $(suffix $(@F)) = .xz && xz --decompress $@ || true
 	$Q touch $@
 
-# Generate Makefile dependencies from `local:` definitions in FCCT files.
-$(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.fcc' -type f 2>/dev/null)
+# Generate Makefile dependencies from `local:` definitions in BUTANE files.
+$(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	@printf "# Automatic prerequisites for Fedora CoreOS configuration." > $@
-	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.fcc,$(TMPDIR)%.ign, \
+	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.bu,$(TMPDIR)%.ign, \
 	         $(i)): $(addprefix $(TMPDIR)config/, $(shell awk -F '[ ]+local:[ ]*' '/[ ]+local:/ {print $$2}' $(i))))" >> $@
 
 # Show help if empty or invalid target has been given.
