@@ -1,6 +1,6 @@
 # CoreOS options.
 STREAM    := stable
-VERSION   := 33.20210426.3.0
+VERSION   := 34.20210529.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
@@ -30,7 +30,7 @@ deploy-%: $(TMPDIR)host/%/spec.ign
 ## Prepares and deploys CoreOS release for local, virtual environment.
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment...\n"
-	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora33 \
+	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora34 \
 	                  --graphics=none --vcpus=2 --memory=2048 \
 	                  --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
 	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)host/$(HOST)/spec.ign"
@@ -40,9 +40,14 @@ destroy-virtual:
 	$Q $(VIRSH) destroy fcos-$(STREAM)-$(VERSION)-$(ARCH) || true
 	$Q $(VIRSH) undefine --remove-all-storage fcos-$(STREAM)-$(VERSION)-$(ARCH) || true
 
-## Remove temporary files required for build.
+## Remove configuration files required for build.
 clean:
-	@printf "Cleaning temporary files...\n"
+	@printf "Removing configuration files...\n"
+	$Q rm -Rf $(TMPDIR)config $(TMPDIR)host $(TMPDIR)make.depend
+
+## Remove all temporary files required for build.
+purge:
+	@printf "Cleaning all temporary files...\n"
 	$Q rm -Rf $(TMPDIR)
 
 ## Show usage information for this Makefile.
@@ -101,7 +106,7 @@ $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	@printf "Invalid target '$@'...\n"
 	$Q $(MAKE) -s -f $(firstword $(MAKEFILE_LIST)) help
 
-.PHONY: deploy deploy-virtual destroy-virtual clean help
+.PHONY: deploy deploy-virtual destroy-virtual clean purge help
 
 # Conditional command echo control.
 Q := $(if $(VERBOSE),,@)
