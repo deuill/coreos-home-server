@@ -1,16 +1,16 @@
 [Unit]
 Description=Postfix SMTP server
-Wants=container-build@%N.service container-network@mail.service container-network@internal.service dovecot.service
-After=container-build@%N.service container-network@mail.service container-network@internal.service dovecot.service
+Wants=container-build@%N.service dovecot.service
+After=container-build@%N.service dovecot.service
 
 [Service]
 Restart=always
-ExecStartPre=/bin/install --owner 5000 --group 5000 -d /var/lib/container-service/mail
-ExecStart=/bin/podman run --replace --pull never --net internal,mail --env-file /etc/container-service/%N/%N.env \
+ExecStart=/bin/podman run --replace --pull never --name %N --net internal \
+                          --env-file /etc/container-service/%N/%N.env \
                           --publish 25:25 --publish 465:465 --publish 587:587 \
-                          --volume /var/lib/container-service/mail:/var/mail:z \
-                          --volume /var/lib/container-service/letsencrypt/private:/etc/ssl/private:z \
-                          --name %N localhost/%N:latest
+                          --volume dovecot:/var/mail:z \
+                          --volume letsencrypt:/etc/ssl/private:z \
+                          localhost/%N:latest
 ExecStop=/bin/podman stop --time 10 %N
 ExecStopPost=/bin/podman rm --force %N
 

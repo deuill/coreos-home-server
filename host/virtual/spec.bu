@@ -51,7 +51,7 @@ systemd:
       dropins:
         - name: wait-for-service.conf
           contents: |
-            [Service]
+            [Unit]
             After=nginx-static@static.localhost.service
         - name: use-localhost-cert.conf
           contents: |
@@ -71,6 +71,20 @@ systemd:
           contents: |
             [Service]
             Environment=SSL_CERT_NAME=localhost
+
+    - name: letsencrypt-dns-register@localhost.service
+      enabled: true
+      dropins:
+        - name: use-local-files.conf
+          contents: |
+            [Service]
+            ExecStart=
+            ExecStart=/bin/podman create --replace --name letsencrypt-register-%i \
+                                         --volume letsencrypt:/var/lib/letsencrypt:z \
+                                         --entrypoint true localhost/letsencrypt:latest
+            ExecStartPost=/bin/podman init letsencrypt-register-%i
+            ExecStartPost=/bin/podman cp /etc/ssl/private/certificates/ letsencrypt-register-%i:/var/lib/letsencrypt
+            ExecStartPost=/bin/podman rm letsencrypt-register-%i
 
 storage:
   files:
@@ -117,7 +131,7 @@ storage:
 
     # Include pre-generated certificates for localhost domain, as we're not using Let's Encrypt in
     # generating certificates for the virtual host.
-    - path: /var/lib/container-service/letsencrypt/private/localhost/tls.crt
+    - path: /etc/ssl/private/certificates/localhost.crt
       mode: 0644
       contents:
         inline: |
@@ -140,7 +154,7 @@ storage:
           NlbOWu19BUaupdkc8nOAmDZPzSzZkc/qpiDeq9pE86KcfadgM3RElXOKXkL5TvlZ
           7g==
           -----END CERTIFICATE-----
-    - path: /var/lib/container-service/letsencrypt/private/localhost/tls.key
+    - path: /etc/ssl/private/certificates/localhost.key
       mode: 0644
       contents:
         inline: |

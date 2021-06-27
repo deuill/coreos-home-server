@@ -7,13 +7,13 @@ ConditionPathExists=/etc/container-service/%i/service/%p.sql
 [Service]
 Type=oneshot
 PrivateTmp=true
-EnvironmentFile=-/etc/container-service/%i/%i.env
-EnvironmentFile=/etc/container-service/mariadb/mariadb.env
-ExecStartPre=/bin/sh -c 'envsubst < /etc/container-service/%i/service/%p.sql > /tmp/%p.sql'
-ExecStart=/bin/podman run --replace --pull never --rm --net mariadb --entrypoint mariadb --user root \
-                          --volume /tmp:/tmp --volume /var/lib/container-service/mariadb:/var/lib/mysql:z \
-                          --name mariadb-migrate-%i localhost/mariadb:latest \
-                          --host mariadb --password=${MYSQL_ROOT_PASSWORD} -e 'source /tmp/%p.sql'
+EnvironmentFile=-%E/container-service/%i/%i.env
+EnvironmentFile=%E/container-service/mariadb/mariadb.env
+ExecStartPre=/bin/sh -c 'envsubst < %E/container-service/%i/service/%p.sql > /tmp/%p.sql'
+ExecStart=/bin/podman run --replace --pull never --rm --name mariadb-migrate-%i --net internal \
+                          --volume mariadb:/var/lib/mysql:z --volume /tmp:/tmp \
+                          --entrypoint mariadb localhost/mariadb:latest \
+                          --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} -e 'source /tmp/%p.sql'
 
 [Install]
 WantedBy=multi-user.target

@@ -194,6 +194,6 @@ tls_random_source = dev:/dev/urandom
 tls_ssl_options = no_ticket, no_compression
 
 # Certificate file location.
-smtpd_tls_cert_file = /etc/ssl/private/${POSTFIX_HOST}/tls.crt
-smtpd_tls_key_file = /etc/ssl/private/${POSTFIX_HOST}/tls.key
+smtpd_tls_cert_file = /etc/ssl/private/certificates/${POSTFIX_HOST}.crt
+smtpd_tls_key_file = /etc/ssl/private/certificates/${POSTFIX_HOST}.key
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt

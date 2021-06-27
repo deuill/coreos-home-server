@@ -1,12 +1,14 @@
 [Unit]
 Description=DKIM key for %I
+Wants=rspamd.service
+After=rspamd.service
 
 [Service]
 Type=oneshot
-ExecStartPre=/bin/install -d /var/lib/container-service/rspamd/dkim
-ExecStart=/bin/openssl genrsa -out /var/lib/container-service/rspamd/dkim/%i.dkim.key 1024
-ExecStartPost=/bin/chmod 644 /var/lib/container-service/rspamd/dkim/%i.dkim.key
-ExecStartPost=/bin/sh -c 'echo "Public DKIM key:"; openssl rsa -in /var/lib/container-service/rspamd/dkim/%i.dkim.key -pubout -outform der 2> /dev/null | openssl base64 -A'
+ExecStartPre=/bin/podman exec rspamd install -d /var/lib/rspamd/dkim
+ExecStart=/bin/podman exec rspamd openssl genrsa -out /var/lib/rspamd/dkim/%i.dkim.key 1024
+ExecStartPost=/bin/podman exec rspamd chmod 644 /var/lib/rspamd/dkim/%i.dkim.key
+ExecStartPost=/bin/podman exec rspamd sh -c 'echo "Public DKIM key:"; openssl rsa -in /var/lib/container-service/rspamd/dkim/%i.dkim.key -pubout -outform der 2> /dev/null | openssl base64 -A'
 
 [Install]
 WantedBy=multi-user.target

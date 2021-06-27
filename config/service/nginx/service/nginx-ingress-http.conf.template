@@ -8,8 +8,8 @@ server {
     listen 443 ssl;
     server_name ${SERVER_NAME} ${SERVER_NAME_ALT};
 
-    ssl_certificate     /etc/ssl/private/${SSL_CERT_NAME}/tls.crt;
-    ssl_certificate_key /etc/ssl/private/${SSL_CERT_NAME}/tls.key;
+    ssl_certificate     /etc/ssl/private/certificates/${SSL_CERT_NAME}.crt;
+    ssl_certificate_key /etc/ssl/private/certificates/${SSL_CERT_NAME}.key;
 
     location / {
         proxy_set_header Host $host;

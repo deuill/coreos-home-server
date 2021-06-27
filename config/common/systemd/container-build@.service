@@ -1,7 +1,7 @@
 [Unit]
 Description=Container build for %I
-Wants=network-online.target container-environment@%i.service container-build@%i.path
-After=network-online.target container-environment@%i.service
+Wants=network-online.target container-environment@%i.service container-network@internal.service container-build@%i.path
+After=network-online.target container-environment@%i.service container-network@internal.service
 ConditionPathExists=/etc/container-service/%i/Containerfile
 
 [Service]

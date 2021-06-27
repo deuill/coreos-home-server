@@ -1,3 +1,5 @@
-FROM docker.io/redis:6.0-alpine
+FROM docker.io/redis:6.2
+
 USER redis
-CMD ["redis-server", "--appendonly", "yes"]
+COPY container/config /etc/redis
+CMD ["redis-server", "/etc/redis/redis.conf"]

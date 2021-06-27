@@ -1,14 +1,11 @@
 [Unit]
 Description=Redis Key-Value Store
-Wants=container-build@%N.service container-network@%N.service container-network@internal.service
-After=container-build@%N.service container-network@%N.service container-network@internal.service
+Wants=container-build@%N.service
+After=container-build@%N.service
 
 [Service]
 Restart=always
-ExecStartPre=/bin/install --owner 999 --group 1000 -d /var/lib/container-service/%N
-ExecStart=/bin/podman run --replace --pull never --net internal,%N \
-                          --volume /var/lib/container-service/%N:/data:z \
-                          --name %N localhost/%N:latest
+ExecStart=/bin/podman run --replace --pull never --name %N --net internal --volume %N:/data:z localhost/%N:latest
 ExecStop=/bin/podman stop --time 10 %N
 ExecStopPost=/bin/podman rm --force %N
 

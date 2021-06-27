@@ -2,7 +2,7 @@
 
 # Create base directories.
 mkdir -m 755 -p /run/rspamd
-chown rspamd:rspamd /run/rspamd
+chown -R rspamd:rspamd /run/rspamd /var/lib/rspamd
 
 # Run rspamd in the foreground.
 /usr/bin/rspamd -f -u rspamd -g rspamd
