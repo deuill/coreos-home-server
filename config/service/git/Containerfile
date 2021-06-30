@@ -4,7 +4,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git openssh-server
 
 RUN addgroup --system --gid 10000 git
-RUN adduser --system --uid 10000 --ingroup git --shell /usr/bin/git-shell --home /home/git git
+RUN adduser --system --uid 10000 --ingroup git --shell /usr/bin/git-shell --home /var/lib/git git
 RUN mkdir -p /var/run/sshd
 
 COPY container/config /etc/ssh

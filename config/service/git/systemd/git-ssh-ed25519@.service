@@ -1,19 +1,19 @@
 [Unit]
 Description=Git SSH authentication via ed25519 key %I
+Wants=git.service
+After=git.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=true
-PrivateTmp=true
-Environment=GIT_HOME=/var/lib/container-service/git
-ExecStartPre=/bin/install --owner 10000 --group 10000 -m 0700 -d ${GIT_HOME}/.ssh
-ExecStartPre=/bin/install -d ${GIT_HOME}/.ssh/authorized_keys.d
-ExecStart=/bin/sh -c "echo 'ssh-ed25519 %I' > ${GIT_HOME}/.ssh/authorized_keys.d/%i"
-ExecStartPost=/bin/sh -c "cat ${GIT_HOME}/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
-ExecStartPost=/bin/install --owner 10000 --group 10000 -m 0600 /tmp/authorized_keys ${GIT_HOME}/.ssh/authorized_keys
-ExecStop=/bin/rm -f ${GIT_HOME}/.ssh/authorized_keys.d/%i
-ExecStopPost=/bin/sh -c "cat ${GIT_HOME}/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
-ExecStopPost=/bin/install --owner 10000 --group 10000 -m 0600 /tmp/authorized_keys ${GIT_HOME}/.ssh/authorized_keys
+ExecStartPre=/bin/podman exec git install --owner 10000 --group 10000 --mode 0700 -d /var/lib/git/.ssh
+ExecStartPre=/bin/podman exec git install -d /var/lib/git/.ssh/authorized_keys.d
+ExecStart=/bin/podman exec git sh -c "echo 'ssh-ed25519 %I' > /var/lib/git/.ssh/authorized_keys.d/%i"
+ExecStartPost=/bin/podman exec git sh -c "cat /var/lib/git/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
+ExecStartPost=/bin/podman exec git install --owner 10000 --group 10000 --mode 0600 /tmp/authorized_keys /var/lib/git/.ssh/authorized_keys
+ExecStop=/bin/podman exec git rm -f /var/lib/git/.ssh/authorized_keys.d/%i
+ExecStopPost=/bin/podman exec git sh -c "cat /var/lib/git/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
+ExecStopPost=/bin/podman exec git install --owner 10000 --group 10000 --mode 0600 /tmp/authorized_keys /var/lib/git/.ssh/authorized_keys
 
 [Install]
 WantedBy=multi-user.target

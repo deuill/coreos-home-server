@@ -1,8 +1,20 @@
 #!/bin/sh
 
+# Generate host keys if none were found.
+for t in rsa ecdsa ed25519; do
+    if test ! -f /etc/ssh/keys/ssh_host_${t}_key; then
+        ssh-keygen -q -t $t -f /etc/ssh/keys/ssh_host_${t}_key -C '' -N '' > /dev/null
+    fi
+done
+
+# Create any missing directories.
+mkdir -p /var/lib/git/.ssh
+
 # Correct permissions where needed.
-chown -R git:git /home/git
-chmod -R u+rwX,go-rwxX /home/git/.ssh
+chown -R git:git /var/lib/git
+chmod -R u+rwX,go-rwxX /var/lib/git/.ssh
+chmod 0644 /etc/ssh/keys/ssh_host_*_key.pub
+chmod 0600 /etc/ssh/keys/ssh_host_*_key
 
 # Run SSH daemon.
 /usr/sbin/sshd -D -e

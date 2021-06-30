@@ -1,15 +1,15 @@
 [Unit]
 Description=Git server over SSH
-Wants=container-build@%N.service container-network@%N.service container-network@internal.service
-After=container-build@%N.service container-network@%N.service container-network@internal.service
+Wants=container-build@%N.service
+After=container-build@%N.service
 
 [Service]
 Restart=always
-ExecStartPre=/bin/install --owner 10000 --group 10000 -d /var/lib/container-service/%N
-ExecStart=/bin/podman run --replace --pull never --net internal,%N --cap-add AUDIT_WRITE \
+ExecStart=/bin/podman run --replace --pull never --net internal --name %N --cap-add AUDIT_WRITE \
                           --publish 468:22 \
-                          --volume /var/lib/container-service/%N:/home/git:z \
-                          --name %N localhost/%N:latest
+                          --volume %N:/var/lib/git:z \
+                          --volume %N-ssh:/etc/ssh/keys:z \
+                          localhost/%N:latest
 ExecStop=/bin/podman stop --time 10 %N
 ExecStopPost=/bin/podman rm --force %N
 
