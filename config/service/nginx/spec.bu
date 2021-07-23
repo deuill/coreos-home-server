@@ -6,11 +6,11 @@ storage:
       local: service/nginx/systemd/
 systemd:
   units:
-    - name: nginx-ingress.service
+    - name: nginx.service
       enabled: true
-    - name: nginx-ingress-http@.service
+    - name: nginx-proxy-http@.service
       enabled: true
-    - name: nginx-static@.service
+    - name: nginx-serve-static@.service
       enabled: true
-    - name: nginx-php@.service
+    - name: nginx-serve-php@.service
       enabled: true

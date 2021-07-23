@@ -1,0 +1,19 @@
+[Unit]
+Description=NGINX HTTP/S proxy for %I
+Wants=nginx.service %i.service
+After=nginx.service %i.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Environment=SERVER_NAME=%i SSL_CERT_NAME=%i UPSTREAM_HOST=%i UPSTREAM_PORT=8080
+Environment=NGINX_CONF=/etc/container-service/nginx/service/%p.conf.template
+ExecStart=/bin/sh -c "envsubst '$SERVER_NAME $SERVER_NAME_ALT $SSL_CERT_NAME $UPSTREAM_HOST $UPSTREAM_PORT' \
+                     < ${NGINX_CONF} > /tmp/%i.conf"
+ExecStartPost=/bin/sh -c 'podman cp /tmp/%i.conf nginx:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%i.conf'
+ExecStartPost=/bin/podman exec nginx nginx -s reload
+ExecStop=/bin/podman exec nginx rm --force /etc/nginx/conf.d/%i.conf
+ExecStopPost=/bin/podman exec nginx nginx -s reload
+
+[Install]
+WantedBy=multi-user.target

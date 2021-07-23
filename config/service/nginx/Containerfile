@@ -1,7 +1,8 @@
-FROM docker.io/nginx:1.19-alpine
+FROM docker.io/nginx:1.21
 
 COPY container/config /etc/nginx
+COPY container/run-nginx /run-nginx
 RUN nginx -t
 
 EXPOSE 80 443
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/run-nginx"]

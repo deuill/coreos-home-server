@@ -44,29 +44,22 @@ systemd:
           contents: |
             [Unit]
             After=container-build@nginx.service
-    - name: nginx-static@static.localhost.service
+
+    - name: nginx-serve-static@static.localhost.service
       enabled: true
-    - name: nginx-ingress-http@static.localhost.service
+    - name: nginx-proxy-http@static.localhost.service
       enabled: true
       dropins:
-        - name: wait-for-service.conf
-          contents: |
-            [Unit]
-            After=nginx-static@static.localhost.service
         - name: use-localhost-cert.conf
           contents: |
             [Service]
             Environment=SSL_CERT_NAME=localhost
 
-    - name: nginx-php@php.localhost.service
+    - name: nginx-serve-php@php.localhost.service
       enabled: true
-    - name: nginx-ingress-http@php.localhost.service
+    - name: nginx-proxy-http@php.localhost.service
       enabled: true
       dropins:
-        - name: wait-for-service.conf
-          contents: |
-            [Service]
-            After=nginx-php@php.localhost.service
         - name: use-localhost-cert.conf
           contents: |
             [Service]
@@ -79,7 +72,7 @@ systemd:
           contents: |
             [Service]
             ExecStart=
-            ExecStart=/bin/podman create --replace --name letsencrypt-register-%i \
+            ExecStart=/bin/podman create --replace --pull never --name letsencrypt-register-%i \
                                          --volume letsencrypt:/var/lib/letsencrypt:z \
                                          --entrypoint true localhost/letsencrypt:latest
             ExecStartPost=/bin/podman init letsencrypt-register-%i
