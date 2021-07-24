@@ -6,8 +6,8 @@ ConditionPathExists=/etc/container-service/%i/Containerfile
 
 [Service]
 Type=oneshot
-Environment=PODMAN_BUILD_OPTIONS=
-ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file /etc/container-service/%i/Containerfile --tag %i /etc/container-service/%i
+Environment=PODMAN_BUILD_OPTIONS="--no-cache"
+ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file /etc/container-service/%i/Containerfile --tag localhost/%i:latest /etc/container-service/%i
 
 [Install]
 WantedBy=multi-user.target
