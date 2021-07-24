@@ -1,6 +1,6 @@
 # CoreOS options.
 STREAM    := stable
-VERSION   := 34.20210529.3.0
+VERSION   := 34.20210626.3.2
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
@@ -12,7 +12,7 @@ TMPDIR  := $(shell ls -d /var/tmp/fcos-build.???? 2>/dev/null || mktemp -d /var/
 
 # Build-time dependencies.
 BUTANE      ?= $(call find-cmd,butane)
-CURL        ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar)
+CURL        ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar) --fail
 GPG         ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
 VIRSH       ?= $(call find-cmd,virsh) --connect=qemu:///system $(if $(VERBOSE),,-q)
 VIRTINSTALL ?= $(call find-cmd,virt-install) --connect=qemu:///system
