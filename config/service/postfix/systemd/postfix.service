@@ -13,6 +13,7 @@ ExecStart=/bin/podman run --replace --pull never --name %N --net internal \
                           localhost/%N:latest
 ExecStop=/bin/podman stop --time 10 %N
 ExecStopPost=/bin/podman rm --force %N
+ExecReload=/bin/podman exec %N %N reload
 
 [Install]
 WantedBy=multi-user.target
