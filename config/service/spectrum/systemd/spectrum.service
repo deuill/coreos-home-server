@@ -1,0 +1,16 @@
+[Unit]
+Description=Spectrum IM Transport for XMPP
+Wants=container-build@%N.service prosody.service
+After=container-build@%N.service prosody.service
+
+[Service]
+Restart=always
+ExecStart=/bin/podman run --replace --pull never --name %N --net internal \
+                          --env-file /etc/container-service/%N/%N.env \
+                          --volume %N:/var/lib/spectrum2:z \
+                          localhost/%N:latest
+ExecStop=/bin/podman stop --time 10 %N
+ExecStopPost=/bin/podman rm --force %N
+
+[Install]
+WantedBy=multi-user.target
