@@ -55,3 +55,20 @@ storage:
           dns-search=
           may-fail=false
           method=manual
+
+    - path: /etc/zincati/config.d/51-rollout-wariness.toml
+      contents:
+        inline: |
+          [identity]
+          rollout_wariness = 0.8
+
+    - path: /etc/zincati/config.d/55-update-strategy.toml
+      contents:
+        inline: |
+          [updates]
+          strategy = "periodic"
+
+          [[updates.periodic.window]]
+          days = ["Sat", "Sun"]
+          start_time = "22:30"
+          length_minutes = 60
