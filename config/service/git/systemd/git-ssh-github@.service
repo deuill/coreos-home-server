@@ -10,6 +10,7 @@ ExecStartPre=/bin/podman exec git install --owner 10000 --group 10000 --mode 070
 ExecStartPre=/bin/podman exec git install -d /var/lib/git/.ssh/authorized_keys.d
 ExecStartPre=/usr/bin/curl --silent --fail -o /tmp/%N.key https://github.com/%i.keys
 ExecStart=/bin/sh -c 'podman cp /tmp/%N.key git:/var/lib/git/.ssh/authorized_keys.d/github-%i && rm -f /tmp/%N.key'
+ExecStartPost=/bin/podman exec git ssh-keygen -l -f /var/lib/git/.ssh/authorized_keys.d/github-%i
 ExecStartPost=/bin/podman exec git sh -c "cat /var/lib/git/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
 ExecStartPost=/bin/podman exec git install --owner 10000 --group 10000 --mode 0600 /tmp/authorized_keys /var/lib/git/.ssh/authorized_keys
 ExecStop=/bin/podman exec git rm -f /var/lib/git/.ssh/authorized_keys.d/github-%i

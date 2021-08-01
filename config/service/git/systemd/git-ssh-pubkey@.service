@@ -1,15 +1,16 @@
 [Unit]
-Description=Git SSH authentication via public key file %I
+Description=Git SSH authentication via public key file /%I
 Wants=git.service
 After=git.service
-ConditionPathExists=%I
+ConditionFileNotEmpty=/%I
 
 [Service]
 Type=oneshot
 RemainAfterExit=true
 ExecStartPre=/bin/podman exec git install --owner 10000 --group 10000 --mode 0700 -d /var/lib/git/.ssh
 ExecStartPre=/bin/podman exec git install -d /var/lib/git/.ssh/authorized_keys.d
-ExecStart=/bin/podman cp %I git:/var/lib/git/.ssh/authorized_keys.d/%i
+ExecStart=/bin/podman cp /%I git:/var/lib/git/.ssh/authorized_keys.d/%i
+ExecStartPost=/bin/podman exec git ssh-keygen -l -f /var/lib/git/.ssh/authorized_keys.d/%i
 ExecStartPost=/bin/podman exec git sh -c "cat /var/lib/git/.ssh/authorized_keys.d/* > /tmp/authorized_keys"
 ExecStartPost=/bin/podman exec git install --owner 10000 --group 10000 --mode 0600 /tmp/authorized_keys /var/lib/git/.ssh/authorized_keys
 ExecStop=/bin/podman exec git rm -f /var/lib/git/.ssh/authorized_keys.d/%i

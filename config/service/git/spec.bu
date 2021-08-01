@@ -14,7 +14,7 @@ systemd:
       enabled: true
     - name: git-ssh-github@.service
       enabled: true
-    - name: git-ssh-pubkey@-etc-ssh-ssh_host_rsa_key.pub.service
+    - name: git-ssh-pubkey@etc-ssh-ssh_host_rsa_key.pub.service
       enabled: true
       dropins:
         - name: wait-for-key.conf
