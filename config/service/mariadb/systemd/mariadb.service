@@ -13,7 +13,7 @@ ExecStart=/bin/podman run --replace --pull never --name %N --net internal \
 ExecStartPost=/bin/podman run --replace --pull never --rm --name %N-wait --net internal \
                               --volume %N:/var/lib/mysql:z \
                               --entrypoint mariadb-admin localhost/%N:latest \
-                              --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait=10 ping
+                              --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait=30 ping
 ExecStop=/bin/podman stop --time 10 %N
 ExecStopPost=/bin/podman rm --force %N
 

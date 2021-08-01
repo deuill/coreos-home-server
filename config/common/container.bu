@@ -9,8 +9,6 @@ storage:
   directories:
     - path: /etc/container-service
       mode: 0700
-    - path: /var/lib/container-service
-      mode: 0700
 systemd:
   units:
     - name: container-build@.service

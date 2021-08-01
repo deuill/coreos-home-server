@@ -6,6 +6,7 @@ ConditionPathExists=/etc/container-service/%i/Containerfile
 
 [Service]
 Type=oneshot
+RemainAfterExit=true
 Environment=PODMAN_BUILD_OPTIONS="--no-cache"
 ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file /etc/container-service/%i/Containerfile --tag localhost/%i:latest /etc/container-service/%i
 

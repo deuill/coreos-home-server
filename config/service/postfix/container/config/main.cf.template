@@ -5,6 +5,9 @@
 # Version 2 is current for Postfix > 3.2 configuration.
 compatibility_level = 2
 
+# Log to standard output.
+maillog_file = /dev/stdout
+
 # Base hostname used for this mail-server.
 myhostname = ${POSTFIX_HOST}
 myorigin = $mydomain

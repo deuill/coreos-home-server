@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# Log to standard error.
-(syslog-ng --no-caps --foreground) &
-(tail -F /var/log/mail.log) &
-
 # Prepare configuration files for environment variable substitution.
 ENV_NAMES="`env | awk -F '=' '{printf "$%s ", $1}'`"
 for file in /etc/postfix/*.template; do
