@@ -1,11 +1,11 @@
 [Unit]
 Description=Container environment for %I
-ConditionPathExists=/etc/container-service.env
+ConditionPathExists=/etc/container-service/host.env
 ConditionPathExists=/etc/container-service/%i/%i.env.template
 
 [Service]
 Type=oneshot
-EnvironmentFile=/etc/container-service.env
+EnvironmentFile=/etc/container-service/host.env
 ExecStart=/bin/sh -c 'envsubst < /etc/container-service/%i/%i.env.template > /etc/container-service/%i/%i.env'
 
 [Install]

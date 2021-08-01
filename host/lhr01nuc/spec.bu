@@ -34,7 +34,7 @@ storage:
       contents:
         inline: lhr01nuc
 
-    - path: /etc/container-service.env
+    - path: /etc/container-service/host.env
       mode: 0600
       contents:
         local: lhr01nuc.env.gpg

@@ -88,7 +88,7 @@ storage:
         inline: core-virtual
 
     # Load host-wide environment into default location.
-    - path: /etc/container-service.env
+    - path: /etc/container-service/host.env
       mode: 0600
       contents:
         local: virtual.env
