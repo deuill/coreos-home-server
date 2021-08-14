@@ -1,7 +1,7 @@
 [Unit]
 Description=Git server over SSH
-Wants=container-build@%N.service
-After=container-build@%N.service
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
 
 [Service]
 Type=notify

@@ -1,7 +1,7 @@
 [Unit]
 Description=Rspamd spam filtering system
-Wants=container-build@%N.service redis.service
-After=container-build@%N.service redis.service
+Wants=container-build@%N.service container-volume@%N.service redis.service
+After=container-build@%N.service container-volume@%N.service redis.service
 
 [Service]
 Type=notify

@@ -1,0 +1,16 @@
+[Unit]
+Description=Backup for container volume %I
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/install --mode 0700 --directory %S/backups/coreos-home-server/%i
+ExecStart=/bin/podman run --replace --pull never --rm --name %p-%i \
+                          --volume %i:/data:z,ro \
+                          --volume %S/backups/coreos-home-server/%i:/backups:z \
+                          --entrypoint /bin/bash docker.io/debian:stable-slim \
+                          -c 'env name="%i-$(date +%%w%%H)" \
+                              tar -cvpzf "/backups/${name}.tar.gz" -C /data . && \
+                              ln --force "/backups/${name}.tar.gz" /backups/%i-latest.tar.gz'
+
+[Install]
+WantedBy=multi-user.target

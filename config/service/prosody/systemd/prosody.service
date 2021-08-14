@@ -1,7 +1,7 @@
 [Unit]
 Description=Prosody XMPP server
-Wants=container-build@%N.service mariadb.service dovecot.service
-After=container-build@%N.service mariadb.service dovecot.service
+Wants=container-build@%N.service container-volume@%N.service mariadb.service dovecot.service
+After=container-build@%N.service container-volume@%N.service mariadb.service dovecot.service
 
 [Service]
 Type=notify

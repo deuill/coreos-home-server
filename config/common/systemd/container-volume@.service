@@ -1,0 +1,11 @@
+[Unit]
+Description=Container volume for %I
+Wants=container-volume-restore@%i.service container-volume-backup@%i.timer
+After=container-volume-restore@%i.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'podman volume exists %i || podman volume create %i'
+
+[Install]
+WantedBy=multi-user.target

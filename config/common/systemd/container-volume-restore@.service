@@ -1,0 +1,14 @@
+[Unit]
+Description=Restore from backup for container volume %I
+ConditionFileNotEmpty=%S/backups/coreos-home-server/%i/%i-latest.tar.gz
+
+[Service]
+Type=oneshot
+ExecStart=/bin/podman run --replace --pull never --rm --name %p-%i --volume %i:/data:z \
+                          --volume %S/backups/coreos-home-server/%i:/backups:z,ro \
+                          --entrypoint /bin/bash docker.io/debian:stable-slim \
+                          -c 'test -n "$(ls -A /data)" && echo "Volume %i is not empty, skipping." && exit 0; \
+                              tar -xvpf "/backups/%i-latest.tar.gz" -C /data'
+
+[Install]
+WantedBy=multi-user.target

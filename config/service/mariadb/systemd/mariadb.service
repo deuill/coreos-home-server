@@ -1,7 +1,7 @@
 [Unit]
 Description=MariaDB SQL Database
-Wants=container-build@%N.service
-After=container-build@%N.service
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
 
 [Service]
 Type=notify
