@@ -9,6 +9,7 @@ HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
 VERBOSE :=
 ROOTDIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 TMPDIR  := $(shell ls -d /var/tmp/fcos-build.???? 2>/dev/null || mktemp -d /var/tmp/fcos-build.XXXX && chmod 0755 /var/tmp/fcos-build.????)/
+ADDRESS =  $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
 
 # Build-time dependencies.
 BUTANE      ?= $(call find-cmd,butane)
@@ -18,14 +19,10 @@ VIRSH       ?= $(call find-cmd,virsh) --connect=qemu:///system $(if $(VERBOSE),,
 VIRTINSTALL ?= $(call find-cmd,virt-install) --connect=qemu:///system
 NC          ?= $(call find-cmd,nc) -vv -r -l
 
-## Builds and deploys Fedora CoreOS for HOST.
-deploy: deploy-$(HOST)
-
-# Prepares and deploys CoreOS for remote environment, serving resulting file in HTTP server.
-deploy-%: LISTENADDR = $(shell ip -o route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$$/\1/p')
-deploy-%: $(TMPDIR)host/%/spec.ign
+## Builds and deploys Fedora CoreOS for HOST on ADDRESS.
+deploy: $(TMPDIR)host/$(HOST)/spec.ign
 	@printf "Serving Ignition config '$<' over HTTP...\n"
-	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "`wc -c < $<`" "`cat $<`" | $(NC) -s $(LISTENADDR) || exit 0
+	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "`wc -c < $<`" "`cat $<`" | $(NC) -s $(ADDRESS) || exit 0
 
 ## Prepares and deploys CoreOS release for local, virtual environment.
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)host/$(HOST)/spec.ign
@@ -66,7 +63,7 @@ $(TMPDIR)config/$(HOST).env: $(ROOTDIR)host/$(HOST)/$(HOST).env
 
 # Copy encrypted host configuration. Used in production hosts.
 $(TMPDIR)config/$(HOST).env.gpg: $(ROOTDIR)host/$(HOST)/$(HOST).env.gpg
-	@printf "Decrypting host configuration...\n"
+	@printf "Waiting to decrypt configuration for '$(HOST)'...\n"
 	$Q install -d $(@D)
 	$Q $(GPG) -o $@ --decrypt $<
 
