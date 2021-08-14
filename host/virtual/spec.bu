@@ -16,6 +16,8 @@ ignition:
       - local: service/prosody/spec.ign
       - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
+      - local: service/discord-ircd/spec.ign
+      - local: service/spectrum/spec.ign
 
 passwd:
   users:
