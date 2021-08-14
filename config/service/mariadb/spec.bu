@@ -8,5 +8,3 @@ systemd:
   units:
     - name: mariadb.service
       enabled: true
-    - name: mariadb-migrate@.service
-      enabled: true
