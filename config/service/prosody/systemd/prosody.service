@@ -4,16 +4,19 @@ Wants=container-build@%N.service mariadb.service dovecot.service
 After=container-build@%N.service mariadb.service dovecot.service
 
 [Service]
-Restart=always
-ExecStart=/bin/podman run --replace --pull never --name %N --net internal \
-                          --env-file /etc/container-service/%N/%N.env \
+Type=notify
+NotifyAccess=all
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --pull never --name %N --net internal --sdnotify=conmon \
+                          --env-file %E/coreos-home-server/%N/%N.env \
                           --publish 5222:5222 --publish 5269:5269 --publish 5347:5347 \
                           --volume %N:/var/lib/%N:z \
                           --volume letsencrypt:/etc/ssl/private:z \
-                          --volume /etc/container-service/%N/service/config:/etc/%N/conf.d:z \
+                          --volume %E/coreos-home-server/%N/service/config:/etc/%N/conf.d:z \
                           localhost/%N:latest
-ExecStop=/bin/podman stop --time 10 %N
-ExecStopPost=/bin/podman rm --force %N
+ExecStop=/bin/podman stop --ignore --time 10 %N
+ExecStopPost=/bin/podman rm --ignore --force %N
 ExecReload=/bin/podman exec %N prosodyctl reload
 
 [Install]

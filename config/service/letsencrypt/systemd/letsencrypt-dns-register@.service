@@ -6,9 +6,9 @@ Before=letsencrypt-dns-renew@%i.timer
 
 [Service]
 Type=oneshot
-EnvironmentFile=/etc/container-service/letsencrypt/letsencrypt.env
+EnvironmentFile=%E/coreos-home-server/letsencrypt/letsencrypt.env
 ExecStart=/bin/podman run --replace --pull never --rm --name letsencrypt-register-%i \
-                          --env-file /etc/container-service/letsencrypt/letsencrypt.env \
+                          --env-file %E/coreos-home-server/letsencrypt/letsencrypt.env \
                           --volume letsencrypt:/var/lib/letsencrypt:z \
                           localhost/letsencrypt:latest \
                           --accept-tos --pem --path /var/lib/letsencrypt --domains "%i" \

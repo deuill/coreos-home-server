@@ -1,12 +1,12 @@
 [Unit]
 Description=Container environment for %I
-ConditionPathExists=/etc/container-service/host.env
-ConditionPathExists=/etc/container-service/%i/%i.env.template
+ConditionPathExists=%E/coreos-home-server/host.env
+ConditionPathExists=%E/coreos-home-server/%i/%i.env.template
 
 [Service]
 Type=oneshot
-EnvironmentFile=/etc/container-service/host.env
-ExecStart=/bin/sh -c 'envsubst < /etc/container-service/%i/%i.env.template > /etc/container-service/%i/%i.env'
+EnvironmentFile=%E/coreos-home-server/host.env
+ExecStart=/bin/sh -c 'envsubst < %E/coreos-home-server/%i/%i.env.template > %E/coreos-home-server/%i/%i.env'
 
 [Install]
 WantedBy=multi-user.target

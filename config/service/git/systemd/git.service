@@ -4,14 +4,18 @@ Wants=container-build@%N.service
 After=container-build@%N.service
 
 [Service]
-Restart=always
-ExecStart=/bin/podman run --replace --pull never --net internal --name %N --cap-add AUDIT_WRITE \
+Type=notify
+NotifyAccess=all
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --pull never --net internal --name %N \
+                          --sdnotify=conmon --cap-add AUDIT_WRITE \
                           --publish 468:22 \
                           --volume %N:/var/lib/git:z \
                           --volume %N-ssh:/etc/ssh/keys:z \
                           localhost/%N:latest
-ExecStop=/bin/podman stop --time 10 %N
-ExecStopPost=/bin/podman rm --force %N
+ExecStop=/bin/podman stop --ignore --time 10 %N
+ExecStopPost=/bin/podman rm --ignore --force %N
 
 [Install]
 WantedBy=multi-user.target

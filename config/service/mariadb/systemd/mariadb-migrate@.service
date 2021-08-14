@@ -2,21 +2,21 @@
 Description=MariaDB SQL migration for %I
 Wants=container-environment@%i.service mariadb.service
 After=container-environment@%i.service mariadb.service
-ConditionPathExists=/etc/container-service/%i/service/%p.sql
+ConditionPathExists=%E/coreos-home-server/%i/service/%p.sql
 
 [Service]
 Type=oneshot
-EnvironmentFile=-/etc/container-service/%i/%i.env
-EnvironmentFile=/etc/container-service/mariadb/mariadb.env
+EnvironmentFile=-%E/coreos-home-server/%i/%i.env
+EnvironmentFile=%E/coreos-home-server/mariadb/mariadb.env
 ExecStartPre=/bin/install --mode 0700 --directory /tmp/%N
-ExecStartPre=/bin/sh -c 'envsubst < /etc/container-service/%i/service/%p.sql > /tmp/%N/migrate.sql'
+ExecStartPre=/bin/sh -c 'envsubst < %E/coreos-home-server/%i/service/%p.sql > /tmp/%N/migrate.sql'
 ExecStartPre=/bin/podman create --replace --pull never --rm --name mariadb-migrate-%i --net internal \
                                 --volume mariadb:/var/lib/mysql:z \
                                 --entrypoint mariadb localhost/mariadb:latest \
-                                --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} -e 'source /migrate.sql'
+                                --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait -e 'source /migrate.sql'
 ExecStartPre=/bin/podman cp /tmp/%N/migrate.sql mariadb-migrate-%i:/migrate.sql
 ExecStart=/bin/podman start --attach mariadb-migrate-%i
-ExecStartPost=/bin/podman rm --force mariadb-migrate-%i
+ExecStartPost=/bin/podman rm --ignore --force mariadb-migrate-%i
 ExecStartPost=/bin/rm -Rf /tmp/%N
 
 [Install]

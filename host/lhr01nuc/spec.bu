@@ -34,7 +34,7 @@ storage:
       contents:
         inline: lhr01nuc
 
-    - path: /etc/container-service/host.env
+    - path: /etc/coreos-home-server/host.env
       mode: 0600
       contents:
         local: lhr01nuc.env.gpg

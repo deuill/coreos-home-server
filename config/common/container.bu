@@ -2,12 +2,12 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
-    - path: /etc/container-service
+    - path: /etc/coreos-home-server
       local: service/
     - path: /etc/systemd/system
       local: common/systemd/
   directories:
-    - path: /etc/container-service
+    - path: /etc/coreos-home-server
       mode: 0700
 systemd:
   units:

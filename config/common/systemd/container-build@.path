@@ -2,7 +2,7 @@
 Description=Container build for %I
 
 [Path]
-PathModified=/etc/container-service/%i/Containerfile
+PathModified=%E/coreos-home-server/%i/Containerfile
 Unit=container-build@%i.service
 
 [Install]

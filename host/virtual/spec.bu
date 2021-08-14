@@ -88,7 +88,7 @@ storage:
         inline: core-virtual
 
     # Load host-wide environment into default location.
-    - path: /etc/container-service/host.env
+    - path: /etc/coreos-home-server/host.env
       mode: 0600
       contents:
         local: virtual.env
@@ -101,14 +101,14 @@ storage:
           export SYSTEMD_PAGER=cat
 
     # Example sites for static and PHP setups.
-    - path: /etc/container-service/static.localhost/Containerfile
+    - path: /etc/coreos-home-server/static.localhost/Containerfile
       mode: 0644
       contents:
         inline: |
           FROM localhost/nginx:latest
           RUN /bin/echo "Hello Static World!" > /srv/index.html
 
-    - path: /etc/container-service/php.localhost/Containerfile
+    - path: /etc/coreos-home-server/php.localhost/Containerfile
       mode: 0644
       contents:
         inline: |
@@ -116,7 +116,7 @@ storage:
           RUN /bin/echo "<?php phpinfo();" > /srv/index.php
           VOLUME /data /srv
 
-    - path: /etc/container-service/php.localhost/php.localhost.env
+    - path: /etc/coreos-home-server/php.localhost/php.localhost.env
       mode: 0644
       contents:
         inline: |

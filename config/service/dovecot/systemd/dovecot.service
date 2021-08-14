@@ -4,17 +4,20 @@ Wants=container-build@%N.service mariadb.service rspamd.service
 After=container-build@%N.service mariadb.service rspamd.service
 
 [Service]
-Restart=always
-ExecStart=/bin/podman run --replace --pull never --name %N --net internal \
-                          --env-file /etc/container-service/%N/%N.env \
-                          --env-file /etc/container-service/rspamd/rspamd.env \
+Type=notify
+NotifyAccess=all
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --pull never --name %N --net internal --sdnotify=conmon \
+                          --env-file %E/coreos-home-server/%N/%N.env \
+                          --env-file %E/coreos-home-server/rspamd/rspamd.env \
                           --publish 143:143 --publish 993:993 \
                           --volume %N:/var/mail:z \
                           --volume letsencrypt:/etc/ssl/private:z \
-                          --volume /etc/container-service/%N/service/config:/etc/%N/conf.d:z \
+                          --volume %E/coreos-home-server/%N/service/config:/etc/%N/conf.d:z,ro \
                           localhost/%N:latest
-ExecStop=/bin/podman stop --time 10 %N
-ExecStopPost=/bin/podman rm --force %N
+ExecStop=/bin/podman stop --ignore --time 10 %N
+ExecStopPost=/bin/podman rm --ignore --force %N
 ExecReload=/bin/podman exec %N doveadm -v reload
 
 [Install]

@@ -2,12 +2,12 @@
 Description=Container build for %I
 Wants=network-online.target container-environment@%i.service container-network@internal.service container-build@%i.path
 After=network-online.target container-environment@%i.service container-network@internal.service
-ConditionPathExists=/etc/container-service/%i/Containerfile
+ConditionPathExists=%E/coreos-home-server/%i/Containerfile
 
 [Service]
 Type=oneshot
 Environment=PODMAN_BUILD_OPTIONS=
-ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file /etc/container-service/%i/Containerfile --tag localhost/%i:latest /etc/container-service/%i
+ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file %E/coreos-home-server/%i/Containerfile --tag localhost/%i:latest %E/coreos-home-server/%i
 
 [Install]
 WantedBy=multi-user.target

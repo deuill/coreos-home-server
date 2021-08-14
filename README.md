@@ -71,7 +71,7 @@ but also be managed throughout the server's life-cycle.
 
 The mechanisms for building and deploying services are simple and fairly consistent. Firstly, Podman
 containers and systemd services are built and enabled using the included `container-build` systemd
-service. This will read files from `/etc/container-service` (copied onto the server during
+service. This will read files from `/etc/coreos-home-server` (copied onto the server during
 deployment) and build container images and systemd service definitions as needed.
 
 ## License

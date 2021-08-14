@@ -5,17 +5,20 @@ After=container-build@%i.service nginx.service
 Before=nginx-proxy-http@%i.service
 
 [Service]
-Restart=always
+Type=notify
+NotifyAccess=all
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
 Environment=SERVER_NAME=%i SERVICE_DATA_DIRECTORY=/data
-Environment=NGINX_CONF=/etc/container-service/nginx/service/%p.conf.template
-ExecStartPre=/bin/podman create --replace --pull never --name %i --net internal \
+Environment=NGINX_CONF=%E/coreos-home-server/nginx/service/%p.conf.template
+ExecStartPre=/bin/podman create --replace --pull never --name %i --net internal --sdnotify=conmon \
                                 --volume %i:${SERVICE_DATA_DIRECTORY}:z,ro \
                                 localhost/%i:latest
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%i.conf"
 ExecStartPre=/bin/sh -c 'podman cp /tmp/%i.conf %i:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%i.conf'
 ExecStart=/bin/podman start --attach %i
-ExecStop=/bin/podman stop --time 10 %i
-ExecStopPost=/bin/podman rm --force %i
+ExecStop=/bin/podman stop --ignore --time 10 %i
+ExecStopPost=/bin/podman rm --ignore --force %i
 
 [Install]
 Alias=%i.service
