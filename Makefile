@@ -22,7 +22,7 @@ NC          ?= $(call find-cmd,nc) -vv -r -l
 ## Builds and deploys Fedora CoreOS for HOST on ADDRESS.
 deploy: $(TMPDIR)host/$(HOST)/spec.ign
 	@printf "Serving Ignition config '$<' over HTTP...\n"
-	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "`wc -c < $<`" "`cat $<`" | $(NC) -s $(ADDRESS) || exit 0
+	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "$$(wc -c < $<)" "$$(cat $<)" | $(NC) -s $(ADDRESS) || exit 0
 
 ## Prepares and deploys CoreOS release for local, virtual environment.
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)host/$(HOST)/spec.ign
