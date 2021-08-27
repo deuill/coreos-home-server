@@ -1,4 +1,4 @@
-FROM docker.io/debian:stable-slim
+FROM docker.io/debian:bullseye-slim
 ARG VERSION=9.0
 
 ENV BUILD_DEPS="build-essential git cmake python"

@@ -1,4 +1,4 @@
-FROM docker.io/debian:stable-slim
+FROM docker.io/debian:buster-slim
 ARG VERSION=2.0.13
 
 ENV BUILD_DEPS="curl gnupg apt-transport-https build-essential git libpurple-dev libglib2.0-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat"

@@ -1,11 +1,11 @@
-FROM docker.io/debian:stable-slim
-ARG VERSION=2.7
+FROM docker.io/debian:bullseye-slim
+ARG VERSION=3.0
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates curl gnupg
 
-RUN echo "deb https://rspamd.com/apt-stable/ buster main" > /etc/apt/sources.list.d/rspamd.list && \
-    echo "deb-src https://rspamd.com/apt-stable/ buster main" >> /etc/apt/sources.list.d/rspamd.list && \
+RUN echo "deb https://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list && \
+    echo "deb-src https://rspamd.com/apt-stable/ bullseye main" >> /etc/apt/sources.list.d/rspamd.list && \
     curl -o - https://rspamd.com/apt-stable/gpg.key | apt-key add - && \
     apt-get update && apt-get install -y --no-install-recommends rspamd="${VERSION}*"
 

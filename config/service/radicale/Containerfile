@@ -1,4 +1,4 @@
-FROM docker.io/debian:stable-slim
+FROM docker.io/debian:bullseye-slim
 ARG VERSION=3.0.6
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \

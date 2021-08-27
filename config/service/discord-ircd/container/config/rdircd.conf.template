@@ -1,4 +1,4 @@
-[auth-main]
+[auth]
 email = ${DISCORD_IRCD_AUTH_EMAIL}
 password = ${DISCORD_IRCD_AUTH_PASSWORD}
 token = ${DISCORD_IRCD_AUTH_TOKEN}
