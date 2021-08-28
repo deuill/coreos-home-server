@@ -6,9 +6,10 @@ After=container-build@%N.service container-volume@%N.service dovecot.service
 [Service]
 Type=notify
 NotifyAccess=all
+SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
-ExecStart=/bin/podman run --replace --pull never --name %N --net internal --sdnotify=conmon \
+ExecStart=/bin/podman run --replace --name %N --sdnotify=conmon \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --volume %N:/var/lib/%N:z \
                           localhost/%N:latest

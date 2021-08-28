@@ -1,5 +1,5 @@
 [Unit]
-Description=Git SSH authentication via public key file /%I
+Description=Git SSH Authentication via Public Key File /%I
 Wants=git.service
 After=git.service
 ConditionFileNotEmpty=/%I
@@ -7,6 +7,7 @@ ConditionFileNotEmpty=/%I
 [Service]
 Type=oneshot
 RemainAfterExit=true
+SyslogIdentifier=%N
 ExecStartPre=/bin/podman exec git install --owner 10000 --group 10000 --mode 0700 -d /var/lib/git/.ssh
 ExecStartPre=/bin/podman exec git install -d /var/lib/git/.ssh/authorized_keys.d
 ExecStart=/bin/podman cp /%I git:/var/lib/git/.ssh/authorized_keys.d/%i

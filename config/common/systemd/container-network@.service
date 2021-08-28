@@ -7,6 +7,7 @@ ConditionPathExists=!/etc/cni/net.d/%i.conflist
 [Service]
 Type=oneshot
 RemainAfterExit=true
+SyslogIdentifier=%N
 ExecStart=/bin/podman network create %i
 ExecStop=/bin/podman network rm %i
 

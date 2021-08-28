@@ -6,14 +6,14 @@ ConditionPathExists=%E/coreos-home-server/%i/service/%p.sql
 
 [Service]
 Type=oneshot
+SyslogIdentifier=%N
 EnvironmentFile=-%E/coreos-home-server/%i/%i.env
 EnvironmentFile=%E/coreos-home-server/mariadb/mariadb.env
 ExecStartPre=/bin/install --mode 0700 --directory /tmp/%N
 ExecStartPre=/bin/sh -c 'envsubst < %E/coreos-home-server/%i/service/%p.sql > /tmp/%N/migrate.sql'
-ExecStartPre=/bin/podman create --replace --pull never --rm --name mariadb-migrate-%i --net internal \
+ExecStartPre=/bin/podman create --replace --rm --name mariadb-migrate-%i --entrypoint mariadb \
                                 --volume mariadb:/var/lib/mysql:z \
-                                --entrypoint mariadb localhost/mariadb:latest \
-                                --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait -e 'source /migrate.sql'
+                                localhost/mariadb:latest --host mariadb --user root --password=${MYSQL_ROOT_PASSWORD} --wait -e 'source /migrate.sql'
 ExecStartPre=/bin/podman cp /tmp/%N/migrate.sql mariadb-migrate-%i:/migrate.sql
 ExecStart=/bin/podman start --attach mariadb-migrate-%i
 ExecStartPost=/bin/podman rm --ignore --force mariadb-migrate-%i

@@ -9,6 +9,11 @@ storage:
   directories:
     - path: /etc/coreos-home-server
       mode: 0700
+  files:
+    - path: /etc/containers/containers.conf
+      mode: 0644
+      contents:
+        local: common/container/containers.conf
 systemd:
   units:
     - name: container-build@.service

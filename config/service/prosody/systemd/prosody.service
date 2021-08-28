@@ -6,9 +6,10 @@ After=container-build@%N.service container-volume@%N.service mariadb.service dov
 [Service]
 Type=notify
 NotifyAccess=all
+SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
-ExecStart=/bin/podman run --replace --pull never --name %N --net internal --sdnotify=conmon \
+ExecStart=/bin/podman run --replace --name %N --sdnotify=conmon \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --publish 5222:5222 --publish 5269:5269 --publish 5347:5347 \
                           --volume %N:/var/lib/%N:z \

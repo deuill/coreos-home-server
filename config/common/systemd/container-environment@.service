@@ -5,6 +5,7 @@ ConditionPathExists=%E/coreos-home-server/%i/%i.env.template
 
 [Service]
 Type=oneshot
+SyslogIdentifier=%N
 EnvironmentFile=%E/coreos-home-server/host.env
 ExecStart=/bin/sh -c 'envsubst < %E/coreos-home-server/%i/%i.env.template > %E/coreos-home-server/%i/%i.env'
 

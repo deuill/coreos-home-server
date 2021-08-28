@@ -5,8 +5,9 @@ After=container-build@letsencrypt.service
 
 [Service]
 Type=oneshot
+SyslogIdentifier=%N
 EnvironmentFile=%E/coreos-home-server/letsencrypt/letsencrypt.env
-ExecStart=/bin/podman run --replace --pull never --rm --name letsencrypt-renew-%i \
+ExecStart=/bin/podman run --replace --rm --name letsencrypt-renew-%i \
                           --env-file %E/coreos-home-server/letsencrypt/letsencrypt.env \
                           --volume letsencrypt:/var/lib/letsencrypt:z \
                           localhost/letsencrypt:latest \

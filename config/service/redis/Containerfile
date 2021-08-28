@@ -1,5 +1,6 @@
 FROM docker.io/redis:6.2
 
-USER redis
 COPY container/config /etc/redis
+USER redis
+
 CMD ["redis-server", "/etc/redis/redis.conf"]
