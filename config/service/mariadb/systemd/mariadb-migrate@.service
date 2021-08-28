@@ -1,5 +1,5 @@
 [Unit]
-Description=MariaDB SQL migration for %I
+Description=MariaDB SQL Migration for %I
 Wants=container-environment@%i.service mariadb.service
 After=container-environment@%i.service mariadb.service
 ConditionPathExists=%E/coreos-home-server/%i/service/%p.sql

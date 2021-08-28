@@ -1,5 +1,5 @@
 [Unit]
-Description=Biboumi IRC gateway for XMPP
+Description=Biboumi IRC Gateway for XMPP
 Wants=container-build@%N.service container-volume@%N.service prosody.service
 After=container-build@%N.service container-volume@%N.service prosody.service
 

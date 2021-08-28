@@ -1,5 +1,5 @@
 [Unit]
-Description=NGINX HTTP/S proxy for %I
+Description=NGINX HTTP/S Proxy for %I
 Wants=nginx.service %i.service
 After=nginx.service %i.service
 

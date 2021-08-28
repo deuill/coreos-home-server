@@ -1,5 +1,5 @@
 [Unit]
-Description=Container environment for %I
+Description=Container Environment for %I
 ConditionPathExists=%E/coreos-home-server/host.env
 ConditionPathExists=%E/coreos-home-server/%i/%i.env.template
 

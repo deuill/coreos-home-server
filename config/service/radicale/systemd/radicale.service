@@ -1,5 +1,5 @@
 [Unit]
-Description=Radicale CalDAV and CardDAV server
+Description=Radicale CalDAV and CardDAV Server
 Wants=container-build@%N.service container-volume@%N.service dovecot.service
 After=container-build@%N.service container-volume@%N.service dovecot.service
 

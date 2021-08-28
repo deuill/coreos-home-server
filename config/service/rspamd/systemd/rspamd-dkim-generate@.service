@@ -1,5 +1,5 @@
 [Unit]
-Description=DKIM key for %I
+Description=DKIM Key for %I
 Wants=rspamd.service
 After=rspamd.service
 

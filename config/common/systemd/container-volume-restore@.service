@@ -1,5 +1,5 @@
 [Unit]
-Description=Restore from backup for container volume %I
+Description=Restore from Backup for Container Volume %I
 ConditionFileNotEmpty=%S/backups/coreos-home-server/%i/%i-latest.tar.gz
 
 [Service]

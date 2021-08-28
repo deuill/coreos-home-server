@@ -1,5 +1,5 @@
 [Unit]
-Description=Initialize Prosody XMPP server
+Description=Initialize Prosody XMPP Server
 Wants=mariadb-migrate@prosody.service prosody.service
 After=mariadb-migrate@prosody.service
 Before=prosody.service

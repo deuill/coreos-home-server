@@ -1,5 +1,5 @@
 [Unit]
-Description=Git SSH authentication via ed25519 key %I
+Description=Git SSH Authentication via ed25519 Key %I
 Wants=git.service
 After=git.service
 

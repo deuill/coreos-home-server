@@ -1,5 +1,5 @@
 [Unit]
-Description=NGINX PHP web service for %I
+Description=NGINX PHP Web Service for %I
 Wants=container-build@%i.service container-volume@%i.service nginx.service nginx-proxy-http@%i.service
 After=container-build@%i.service container-volume@%i.service nginx.service
 Before=nginx-proxy-http@%i.service

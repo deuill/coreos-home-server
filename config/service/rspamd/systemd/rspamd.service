@@ -1,5 +1,5 @@
 [Unit]
-Description=Rspamd spam filtering system
+Description=RSpamd Spam Filtering System
 Wants=container-build@%N.service container-volume@%N.service redis.service
 After=container-build@%N.service container-volume@%N.service redis.service
 

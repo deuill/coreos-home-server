@@ -1,5 +1,5 @@
 [Unit]
-Description=Dovecot POP3/IMAP server
+Description=Dovecot POP3/IMAP Server
 Wants=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service
 After=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service
 

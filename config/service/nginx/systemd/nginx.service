@@ -1,5 +1,5 @@
 [Unit]
-Description=NGINX web server
+Description=NGINX Web Server
 Wants=container-build@%N.service
 After=container-build@%N.service
 

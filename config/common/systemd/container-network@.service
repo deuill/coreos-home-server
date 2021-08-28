@@ -1,5 +1,5 @@
 [Unit]
-Description=Container network for %I
+Description=Container Network for %I
 Wants=network-online.target
 After=network-online.target
 ConditionPathExists=!/etc/cni/net.d/%i.conflist

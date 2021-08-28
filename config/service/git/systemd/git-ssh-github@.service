@@ -1,5 +1,5 @@
 [Unit]
-Description=Git SSH authentication via key for Github user %I
+Description=Git SSH Authentication via Key for Github User %I
 Wants=git.service
 After=git.service
 

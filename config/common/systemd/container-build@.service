@@ -1,5 +1,5 @@
 [Unit]
-Description=Container build for %I
+Description=Container Build for %I
 Wants=network-online.target container-environment@%i.service container-network@internal.service container-build@%i.path
 After=network-online.target container-environment@%i.service container-network@internal.service
 ConditionPathExists=%E/coreos-home-server/%i/Containerfile

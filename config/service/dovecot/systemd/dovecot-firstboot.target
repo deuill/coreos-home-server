@@ -1,5 +1,5 @@
 [Unit]
-Description=Initialize Dovecot POP3/IMAP server
+Description=Initialize Dovecot POP3/IMAP Server
 Wants=mariadb-migrate@dovecot.service dovecot.service
 After=mariadb-migrate@dovecot.service
 Before=dovecot.service
