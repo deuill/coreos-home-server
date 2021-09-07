@@ -3,8 +3,8 @@ version: 1.3.0
 ignition:
   config:
     merge:
+      - local: common/common.ign
       - local: common/logging.ign
-      - local: common/container.ign
       - local: service/redis/spec.ign
       - local: service/mariadb/spec.ign
       - local: service/nginx/spec.ign

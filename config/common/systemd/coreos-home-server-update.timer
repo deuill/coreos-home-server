@@ -1,0 +1,9 @@
+[Unit]
+Description=Scheduled Update for CoreOS Home Server
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=5m
+
+[Install]
+WantedBy=timers.target
