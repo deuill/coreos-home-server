@@ -8,38 +8,63 @@
 
 set -euo pipefail
 
-# Base configuration variables.
-ROOTDIR="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
-COREOS_CONFIG_DIR="/etc/coreos-home-server"
-SYSTEMD_CONFIG_DIR="/etc/systemd/system"
+# Global configuration variables.
+TEMP_CONFIG_PATH="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
+HOST_CONFIG_PATH="/etc/coreos-home-server"
+SYSTEMD_CONFIG_PATH="/etc/systemd/system"
 
-function sync-coreos() {
-      local from="${ROOTDIR}/config" to="${COREOS_CONFIG_DIR}"
-      rsync --recursive --update --links --times --perms --delete-after --delete-excluded \
-            --exclude=.git --exclude=*.fcc --exclude=*.ign --filter='protect *.env' "${from}"/*/ "${to}/"
+# Synchronize CoreOS home-server configuration for specific path.
+function sync-coreos-config() {
+    local path="$1"
+
+    # Search for configuration in any of the local configuration sub-directories.
+    for dir in "$TEMP_CONFIG_PATH"/config/*/"$(basename "$path")"; do
+        if test ! -d "$dir"; then
+            echo "configuration not found, skipping."
+            return
+        fi
+
+        # Remove files that only exist in local configuration.
+        for n in $(comm -23 <(cd "$path"; find . | sort) <(cd "$dir"; find . | sort)); do
+            rm --verbose --recursive --force "$(realpath --quiet "$path/$n")"
+        done
+
+        cp --verbose --recursive --update --target-directory "$path" "$dir"/*
+        echo "done."
+    done
 }
 
-function sync-systemd() {
-      local from="${ROOTDIR}/config" to="${SYSTEMD_CONFIG_DIR}"
-      rsync --info=name --recursive --update "${from}"/*/systemd/ "${from}"/*/*/systemd/ "${to}/"
+# Synchronize systemd service files from CoreOS home-server configuration.
+function sync-systemd-services() {
+    local dest
+    local result=1
+
+    # Copy service files if newer than destination.
+    for src in "$HOST_CONFIG_PATH"/*/systemd/*; do
+        dest="$SYSTEMD_CONFIG_PATH/$(basename "$src")"
+        if test "$src" -nt "$dest"; then
+            cp --verbose --recursive "$src" "$dest"
+            result=0
+        fi
+    done
+
+    echo "done."
+    return $result
 }
 
-function main() {
-      local buffer
+# Synchronize all existing CoreOS home-server configuration.
+for dir in "$HOST_CONFIG_PATH"/*; do
+    if test ! -d "$dir"; then
+        continue
+    fi
 
-      # Synchronize local configuration into host directory.
-      echo "Synchronizing host configuration in '${COREOS_CONFIG_DIR}'..."
-      sync-coreos
+    echo -n "Synchronizing host configuration for '$dir'... "
+    sync-coreos-config "$dir"
+done
 
-      echo "Synchronizing systemd configuration in '${SYSTEMD_CONFIG_DIR}'..."
-      buffer=$(sync-systemd)
-
-      if test -n "${buffer}"; then
-            echo "Systemd services updated, reloading daemon..."
-            echo "${buffer}"
-            sudo systemctl daemon-reload
-      fi
-}
-
-# Execute program body.
-main "$@"
+# Synchronize systemd services from local CoreOS home-server configuration.
+echo -n "Synchronizing systemd service files... "
+if sync-systemd-services; then
+    echo "Reloading systemd daemon after service updates."
+    systemctl daemon-reload
+fi

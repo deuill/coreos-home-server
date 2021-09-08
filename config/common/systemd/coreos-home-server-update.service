@@ -9,7 +9,7 @@ SyslogIdentifier=%N
 PrivateTmp=true
 Environment=GIT_REMOTE_URL=https://github.com/deuill/coreos-home-server.git
 ExecStartPre=/usr/bin/git clone --verbose --depth=1 -- $GIT_REMOTE_URL %T/coreos-home-server
-ExecStart=/bin/sh %T/coreos-home-server/hooks/post-merge
+ExecStart=/bin/bash %T/coreos-home-server/hooks/post-merge
 
 [Install]
 WantedBy=multi-user.target
