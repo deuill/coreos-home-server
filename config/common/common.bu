@@ -16,23 +16,5 @@ storage:
         local: common/container/containers.conf
 systemd:
   units:
-    - name: container-build@.service
-      enabled: true
-    - name: container-build@.path
-      enabled: true
-    - name: container-network@.service
-      enabled: true
-    - name: container-environment@.service
-      enabled: true
-    - name: container-volume@.service
-      enabled: true
-    - name: container-volume-backup@.service
-      enabled: true
-    - name: container-volume-backup@.timer
-      enabled: true
-    - name: container-volume-restore@.service
-      enabled: true
-    - name: coreos-home-server-update.service
-      enabled: true
     - name: coreos-home-server-update.timer
       enabled: true

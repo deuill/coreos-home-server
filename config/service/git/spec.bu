@@ -8,12 +8,6 @@ systemd:
   units:
     - name: git.service
       enabled: true
-    - name: git-ssh-pubkey@.service
-      enabled: true
-    - name: git-ssh-ed25519@.service
-      enabled: true
-    - name: git-ssh-github@.service
-      enabled: true
     - name: git-ssh-pubkey@etc-ssh-ssh_host_rsa_key.pub.service
       enabled: true
       dropins:

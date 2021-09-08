@@ -9,7 +9,7 @@ NotifyAccess=all
 SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
-ExecStart=/bin/podman run --replace --name %N --sdnotify=conmon \
+ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
                           --publish 80:80 --publish 443:443 \
                           --volume nginx-conf:/etc/nginx/conf.d:z \
                           --volume letsencrypt:/etc/ssl/private:z,rshared,ro \

@@ -8,5 +8,3 @@ systemd:
   units:
     - name: rspamd.service
       enabled: true
-    - name: rspamd-dkim-generate@.service
-      enabled: true

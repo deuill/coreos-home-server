@@ -4,11 +4,3 @@ storage:
   trees:
     - path: /etc/systemd/system
       local: service/letsencrypt/systemd/
-systemd:
-  units:
-    - name: letsencrypt-dns-register@.service
-      enabled: true
-    - name: letsencrypt-dns-renew@.service
-      enabled: true
-    - name: letsencrypt-dns-renew@.timer
-      enabled: true

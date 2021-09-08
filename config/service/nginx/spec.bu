@@ -8,9 +8,3 @@ systemd:
   units:
     - name: nginx.service
       enabled: true
-    - name: nginx-proxy-http@.service
-      enabled: true
-    - name: nginx-serve-static@.service
-      enabled: true
-    - name: nginx-serve-php@.service
-      enabled: true

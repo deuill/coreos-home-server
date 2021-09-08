@@ -9,7 +9,7 @@ NotifyAccess=all
 SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
-ExecStart=/bin/podman run --replace --name %N --sdnotify=conmon \
+ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --publish 25:25 --publish 465:465 --publish 587:587 \
                           --volume dovecot:/var/mail:z \

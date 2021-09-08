@@ -12,7 +12,7 @@ Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Environment=SERVER_NAME=%i SERVICE_DATA_DIRECTORY=/data
 Environment=NGINX_CONF=%E/coreos-home-server/nginx/service/%p.conf.template
-ExecStartPre=/bin/podman create --replace --name %i --sdnotify=conmon --volume %i:${SERVICE_DATA_DIRECTORY}:z,ro localhost/%i:latest
+ExecStartPre=/bin/podman create --replace --name %i --net internal --sdnotify=conmon --volume %i:${SERVICE_DATA_DIRECTORY}:z,ro localhost/%i:latest
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%i.conf"
 ExecStartPre=/bin/sh -c 'podman cp /tmp/%i.conf %i:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%i.conf'
 ExecStart=/bin/podman start --attach %i
