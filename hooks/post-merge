@@ -27,6 +27,11 @@ function sync-coreos-config() {
 
         # Remove files that only exist in local configuration.
         for f in $(comm -23 <(cd "$path"; find . | sort) <(cd "$dir"; find . | sort)); do
+            # Don't delete environment files, as these are required for active services.
+            if test "$(basename --suffix=.env "$f")" != "$(basename "$f")"; then
+                continue
+            fi
+
             rm --verbose --recursive --force "$(realpath --quiet "$path/$f")"
         done
 
