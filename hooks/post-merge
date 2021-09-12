@@ -7,6 +7,7 @@
 # The script assumes write access to host directories, and a CoreOS host. Don't run on other systems!
 
 set -euo pipefail
+shopt -s globstar
 
 # Global configuration variables.
 TEMP_CONFIG_PATH="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
@@ -25,10 +26,17 @@ function sync-coreos-config() {
         fi
 
         # Remove files that only exist in local configuration.
-        for n in $(comm -23 <(cd "$path"; find . | sort) <(cd "$dir"; find . | sort)); do
-            rm --verbose --recursive --force "$(realpath --quiet "$path/$n")"
+        for f in $(comm -23 <(cd "$path"; find . | sort) <(cd "$dir"; find . | sort)); do
+            rm --verbose --recursive --force "$(realpath --quiet "$path/$f")"
         done
 
+        # Update timestamp for temporary file to match last commit time, in order to ensure
+        # correct partial updates.
+        for f in "$dir/"**; do
+            touch --date="$(git -C "$TEMP_CONFIG_PATH" log -n 1 --pretty=format:%cd --date=iso --date-order -- "$f")" -- "$f"
+        done
+
+        # Copy files from temporary directory to host configuration directory.
         cp --verbose --recursive --update --target-directory "$path" "$dir"/*
         echo "done."
     done
@@ -36,8 +44,8 @@ function sync-coreos-config() {
 
 # Synchronize systemd service files from CoreOS home-server configuration.
 function sync-systemd-services() {
-    local dest
     local result=1
+    local dest
 
     # Copy service files if newer than destination.
     for src in "$HOST_CONFIG_PATH"/*/systemd/*; do
