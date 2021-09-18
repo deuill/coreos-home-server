@@ -7,7 +7,7 @@ Type=oneshot
 SyslogIdentifier=%N
 ExecStart=/bin/podman run --replace --rm --name %p-%i --volume %i:/data:z --entrypoint /bin/bash \
                           --volume %S/backups/coreos-home-server/%i:/backups:z,ro \
-                          docker.io/debian:stable-slim \
+                          docker.io/debian:bullseye-slim \
                           -c 'test -n "$(ls -A /data)" && echo "Volume %i is not empty, skipping." && exit 0; \
                               tar -xvpf "/backups/%i-latest.tar.gz" -C /data'
 
