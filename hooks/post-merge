@@ -38,6 +38,11 @@ function sync-coreos-config() {
         # Update timestamp for temporary file to match last commit time, in order to ensure
         # correct partial updates.
         for f in "$dir/"**; do
+            # Skip directories, as updating their commit times will have all files within be synchronized.
+            if test -d "$f"; then
+                continue
+            fi
+
             touch --date="$(git -C "$TEMP_CONFIG_PATH" log -n 1 --pretty=format:%cd --date=iso --date-order -- "$f")" -- "$f"
         done
 
