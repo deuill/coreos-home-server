@@ -8,6 +8,6 @@ done
 
 # Ensure state file exists before starting service.
 touch /var/lib/rdircd/state.conf
-chmod -R rdircd:rdircd /var/lib/rdircd
+chown -R rdircd:rdircd /var/lib/rdircd
 
-sudo --user rdircd -- /usr/bin/rdircd --conf /etc/rdircd/rdircd.conf --conf /var/lib/rdircd/state.conf "$@"
+gosu rdircd /usr/bin/rdircd --conf /etc/rdircd/rdircd.conf --conf /var/lib/rdircd/state.conf "$@"

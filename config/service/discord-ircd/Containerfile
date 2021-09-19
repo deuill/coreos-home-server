@@ -1,7 +1,7 @@
 FROM docker.io/debian:bullseye-slim
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates python3 python3-aiohttp gettext git sudo
+    ca-certificates python3 python3-aiohttp gettext git gosu
 
 RUN git clone --depth 1 https://github.com/mk-fg/reliable-discord-client-irc-daemon.git /rdircd && \
     cp /rdircd/rdircd /usr/bin && chmod 0755 /usr/bin/rdircd && \
