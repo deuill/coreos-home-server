@@ -27,31 +27,13 @@ passwd:
         - ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAD46O1S/DSegplXd2Py5loFW2ZYahNvmUYGaFesR8Bo+A+vdmNur7eJ2Ke18j86E2VrVCnzze7EL3dqG1WmseektgClfyeDau+wSvvL8DPNc8JZFdoSd//Kk/OGmJcFfZjag0EXYqYuO/sgHE6yystnwB5ya5PaChNCDr7nG6j5qBJtYw==
         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDkzmZlPFoz3pN5S0J4z+OIuEx/vyXySfm1Y+KJzPt5kS7CGQ5SvJG8LItssmT5WRsflfEvGtlqKFPwpx3HXeiGpBonAmRnwPIZjmi0oP1SoiB2HIyiErL1pxq5Eodno9AVTEjDjau6/W3SpXlxEzunqDG0VnihTzFYa/p7K/8MiwNk6vaiLcdNjK0wsaFo4yWaN7kqyk2EGspdT0hzqENwQy/x/hdsQxZxAScatgVz5OXW626eoHd9PtmYppwj/WLa5nORoi63UCdlwhFKgJ55eTxeRMCiq9HHwlAvCe4IZ+dRbypg0gO2TNvHvvue2uVvT8BwMEujW62nx4Qen5kI9JvxiZt5aifKLCwyOgBsb/DIUP+ZcN51vwAmp/bCLW6IQqXMGH3BxIpml+bW/qxtmjAoh1+osWngsgtpZkhqRf+hTTJ5Om4QII4jDZxkBv0pysUl1W/krOr2a2DjfHGPyc11GqEPGb0FaFv3Q1SWuh3HTnr5YsA1Ig58UJQWhTm3bJKlH/Unl1+vwAU25Ger0j/JFsjJHVZF5Lkmu5hr84EhZ5S51FhEzRBVjhKBcZpKGRauCmO+SENFXnuTDPauiA3myEgTrVYSVTCbX9/RSz6pvVTkrBz/L1r6G7F8E+4DOL5/niXr+koBWsSiF3C8PNICT8gLsCD/d0mQo2nSsw==
 
+boot_device:
+  mirror:
+    devices:
+      - /dev/disk/by-path/pci-0000:00:1f.2-ata-1
+      - /dev/disk/by-path/pci-0000:00:1f.2-ata-2
+
 storage:
-  disks:
-    - device: /dev/disk/by-path/pci-0000:00:1f.2-ata-1
-      wipe_table: true
-      partitions:
-        - label: data-1
-
-    - device: /dev/disk/by-path/pci-0000:00:1f.2-ata-2
-      wipe_table: true
-      partitions:
-        - label: data-2
-
-  raid:
-    - name: data
-      level: raid1
-      devices:
-        - /dev/disk/by-partlabel/data-1
-        - /dev/disk/by-partlabel/data-2
-
-  filesystems:
-    - device: /dev/md/data
-      path: /var
-      format: ext4
-      with_mount_unit: true
-
   files:
     - path: /etc/hostname
       mode: 0644
