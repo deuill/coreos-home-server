@@ -25,6 +25,10 @@ admins = {}
 -- For more information see: https://prosody.im/doc/libevent
 use_libevent = true
 
+-- Run Prosody under a restricted user and group, to prevent runaway permissions.
+prosody_user = "prosody"
+prosody_group = "prosody"
+
 -- Prosody will always look in its source directory for modules, but
 -- this option allows you to specify additional locations where Prosody
 -- will look for modules first. For community modules, see https://modules.prosody.im/
