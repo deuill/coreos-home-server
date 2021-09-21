@@ -25,10 +25,6 @@ admins = {}
 -- For more information see: https://prosody.im/doc/libevent
 use_libevent = true
 
--- Run Prosody under a restricted user and group, to prevent runaway permissions.
-prosody_user = "prosody"
-prosody_group = "prosody"
-
 -- Prosody will always look in its source directory for modules, but
 -- this option allows you to specify additional locations where Prosody
 -- will look for modules first. For community modules, see https://modules.prosody.im/
@@ -66,6 +62,9 @@ modules_enabled = {
 	"filter_chatstates"; -- Don't send chat state notifications when client is inactive.
 	"throttle_presence"; -- Don't send presence information when client is inactive.
 	"cloud_notify"; -- Support for push notifications.
+	"cloud_notify_encrypted"; -- Support for experimental encrypted push notifications.
+	"cloud_notify_priority_tag"; -- Support for the experimental Priority of Notifications specification.
+	"cloud_notify_filters"; -- Support for experimental push notification filtering.
 
 	-- Admin interfaces
 	--"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
