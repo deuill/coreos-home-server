@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Correct permissions where needed.
+chown -R letsencrypt:letsencrypt /var/lib/letsencrypt
+
+# Run ACME verification with parameters given.
+gosu letsencrypt /usr/bin/lego "$@"
