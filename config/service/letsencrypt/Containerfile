@@ -3,7 +3,7 @@ FROM docker.io/goacme/lego:v4.4.0
 RUN addgroup --system --gid 10000 letsencrypt
 RUN adduser --system --uid 10000 --ingroup letsencrypt --home /var/lib/letsencrypt letsencrypt
 
-RUN apk --no-cache --no-progress add gosu
+RUN apk --no-cache --no-progress add su-exec
 COPY container/run-lego /run-lego
 
 ENTRYPOINT ["/run-lego"]

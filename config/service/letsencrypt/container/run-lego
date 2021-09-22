@@ -4,4 +4,4 @@
 chown -R letsencrypt:letsencrypt /var/lib/letsencrypt
 
 # Run ACME verification with parameters given.
-gosu letsencrypt /usr/bin/lego "$@"
+su-exec letsencrypt /usr/bin/lego "$@"
