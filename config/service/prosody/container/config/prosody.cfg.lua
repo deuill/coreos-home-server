@@ -69,6 +69,7 @@ modules_enabled = {
 	-- Admin interfaces
 	--"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
 	--"admin_telnet"; -- Opens telnet console interface on localhost port 5582
+    "admin_shell"; -- Allows administration via console commands.
 
 	-- HTTP modules
 	--"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"

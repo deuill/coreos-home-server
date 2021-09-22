@@ -4,6 +4,9 @@ ARG VERSION=0.11.10
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl mercurial gnupg ca-certificates apt-transport-https
 
+RUN addgroup --system --gid 10000 prosody
+RUN adduser --system --uid 10000 --ingroup prosody --home /var/lib/prosody prosody
+
 RUN echo "deb https://packages.prosody.im/debian bullseye main" > /etc/apt/sources.list.d/prosody.list && \
     echo "deb-src https://packages.prosody.im/debian bullseye main" >> /etc/apt/sources.list.d/prosody.list && \
     curl -o - https://prosody.im/files/prosody-debian-packages.key | apt-key add - && \
