@@ -18,7 +18,7 @@ ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
                           localhost/%N:latest
 ExecStop=/bin/podman stop --ignore --time 10 %N
 ExecStopPost=/bin/podman rm --ignore --force %N
-ExecReload=/bin/podman exec %N prosodyctl reload
+ExecReload=/bin/podman exec %N sh -c 'echo "config:reload()" | nc -q 1 -w 10 127.0.0.1 5582'
 
 [Install]
 WantedBy=multi-user.target

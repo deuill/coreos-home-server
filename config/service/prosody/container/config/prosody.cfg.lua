@@ -68,8 +68,7 @@ modules_enabled = {
 
 	-- Admin interfaces
 	--"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
-	--"admin_telnet"; -- Opens telnet console interface on localhost port 5582
-    "admin_shell"; -- Allows administration via console commands.
+	"admin_telnet"; -- Opens telnet console interface on localhost port 5582
 
 	-- HTTP modules
 	--"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
@@ -174,6 +173,9 @@ archive_expires_after = "1w" -- Remove archived messages after 1 week
 -- Logging configuration
 -- For advanced logging see https://prosody.im/doc/logging
 log = {{to = "console", levels = {min = "info"}, timestamps = true}}
+
+-- Don't show banner when performing console commands.
+console_banner = ""
 
 -- Configuration for Converse.js
 conversejs_options = {

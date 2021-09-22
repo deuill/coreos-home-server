@@ -2,7 +2,7 @@ FROM docker.io/debian:bullseye-slim
 ARG VERSION=0.11.10
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    curl mercurial gnupg ca-certificates apt-transport-https
+    curl mercurial gnupg ca-certificates apt-transport-https netcat-traditional
 
 RUN addgroup --system --gid 10000 prosody
 RUN adduser --system --uid 10000 --ingroup prosody --home /var/lib/prosody prosody
