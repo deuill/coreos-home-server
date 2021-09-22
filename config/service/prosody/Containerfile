@@ -22,5 +22,7 @@ RUN prosodyctl check config
 VOLUME /var/lib/prosody
 ENV __FLUSH_LOG yes
 
+USER prosody
 EXPOSE 5222 5269 5280 5347
+
 ENTRYPOINT ["prosody"]
