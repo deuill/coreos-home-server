@@ -43,7 +43,7 @@ function sync-coreos-config() {
                 continue
             fi
 
-            touch -t "$(git -C "$TEMP_CONFIG_PATH" log -n 1 --pretty=format:%cd --date=format:%Y%m%d%H%M.%S --date-order -- "$f")" -- "$f"
+            touch -t "$(cd "$dir" && git log -n 1 --pretty=format:%cd --date=format:%Y%m%d%H%M.%S --date-order -- "$f")" -- "$f"
         done
 
         # Copy files from temporary directory to host configuration directory.
