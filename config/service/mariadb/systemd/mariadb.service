@@ -9,9 +9,10 @@ NotifyAccess=all
 SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
-ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
+ExecStart=/bin/podman run --replace --name %N --net internal \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --volume %N:/var/lib/mysql:z \
+                          --health-cmd 'mariadb-admin -uroot -p$MYSQL_ROOT_PASSWORD ping' \
                           localhost/%N:latest
 ExecStop=/bin/podman stop --ignore --time 10 %N
 ExecStopPost=/bin/podman rm --ignore --force %N
