@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Create configuration file from collected templates.
+mkdir -p /etc/rss2email
+envsubst < /etc/rss2email/rss2email.conf.template > /etc/rss2email/rss2email.conf
+
+if test -n "$(ls -A /etc/rss2email/conf.d)"; then
+    cat /etc/rss2email/conf.d/*.conf >> /etc/rss2email/rss2email.conf
+fi
+
+# Correct permissions for data files.
+mkdir -p /var/lib/rss2email
+chown -R rss2email:rss2email /var/lib/rss2email
+
+# Run entrypoint under specific user.
+gosu rss2email /usr/local/bin/r2e --config /etc/rss2email/rss2email.conf --data /var/lib/rss2email/data.json "$@"

@@ -18,6 +18,7 @@ ignition:
       - local: service/radicale/spec.ign
       - local: service/discord-ircd/spec.ign
       - local: service/spectrum/spec.ign
+      - local: service/rss2email/spec.ign
 
 passwd:
   users:

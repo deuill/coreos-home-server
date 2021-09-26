@@ -1,0 +1,18 @@
+[Unit]
+Description=RSS Feed Subscription for %I
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+SyslogIdentifier=%N
+ExecStart=/bin/podman run --rm --entrypoint /bin/bash \
+                          --volume rss2email-feeds:/etc/rss2email/conf.d:z \
+                          localhost/rss2email:latest -c \
+                          "printf '[feed.%%s]\nurl = %I\n' $(md5sum <<< '%i' | cut -c-32) > /etc/rss2email/conf.d/%i.conf"
+ExecStop=/bin/podman run --rm --entrypoint /bin/bash \
+                         --volume rss2email-feeds:/etc/rss2email/conf.d:z \
+                         localhost/rss2email:latest -c \
+                         "rm -f /etc/rss2email/conf.d/%i.conf"
+
+[Install]
+WantedBy=multi-user.target
