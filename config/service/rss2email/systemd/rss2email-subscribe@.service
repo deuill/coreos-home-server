@@ -1,5 +1,7 @@
 [Unit]
 Description=RSS Feed Subscription for %I
+Wants=container-build@rss2email.service
+After=container-build@rss2email.service
 
 [Service]
 Type=oneshot

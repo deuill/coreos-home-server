@@ -12,5 +12,5 @@ smtp-username = ${RSS2EMAIL_SMTP_USERNAME}
 smtp-password = ${RSS2EMAIL_SMTP_PASSWORD}
 smtp-server = ${RSS2EMAIL_SMTP_HOST}
 smtp-port = ${RSS2EMAIL_SMTP_PORT}
-smtp-ssl = True
+smtp-ssl = False
 verbose = info
