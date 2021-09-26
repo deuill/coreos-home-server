@@ -61,7 +61,7 @@ function sync-systemd-services() {
     for src in "$HOST_CONFIG_PATH"/*/systemd/*; do
         dest="$SYSTEMD_CONFIG_PATH/$(basename "$src")"
         if test "$src" -nt "$dest"; then
-            cp --verbose --recursive "$src" "$dest"
+            cp --verbose --recursive --update "$src" "$dest"
             result=0
         fi
     done
