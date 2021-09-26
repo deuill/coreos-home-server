@@ -21,7 +21,7 @@ function sync-coreos-config() {
     # Search for configuration in any of the local configuration sub-directories.
     for dir in "$TEMP_CONFIG_PATH"/config/*/"$(basename "$path")"; do
         if test ! -d "$dir"; then
-            echo "configuration not found, skipping."
+            printf "configuration not found, skipping\n"
             return
         fi
 
@@ -48,26 +48,22 @@ function sync-coreos-config() {
 
         # Copy files from temporary directory to host configuration directory.
         cp --verbose --recursive --update --target-directory "$path" "$dir"/*
-        echo "done."
+        printf "done\n"
     done
 }
 
 # Synchronize systemd service files from CoreOS home-server configuration.
 function sync-systemd-services() {
-    local result=1
-    local dest
+    local buffer="" tmp
 
     # Copy service files if newer than destination.
     for src in "$HOST_CONFIG_PATH"/*/systemd/*; do
-        dest="$SYSTEMD_CONFIG_PATH/$(basename "$src")"
-        if test "$src" -nt "$dest"; then
-            cp --verbose --recursive --update "$src" "$dest"
-            result=0
-        fi
+        tmp="$(cp --verbose --recursive --update --target-directory "$SYSTEMD_CONFIG_PATH" "$src")"
+        buffer="${buffer}${tmp}"
     done
 
-    echo "done."
-    return $result
+    printf "%sdone\n" "$buffer"
+    if test -n "$buffer"; then return 0; else return 1; fi
 }
 
 # Synchronize all existing CoreOS home-server configuration.
@@ -76,13 +72,13 @@ for dir in "$HOST_CONFIG_PATH"/*; do
         continue
     fi
 
-    echo -n "Synchronizing host configuration for '$dir'... "
+    printf "Synchronizing host configuration for '%s'... " "$dir"
     sync-coreos-config "$dir"
 done
 
 # Synchronize systemd services from local CoreOS home-server configuration.
-echo -n "Synchronizing systemd service files... "
+printf "Synchronizing systemd service files... "
 if sync-systemd-services; then
-    echo "Reloading systemd daemon after service updates."
+    printf "Reloading systemd daemon after service updates\n"
     systemctl daemon-reload
 fi
