@@ -1,13 +1,13 @@
-FROM docker.io/debian:buster-slim
-ARG VERSION=2.0.13
+FROM docker.io/debian:bullseye-slim
+ARG VERSION=2.1.0
 
 ENV BUILD_DEPS="curl gnupg apt-transport-https build-essential git libpurple-dev libglib2.0-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat"
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends ca-certificates sudo gettext libjson-glib-1.0-0 ${BUILD_DEPS}
 
-RUN echo "deb https://packages.spectrum.im/spectrum2/ buster main" > /etc/apt/sources.list.d/spectrum2.list && \
-    echo "deb-src https://packages.spectrum.im/spectrum2/ buster main" >> /etc/apt/sources.list.d/spectrum2.list && \
+RUN echo "deb https://packages.spectrum.im/spectrum2/ bullseye main" > /etc/apt/sources.list.d/spectrum2.list && \
+    echo "deb-src https://packages.spectrum.im/spectrum2/ bullseye main" >> /etc/apt/sources.list.d/spectrum2.list && \
     curl -o - https://packages.spectrum.im/packages.key | apt-key add - && \
     apt-get update -y && \
     apt-get install -y --no-install-recommends spectrum2=1:${VERSION}"*" spectrum2-backend-libpurple=1:${VERSION}"*"

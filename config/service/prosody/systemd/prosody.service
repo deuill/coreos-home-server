@@ -13,8 +13,8 @@ ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --publish 5222:5222 --publish 5269:5269 --publish 5347:5347 \
                           --volume %N:/var/lib/%N:z \
+                          --volume prosody-conf:/etc/%N/conf.d:z \
                           --volume letsencrypt:/etc/ssl/private:z \
-                          --volume %E/coreos-home-server/%N/service/config:/etc/%N/conf.d:z \
                           localhost/%N:latest
 ExecStop=/bin/podman stop --ignore --time 10 %N
 ExecStopPost=/bin/podman rm --ignore --force %N

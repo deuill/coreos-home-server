@@ -34,69 +34,69 @@ plugin_paths = {"/usr/lib/prosody/community-modules"}
 -- It looks for mod_modulename.lua in the plugins folder, so make sure that exists too.
 -- Documentation for bundled modules can be found at: https://prosody.im/doc/modules
 modules_enabled = {
-	-- Generally required
-	"roster"; -- Allow users to have a roster. Recommended ;)
-	"saslauth"; -- Authentication for clients and servers. Recommended if you want to log in.
-	"tls"; -- Add support for secure TLS on c2s/s2s connections
-	"dialback"; -- s2s dialback support
-	"disco"; -- Service discovery
+    -- Generally required
+    "roster"; -- Allow users to have a roster. Recommended ;)
+    "saslauth"; -- Authentication for clients and servers. Recommended if you want to log in.
+    "tls"; -- Add support for secure TLS on c2s/s2s connections
+    "dialback"; -- s2s dialback support
+    "disco"; -- Service discovery
 
-	-- Not essential, but recommended
-	"carbons"; -- Keep multiple clients in sync
-	"pep"; -- Enables users to publish their mood, activity, playing music and more
-	"private"; -- Private XML storage (for room bookmarks, etc.)
-	"blocklist"; -- Allow users to block communications with other users
-	"vcard4"; -- Allow users to set vCards in v4 format.
-	"vcard_legacy"; -- Allow users to set vCards in legacy formats.
+    -- Not essential, but recommended
+    "carbons"; -- Keep multiple clients in sync
+    "pep"; -- Enables users to publish their mood, activity, playing music and more
+    "private"; -- Private XML storage (for room bookmarks, etc.)
+    "blocklist"; -- Allow users to block communications with other users
+    "vcard4"; -- Allow users to set vCards in v4 format.
+    "vcard_legacy"; -- Allow users to set vCards in legacy formats.
 
-	-- Nice to have
-	"version"; -- Replies to server version requests
-	"uptime"; -- Report how long server has been running
-	"time"; -- Let others know the time here on this server
-	"ping"; -- Replies to XMPP pings with pongs
-	"register"; -- Allow users to register on this server using a client and change passwords
-	"mam"; -- Store messages in an archive and allow users to access it
-	"smacks"; -- Stream management for resuming dropped connections.
-	"csi"; -- Chat state information.
-	"csi_simple"; -- Enables simple traffic optimisation for clients that have reported themselves as inactive.
-	"filter_chatstates"; -- Don't send chat state notifications when client is inactive.
-	"throttle_presence"; -- Don't send presence information when client is inactive.
-	"cloud_notify"; -- Support for push notifications.
-	"cloud_notify_encrypted"; -- Support for experimental encrypted push notifications.
-	"cloud_notify_priority_tag"; -- Support for the experimental Priority of Notifications specification.
-	"cloud_notify_filters"; -- Support for experimental push notification filtering.
+    -- Nice to have
+    "version"; -- Replies to server version requests
+    "uptime"; -- Report how long server has been running
+    "time"; -- Let others know the time here on this server
+    "ping"; -- Replies to XMPP pings with pongs
+    "register"; -- Allow users to register on this server using a client and change passwords
+    "mam"; -- Store messages in an archive and allow users to access it
+    "smacks"; -- Stream management for resuming dropped connections.
+    "csi"; -- Chat state information.
+    "csi_simple"; -- Enables simple traffic optimisation for clients that have reported themselves as inactive.
+    "filter_chatstates"; -- Don't send chat state notifications when client is inactive.
+    "throttle_presence"; -- Don't send presence information when client is inactive.
+    "cloud_notify"; -- Support for push notifications.
+    "cloud_notify_encrypted"; -- Support for experimental encrypted push notifications.
+    "cloud_notify_priority_tag"; -- Support for the experimental Priority of Notifications specification.
+    "cloud_notify_filters"; -- Support for experimental push notification filtering.
 
-	-- Admin interfaces
-	--"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
-	"admin_telnet"; -- Opens telnet console interface on localhost port 5582
+    -- Admin interfaces
+    --"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
+    "admin_telnet"; -- Opens telnet console interface on localhost port 5582
 
-	-- HTTP modules
-	--"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
-	"websocket"; -- XMPP over WebSockets
-	-- "http_files"; -- Serve static files from a directory over HTTP
+    -- HTTP modules
+    --"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
+    "websocket"; -- XMPP over WebSockets
+    -- "http_files"; -- Serve static files from a directory over HTTP
 
-	-- Other specific functionality
-	--"limits"; -- Enable bandwidth limiting for XMPP connections
-	--"groups"; -- Shared roster support
-	--"server_contact_info"; -- Publish contact information for this service
-	--"announce"; -- Send announcement to all online users
-	--"welcome"; -- Welcome users who register accounts
-	--"watchregistrations"; -- Alert admins of registrations
-	--"motd"; -- Send a message to users when they log in
-	--"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
-	"proxy65"; -- Enables a file transfer proxy service which clients behind NAT can use
-	"conversejs"; -- Web-based frontend for XMPP
-	"bookmarks"; -- Next-generation group-chat bookmarks
-	"turncredentials"; -- Connect to TURN/STUN server.
+    -- Other specific functionality
+    --"limits"; -- Enable bandwidth limiting for XMPP connections
+    --"groups"; -- Shared roster support
+    --"server_contact_info"; -- Publish contact information for this service
+    --"announce"; -- Send announcement to all online users
+    --"welcome"; -- Welcome users who register accounts
+    --"watchregistrations"; -- Alert admins of registrations
+    --"motd"; -- Send a message to users when they log in
+    --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
+    "proxy65"; -- Enables a file transfer proxy service which clients behind NAT can use
+    "conversejs"; -- Web-based frontend for XMPP
+    "bookmarks"; -- Next-generation group-chat bookmarks
+    "turncredentials"; -- Connect to TURN/STUN server.
 }
 
 -- These modules are auto-loaded, but should you want
 -- to disable them then uncomment them here:
 modules_disabled = {
-	--"offline"; -- Store offline messages
-	--"c2s"; -- Handle client connections
-	--"s2s"; -- Handle server-to-server connections
-	"posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
+    --"offline"; -- Store offline messages
+    --"c2s"; -- Handle client connections
+    --"s2s"; -- Handle server-to-server connections
+    "posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
 }
 
 -- Disable account creation by default, for security
@@ -147,11 +147,11 @@ authentication = "internal_hashed"
 
 storage = "sql" -- Default is "internal"
 sql = {
-	driver   = "MySQL",
-	host     = os.getenv("PROSODY_DATABASE_HOST") or "localhost",
-	database = os.getenv("PROSODY_DATABASE_NAME") or "prosody",
-	username = os.getenv("PROSODY_DATABASE_USERNAME") or "prosody",
-	password = os.getenv("PROSODY_DATABASE_PASSWORD") or ""
+    driver   = "MySQL",
+    host     = os.getenv("PROSODY_DATABASE_HOST") or "localhost",
+    database = os.getenv("PROSODY_DATABASE_NAME") or "prosody",
+    username = os.getenv("PROSODY_DATABASE_USERNAME") or "prosody",
+    password = os.getenv("PROSODY_DATABASE_PASSWORD") or ""
 }
 
 -- For the "sql" backend, you can uncomment *one* of the below to configure:
@@ -179,7 +179,7 @@ console_banner = ""
 
 -- Configuration for Converse.js
 conversejs_options = {
-	view_mode = "fullscreen";
+    view_mode = "fullscreen";
 }
 
 -- Configuration for IMAP authentication.
@@ -219,6 +219,9 @@ VirtualHost "localhost"
 
 -- Disable TLS for local connections, which generally don't require encryption.
 modules_disabled = {"tls"}
+
+-- Default, environment-based virtual host.
+include "virtualhost.cfg.lua"
 
 --------- Additional configuration ---------
 include "conf.d/*.cfg.lua"

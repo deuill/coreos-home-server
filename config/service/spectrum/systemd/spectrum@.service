@@ -1,0 +1,21 @@
+[Unit]
+Description=Spectrum IM Transport for XMPP (%i)
+Wants=container-build@%p.service container-volume@%p-%i.service prosody.service prosody-component-register@%p-%i.service
+After=container-build@%p.service container-volume@%p-%i.service prosody.service prosody-component-register@%p-%i.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+SyslogIdentifier=%N
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmon \
+                          --env SPECTRUM_HOSTNAME=%p-%i --env SPECTRUM_PROTOCOL=prpl-%i \
+                          --env-file %E/coreos-home-server/%p/%p.env \
+                          --volume %p-%i:/var/lib/spectrum2:z \
+                          localhost/%p:latest
+ExecStop=/bin/podman stop --ignore --time 10 %p-%i
+ExecStopPost=/bin/podman rm --ignore --force %p-%i
+
+[Install]
+WantedBy=multi-user.target

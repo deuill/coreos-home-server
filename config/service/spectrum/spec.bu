@@ -4,7 +4,3 @@ storage:
   trees:
     - path: /etc/systemd/system
       local: service/spectrum/systemd/
-systemd:
-  units:
-    - name: spectrum.service
-      enabled: true

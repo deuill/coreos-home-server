@@ -1,7 +1,7 @@
 [Unit]
 Description=Biboumi IRC Gateway for XMPP
-Wants=container-build@%N.service container-volume@%N.service prosody.service
-After=container-build@%N.service container-volume@%N.service prosody.service
+Wants=container-build@%N.service container-volume@%N.service prosody.service prosody-component-register@%N.service
+After=container-build@%N.service container-volume@%N.service prosody.service prosody-component-register@%N.service
 
 [Service]
 Type=notify
