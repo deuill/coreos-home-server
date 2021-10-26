@@ -9,9 +9,11 @@ NotifyAccess=all
 SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
+Environment=SPECTRUM_HOSTNAME=%p-%i SPECTRUM_PROTOCOL=prpl-%i
 ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmon \
-                          --env SPECTRUM_HOSTNAME=%p-%i --env SPECTRUM_PROTOCOL=prpl-%i \
                           --env-file %E/coreos-home-server/%p/%p.env \
+                          --env SPECTRUM_HOSTNAME=${SPECTRUM_HOSTNAME} \
+                          --env SPECTRUM_PROTOCOL=${SPECTRUM_PROTOCOL} \
                           --volume %p-%i:/var/lib/spectrum2:z \
                           localhost/%p:latest
 ExecStop=/bin/podman stop --ignore --time 10 %p-%i
