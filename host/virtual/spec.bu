@@ -16,7 +16,6 @@ ignition:
       - local: service/prosody/spec.ign
       - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
-      - local: service/discord-ircd/spec.ign
       - local: service/spectrum/spec.ign
       - local: service/rss2email/spec.ign
 
@@ -41,7 +40,7 @@ systemd:
 
     # Don't auto-update our CoreOS configuration.
     - name: coreos-home-server-update.timer
-      enabled: false
+      mask: true
 
     # Enable default web services.
     - name: container-build@static.localhost.service
