@@ -39,6 +39,10 @@ systemd:
           ExecStart=-/usr/sbin/agetty --autologin core --noclear %I $TERM
           TTYVTDisallocate=no
 
+    # Don't auto-update our CoreOS configuration.
+    - name: coreos-home-server-update.timer
+      enabled: false
+
     # Enable default web services.
     - name: container-build@static.localhost.service
       enabled: true

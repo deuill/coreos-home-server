@@ -1,6 +1,6 @@
 # CoreOS options.
 STREAM    := stable
-VERSION   := 34.20210904.3.0
+VERSION   := 34.20211031.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
@@ -40,7 +40,7 @@ destroy-virtual:
 ## Remove configuration files required for build.
 clean:
 	@printf "Removing configuration files...\n"
-	$Q rm -Rf $(TMPDIR)config $(TMPDIR)host $(TMPDIR)make.depend
+	$Q rm -Rf $(TMPDIR)config $(TMPDIR)host
 
 ## Remove all temporary files required for build.
 purge:
@@ -96,7 +96,7 @@ $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
 $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	@printf "# Automatic prerequisites for Fedora CoreOS configuration." > $@
 	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.bu,$(TMPDIR)%.ign, \
-	         $(i)): $(addprefix $(TMPDIR)config/, $(shell awk -F '[ ]+local:[ ]*' '/[ ]+local:/ {print $$2}' $(i))))" >> $@
+	         $(i)): $(addprefix $(TMPDIR)config/, $(shell awk -F '[ ]+local:[ ]*' '/^[ ]+(-[ ]+)?local:/ {print $$2}' $(i))))" >> $@
 
 # Show help if empty or invalid target has been given.
 .DEFAULT:
