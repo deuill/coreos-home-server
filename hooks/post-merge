@@ -21,7 +21,7 @@ function sync-coreos-config() {
     # Search for configuration in any of the local configuration sub-directories.
     for dir in "$TEMP_CONFIG_PATH"/config/*/"$(basename "$path")"; do
         if test ! -d "$dir"; then
-            printf "configuration not found, skipping\n"
+            printf "configuration not found, skipping.\n"
             return
         fi
 
@@ -48,7 +48,7 @@ function sync-coreos-config() {
 
         # Copy files from temporary directory to host configuration directory.
         cp --verbose --recursive --update --target-directory "$path" "$dir"/*
-        printf "done\n"
+        printf "done.\n"
     done
 }
 
@@ -62,7 +62,7 @@ function sync-systemd-services() {
         buffer="${buffer}${tmp}"
     done
 
-    printf "%sdone\n" "$buffer"
+    printf "%s done.\n" "$buffer"
     if test -n "$buffer"; then return 0; else return 1; fi
 }
 
@@ -79,6 +79,6 @@ done
 # Synchronize systemd services from local CoreOS home-server configuration.
 printf "Synchronizing systemd service files... "
 if sync-systemd-services; then
-    printf "Reloading systemd daemon after service updates\n"
+    printf "Reloading systemd daemon after service updates...\n"
     systemctl daemon-reload
 fi
