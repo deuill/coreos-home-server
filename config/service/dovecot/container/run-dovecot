@@ -6,8 +6,9 @@ for file in /etc/dovecot/*.template; do
 	envsubst "$ENV_NAMES" < "$file" > "$(echo "$file" | awk -F '.template$' '{print $1}')"
 done
 
-# Compile Sieve scripts.
+# Compile Sieve scripts and ensure correct permissions.
 find /etc/dovecot -name '*.sieve' -execdir sievec {} \;
+find /etc/dovecot -name '*.script' -execdir chmod 0755 {} \;
 
 # Set up environment variables for Rspamd integration.
 env | awk -F_ '$1 == "RSPAMD" {print $0}' > /etc/dovecot/rspamd.env
