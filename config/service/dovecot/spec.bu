@@ -8,5 +8,7 @@ systemd:
   units:
     - name: dovecot-firstboot.target
       enabled: true
+    - name: dovecot-fts-optimize.timer
+      enabled: true
     - name: dovecot.service
       enabled: true

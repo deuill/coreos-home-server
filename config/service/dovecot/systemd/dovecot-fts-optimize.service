@@ -1,0 +1,12 @@
+[Unit]
+Description=Optimize Dovecot FTS Index
+Wants=dovecot.service
+After=dovecot.service
+
+[Service]
+Type=oneshot
+SyslogIdentifier=%N
+ExecStart=/bin/podman exec dovecot doveadm fts optimize -A
+
+[Install]
+WantedBy=multi-user.target

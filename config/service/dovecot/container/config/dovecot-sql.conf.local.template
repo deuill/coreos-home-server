@@ -3,5 +3,6 @@ driver = mysql
 connect = "host=${DOVECOT_DATABASE_HOST} dbname=${DOVECOT_DATABASE_NAME} user=${DOVECOT_DATABASE_USERNAME} password=${DOVECOT_DATABASE_PASSWORD}"
 
 default_pass_scheme = SHA512-CRYPT
-password_query = SELECT username AS user, password, CONCAT(home, '/', maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid FROM users WHERE username = '%u'
+iterate_query = SELECT username FROM users
 user_query = SELECT CONCAT(home, '/', maildir) AS home, uid, gid, CONCAT('maildir:', home, '/', maildir) AS mail FROM users WHERE username = '%u'
+password_query = SELECT username AS user, password, CONCAT(home, '/', maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid FROM users WHERE username = '%u'
