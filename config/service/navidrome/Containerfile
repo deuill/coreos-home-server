@@ -1,0 +1,21 @@
+FROM debian:bullseye-slim
+ARG VERSION=0.46.0
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl ca-certificates gosu ffmpeg
+
+ENV PACKAGE_URL https://github.com/deluan/navidrome/releases/download/v${VERSION}/navidrome_${VERSION}_Linux_x86_64.tar.gz
+RUN curl -L ${PACKAGE_URL} | tar -C /bin -xvzf - navidrome && chmod +x /bin/navidrome
+
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+
+RUN addgroup --system --gid 10000 navidrome
+RUN adduser --system --uid 10000 --ingroup navidrome --home /var/lib/navidrome navidrome
+
+COPY container/config /etc/navidrome
+VOLUME /music
+
+USER navidrome
+EXPOSE 4533
+
+ENTRYPOINT ["/bin/navidrome", "--configfile", "/etc/navidrome/navidrome.toml"]

@@ -1,0 +1,17 @@
+# Log level. Useful for troubleshooting. Possible values: error, info, debug, trace.
+LogLevel = "info"
+
+# Base URL (only the path part) to configure Navidrome behind a proxy.
+BaseURL = "/"
+
+# Folder for storing Navidrome database.
+DataFolder = "/var/lib/navidrome"
+
+# How frequently to scan for changes in your music library.
+ScanSchedule = "@every 30m"
+
+# Size of transcoding cache.
+TranscodingCacheSize = "100MB"
+
+# Folder where your music library is stored. Can be read-only.
+MusicFolder = "/music"

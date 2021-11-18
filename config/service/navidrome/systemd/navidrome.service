@@ -1,0 +1,20 @@
+[Unit]
+Description=Navidrome Music Server
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+SyslogIdentifier=%N
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
+                          --volume %N:/var/lib/%N:z \
+                          --volume %N-music:/music:z,ro \
+                          localhost/%N:latest
+ExecStop=/bin/podman stop --ignore --time 10 %N
+ExecStopPost=/bin/podman rm --ignore --force %N
+
+[Install]
+WantedBy=multi-user.target

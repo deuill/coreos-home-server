@@ -16,6 +16,7 @@ ignition:
       - local: service/prosody/spec.ign
       - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
+      - local: service/navidrome/spec.ign
       - local: private/spec.ign
 
 passwd:
