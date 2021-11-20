@@ -1,5 +1,5 @@
 FROM debian:bullseye-slim
-ARG VERSION=0.46.0
+ARG VERSION=0.47.0
 
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends curl ca-certificates gosu ffmpeg
