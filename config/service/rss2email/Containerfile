@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM docker.io/debian:bullseye-slim
 ARG VERSION=4a088c7efe1c76fa1ebe842adc8e2a796df8f313
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \

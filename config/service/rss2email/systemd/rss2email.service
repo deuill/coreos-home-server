@@ -6,7 +6,7 @@ After=container-build@%N.service postfix.service
 [Service]
 Type=oneshot
 SyslogIdentifier=%N
-ExecStart=/bin/podman run --replace --name %N --net internal \
+ExecStart=/bin/podman run --replace --rm --name %N --net internal \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --volume %N-feeds:/etc/%N/conf.d:z,ro \
                           --volume %N:/var/lib/%N:z \
