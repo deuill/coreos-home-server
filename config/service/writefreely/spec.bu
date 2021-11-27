@@ -1,0 +1,10 @@
+variant: fcos
+version: 1.3.0
+storage:
+  trees:
+    - path: /etc/systemd/system
+      local: service/writefreely/systemd/
+systemd:
+  units:
+    - name: writefreely.service
+      enabled: true

@@ -1,0 +1,20 @@
+FROM docker.io/debian:bullseye-slim
+ARG VERSION=0.13.1
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl ca-certificates gettext gosu
+
+ENV PACKAGE_URL https://github.com/writefreely/writefreely/releases/download/v${VERSION}/writefreely_${VERSION}_linux_amd64.tar.gz
+RUN curl -L ${PACKAGE_URL} | tar -C /opt --no-same-owner -xvzf - && \
+    mv /opt/writefreely/writefreely /bin/writefreely && chmod +x /bin/writefreely
+
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+
+RUN addgroup --system --gid 10000 writefreely
+RUN adduser --system --uid 10000 --ingroup writefreely --home /var/lib/writefreely writefreely
+
+COPY container/config /etc/writefreely
+COPY container/run-writefreely /run-writefreely
+
+EXPOSE 8080
+ENTRYPOINT ["/run-writefreely"]

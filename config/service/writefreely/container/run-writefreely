@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Create configuration file from collected templates.
+envsubst < /etc/writefreely/config.ini.template > /etc/writefreely/config.ini
+mkdir -p /var/lib/writefreely/keys
+
+# Initialize and run migrates on database if needed. New instances of WriteFreely will have a
+# default administrator be created with a random password, which is echoed back to the system. It
+# is intended that both the username and password are changed by whoever manages this instance.
+if ! test -f /var/lib/writefreely/writefreely.db; then
+    writefreely -c /etc/writefreely/config.ini db init
+    (
+        password="$(dd if=/dev/urandom | tr -dc '[:alnum:]' | head -c 50)"
+        writefreely -c /etc/writefreely/config.ini user add --admin "default:${password}"
+        echo "Created an administrator user with username 'default' and password '${password}'"
+        echo "Make sure to change this immediately after logging in for the first time!"
+    )
+fi
+
+writefreely -c /etc/writefreely/config.ini db migrate
+
+# Generate keys, if none have already been generated.
+if test -z "$(ls -A /var/lib/writefreely/keys)"; then
+    writefreely -c /etc/writefreely/config.ini keys generate
+fi
+
+# Correct permissions for data files.
+chown -R writefreely:writefreely /var/lib/writefreely
+
+# Run entrypoint under specific user.
+gosu writefreely /bin/writefreely -c /etc/writefreely/config.ini "$@"

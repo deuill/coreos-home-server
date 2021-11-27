@@ -1,0 +1,29 @@
+[server]
+bind                 = 0.0.0.0
+port                 = 8080
+templates_parent_dir = /opt/writefreely
+static_parent_dir    = /opt/writefreely
+pages_parent_dir     = /opt/writefreely
+keys_parent_dir      = /var/lib/writefreely
+
+[database]
+type     = sqlite3
+filename = /var/lib/writefreely/writefreely.db
+
+[app]
+site_name             = WriteFreely
+site_description      =
+host                  = ${WRITEFREELY_SITE_HOST}
+theme                 = ${WRITEFREELY_SITE_THEME}
+editor                = ${WRITEFREELY_EDITOR}
+wf_modesty            = true
+single_user           = ${WRITEFREELY_SINGLE_USER}
+open_registration     = false
+open_deletion         = false
+user_invites          = admin
+min_username_len      = 3
+max_blogs             = 100
+federation            = false
+private               = false
+update_checks         = false
+disable_password_auth = false
