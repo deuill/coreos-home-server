@@ -19,6 +19,7 @@ ignition:
       - local: service/spectrum/spec.ign
       - local: service/rss2email/spec.ign
       - local: service/navidrome/spec.ign
+      - local: service/writefreely/spec.ign
 
 passwd:
   users:
@@ -40,6 +41,8 @@ systemd:
           TTYVTDisallocate=no
 
     # Don't auto-update our CoreOS configuration.
+    - name: zincati.service
+      mask: true
     - name: coreos-home-server-update.timer
       mask: true
 
@@ -52,25 +55,46 @@ systemd:
             [Unit]
             After=container-build@nginx.service
 
-    - name: nginx-serve-static@static.localhost.service
-      enabled: true
-    - name: nginx-proxy-http@static.localhost.service
-      enabled: true
+    - name: nginx-proxy-http@.service
       dropins:
         - name: use-localhost-cert.conf
           contents: |
             [Service]
             Environment=SSL_CERT_NAME=localhost
 
+    - name: nginx-serve-static@static.localhost.service
+      enabled: true
+    - name: nginx-proxy-http@static.localhost.service
+      enabled: true
+
     - name: nginx-serve-php@php.localhost.service
       enabled: true
     - name: nginx-proxy-http@php.localhost.service
       enabled: true
+
+    - name: nginx-proxy-http@dav.localhost.service
+      enabled: true
       dropins:
-        - name: use-localhost-cert.conf
+        - name: radicale-upstream.conf
           contents: |
             [Service]
-            Environment=SSL_CERT_NAME=localhost
+            Environment=UPSTREAM_HOST=radicale UPSTREAM_PORT=5232
+
+    - name: nginx-proxy-http@music.localhost.service
+      enabled: true
+      dropins:
+        - name: navidrome-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=navidrome UPSTREAM_PORT=4533
+
+    - name: nginx-proxy-http@writefreely.localhost.service
+      enabled: true
+      dropins:
+        - name: writefreely-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=writefreely UPSTREAM_PORT=8080
 
     - name: letsencrypt-dns-register@localhost.service
       enabled: true
@@ -92,7 +116,7 @@ storage:
     - path: /etc/hostname
       mode: 0644
       contents:
-        inline: core-virtual
+        inline: coreos-virtual
 
     # Load host-wide environment into default location.
     - path: /etc/coreos-home-server/host.env
