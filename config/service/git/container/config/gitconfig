@@ -1,0 +1,3 @@
+[core]
+# Use system-wide directory for server-side hooks.
+hooksPath = /etc/git/hooks

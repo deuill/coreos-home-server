@@ -8,6 +8,8 @@ systemd:
   units:
     - name: git.service
       enabled: true
+    - name: git-daemon.service
+      enabled: true
     - name: git-ssh-pubkey@etc-ssh-ssh_host_rsa_key.pub.service
       enabled: true
       dropins:

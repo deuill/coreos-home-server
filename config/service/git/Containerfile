@@ -1,13 +1,26 @@
+FROM docker.io/debian:bullseye-slim AS builder
+ARG STAGIT_VERSION=1.0
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    git libgit2-dev build-essential
+
+RUN git clone git://git.codemadness.org/stagit && \
+    cd stagit && git checkout ${STAGIT_VERSION} && make && make PREFIX=/usr DESTDIR=/stagit-build install && \
+    rm -Rf /stagit
+
 FROM docker.io/debian:bullseye-slim
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates git openssh-server
+    ca-certificates openssh-server git libgit2-1.1
+
+COPY --from=builder /stagit-build /
+RUN mkdir -p /var/run/sshd
 
 RUN addgroup --system --gid 10000 git
 RUN adduser --system --uid 10000 --ingroup git --shell /usr/bin/git-shell --home /var/lib/git git
-RUN mkdir -p /var/run/sshd
+RUN adduser --system --uid 10001 --ingroup git --shell /usr/bin/git-shell --home /var/lib/git/public git-public
 
-COPY container/config /etc/ssh
+COPY container/config /etc
 COPY container/run-git-server /run-git-server
 
 EXPOSE 22

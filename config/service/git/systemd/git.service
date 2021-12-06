@@ -1,7 +1,7 @@
 [Unit]
-Description=Git Server
-Wants=container-build@%N.service container-volume@%N.service
-After=container-build@%N.service container-volume@%N.service
+Description=Git Server via SSH
+Wants=container-build@%N.service container-volume@%N.service container-volume@%N-serve.service
+After=container-build@%N.service container-volume@%N.service container-volume@%N-serve.service
 
 [Service]
 Type=notify
@@ -12,6 +12,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon --cap-add AUDIT_WRITE \
                           --publish 468:22 \
                           --volume %N:/var/lib/git:z \
+                          --volume %N-serve:/var/lib/git-serve:z \
                           --volume %N-ssh:/etc/ssh/keys:z \
                           localhost/%N:latest
 ExecStop=/bin/podman stop --ignore --time 10 %N

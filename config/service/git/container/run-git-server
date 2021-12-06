@@ -8,11 +8,15 @@ for t in rsa ecdsa ed25519; do
 done
 
 # Create any missing directories.
-mkdir -p /var/lib/git/.ssh
+mkdir -p /var/lib/git/.ssh /var/lib/git/public
 
 # Correct permissions where needed.
-chown -R git:git /var/lib/git
-chmod -R u+rwX,go-rwxX /var/lib/git/.ssh
+chown -R git:git /var/lib/git /var/lib/git-serve
+chown -R git-public:git /var/lib/git/public
+
+chmod -R u+rwX,go-rwxX /var/lib/git && chmod g+X /var/lib/git
+chmod -R ug+rwX /var/lib/git/public
+
 chmod 0644 /etc/ssh/keys/ssh_host_*_key.pub
 chmod 0600 /etc/ssh/keys/ssh_host_*_key
 

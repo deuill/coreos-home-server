@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+#
+# Generate static HTML pages for repositories set in public directories. This hook will run on every
+# push for repositories handled here, but will skip private repositories with no errors returned.
+
+set -euo pipefail
+
+# Base configuration.
+GIT_PUBLIC_DIR="/var/lib/git/public"
+GIT_SERVE_DIR="/var/lib/git-serve"
+
+# Other global variables.
+__GIT_FORCE_PUSH=
+
+# Returns the name for a repository, as typically passed in by git.
+function get-repository-name() {
+    local name="$1"
+    if test -z "$name"; then
+        name=$(basename "$(pwd)")
+    fi
+
+    echo -n "$name"
+}
+
+# Detect if changes have been force-pushed. Returns 0 if true, 1 if false.
+function is-force-push() {
+    if test -n $__GIT_FORCE_PUSH; then
+        return $__GIT_FORCE_PUSH
+    fi
+
+    while read -r old new ref; do
+        if test "${old}" = "0000000000000000000000000000000000000000"; then
+            continue
+        elif test "${new}" = "0000000000000000000000000000000000000000"; then
+            continue
+        elif test -n "$(git rev-list "${old}" "^${new}" | sed 1q)"; then
+            __GIT_FORCE_PUSH=0
+            return $__GIT_FORCE_PUSH
+        fi
+    done
+
+    __GIT_FORCE_PUSH=1
+    return $__GIT_FORCE_PUSH
+}
+
+# Generate static HTML files for given repository.
+function stagit-generate-repo() {
+    local repo=$(get-repository-name "$1")
+    local repopath="$GIT_PUBLIC_DIR/$repo"
+
+    if ! test -d "$repopath"; then
+        echo "Repository '$repo' is not a public repository, skipping..." >&2
+        return 1
+    fi
+
+    local name=$(basename "${repo}" ".git")
+    echo -n "Generating static HTML pages for '$name'... "
+
+    mkdir -p "$GIT_SERVE_DIR/$name"
+    cd "$GIT_SERVE_DIR/$name" || return 1
+
+    # Remove commits and cache file on 'git push -f', this recreated later on.
+    if is-force-push; then
+        rm -Rf "$GIT_SERVE_DIR/$name/commit"
+        rm -f "$GIT_SERVE_DIR/.$name.cache"
+    fi
+
+    # Generate static HTML for given repository path.
+    stagit -c "$GIT_SERVE_DIR/.$name.cache" "$repopath"
+
+    ln -sf log.html index.html
+    for f in style.css logo.png; do
+        ln -sf "../$f" "$f"
+    done
+
+    echo "done."
+}
+
+# Generate static HTML files for all repositories in public directory.
+function stagit-generate-index() {
+    echo -n "Generating static HTML pages for public git index... "
+    stagit-index "$GIT_PUBLIC_DIR/"*/ > "$GIT_SERVE_DIR/index.html"
+
+    # Copy example assets if none are found being served.
+    for f in style.css logo.png; do
+        if ! test -f "$GIT_SERVE_DIR/$f"; then
+            cp -f "/usr/share/doc/stagit/$f" "$GIT_SERVE_DIR/$f"
+        fi
+    done
+
+    echo "done."
+}
+
+# Attempt to generate static files for public repository.
+stagit-generate-repo "$1" && stagit-generate-index

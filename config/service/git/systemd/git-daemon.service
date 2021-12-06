@@ -1,0 +1,22 @@
+[Unit]
+Description=Git Server via Daemon
+Wants=git.service
+After=git.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+SyslogIdentifier=%N
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
+                          --user git-public --entrypoint git \
+                          --publish 9418:9418 \
+                          --volume git:/var/lib/git:z,ro \
+                          localhost/git:latest daemon \
+                          --verbose --export-all --base-path=/var/lib/git/public
+ExecStop=/bin/podman stop --ignore --time 10 %N
+ExecStopPost=/bin/podman rm --ignore --force %N
+
+[Install]
+WantedBy=multi-user.target
