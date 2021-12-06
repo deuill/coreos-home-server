@@ -72,6 +72,16 @@ systemd:
     - name: nginx-proxy-http@php.localhost.service
       enabled: true
 
+    - name: nginx-serve-volume@git-serve.service
+      enabled: true
+    - name: nginx-proxy-http@git.localhost.service
+      enabled: true
+      dropins:
+        - name: git-volume-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=nginx-serve-volume-git-serve UPSTREAM_PORT=8080
+
     - name: nginx-proxy-http@dav.localhost.service
       enabled: true
       dropins:
