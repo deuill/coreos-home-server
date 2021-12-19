@@ -3,7 +3,7 @@
 This repository contains support files for deploying a simple server setup based on Fedora CoreOS,
 and mainly based around [systemd](https://systemd.io) and [Podman](https://podman.io).
 
-## Pre-requisites
+## Prerequisites
 
 Effective use of the source-files here requires that you have the following dependencies installed
 on your host:
@@ -63,16 +63,13 @@ parameter to the `make` invocation.
 By default, you can use the `<Ctrl>]` key-combination to escape the virtual machine, and can use the
 `make destroy-virtual` command to drop any resources initialized for the virtual host.
 
-## Services
+## Included Services
 
 In addition to host-specific configuration, servers will typically include a number of services,
 managed by `systemd` and `podman`. These are intended to be deployed via Ignition on server setup,
 but also be managed throughout the server's life-cycle.
 
-The mechanisms for building and deploying services are simple and fairly consistent. Firstly, Podman
-containers and systemd services are built and enabled using the included `container-build` systemd
-service. This will read files from `/etc/coreos-home-server` (copied onto the server during
-deployment) and build container images and systemd service definitions as needed.
+Check the [service documentation](config/service/README.md) for more information.
 
 ## License
 
