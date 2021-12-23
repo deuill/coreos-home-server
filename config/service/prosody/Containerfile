@@ -1,5 +1,5 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=0.11.10
+ARG VERSION=0.11.11
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl mercurial gnupg ca-certificates apt-transport-https netcat-traditional
