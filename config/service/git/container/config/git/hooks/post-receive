@@ -6,8 +6,9 @@
 set -euo pipefail
 
 # Base configuration.
-GIT_PUBLIC_DIR="/var/lib/git/public"
-GIT_SERVE_DIR="/var/lib/git-serve"
+GIT_REPO_PATH="$(pwd)"
+GIT_PUBLIC_PATH="/var/lib/git/public"
+GIT_SERVE_PATH="/var/lib/git-serve"
 
 # Other global variables.
 __GIT_FORCE_PUSH=
@@ -16,7 +17,7 @@ __GIT_FORCE_PUSH=
 function get-repository-name() {
     local name="$1"
     if test -z "$name"; then
-        name=$(basename "$(pwd)")
+        name=$(basename "$GIT_REPO_PATH")
     fi
 
     echo -n "$name"
@@ -46,7 +47,7 @@ function is-force-push() {
 # Generate static HTML files for given repository.
 function stagit-generate-repo() {
     local repo=$(get-repository-name "$1")
-    local repopath="$GIT_PUBLIC_DIR/$repo"
+    local repopath="$GIT_PUBLIC_PATH/$repo"
 
     if ! test -d "$repopath"; then
         echo "Repository '$repo' is not a public repository, skipping..." >&2
@@ -56,17 +57,17 @@ function stagit-generate-repo() {
     local name=$(basename "${repo}" ".git")
     echo -n "Generating static HTML pages for '$name'... "
 
-    mkdir -p "$GIT_SERVE_DIR/$name"
-    cd "$GIT_SERVE_DIR/$name" || return 1
+    mkdir -p "$GIT_SERVE_PATH/$name"
+    cd "$GIT_SERVE_PATH/$name" || return 1
 
     # Remove commits and cache file on 'git push -f', this recreated later on.
     if is-force-push; then
-        rm -Rf "$GIT_SERVE_DIR/$name/commit"
-        rm -f "$GIT_SERVE_DIR/.$name.cache"
+        rm -Rf "$GIT_SERVE_PATH/$name/commit"
+        rm -f "$GIT_SERVE_PATH/.$name.cache"
     fi
 
     # Generate static HTML for given repository path.
-    stagit -c "$GIT_SERVE_DIR/.$name.cache" "$repopath"
+    stagit -c "$GIT_SERVE_PATH/.$name.cache" "$repopath"
 
     ln -sf log.html index.html
     for f in style.css logo.png; do
@@ -79,12 +80,12 @@ function stagit-generate-repo() {
 # Generate static HTML files for all repositories in public directory.
 function stagit-generate-index() {
     echo -n "Generating static HTML pages for public git index... "
-    stagit-index "$GIT_PUBLIC_DIR/"*/ > "$GIT_SERVE_DIR/index.html"
+    stagit-index "$GIT_PUBLIC_PATH/"*/ > "$GIT_SERVE_PATH/index.html"
 
     # Copy example assets if none are found being served.
     for f in style.css logo.png; do
-        if ! test -f "$GIT_SERVE_DIR/$f"; then
-            cp -f "/usr/share/doc/stagit/$f" "$GIT_SERVE_DIR/$f"
+        if ! test -f "$GIT_SERVE_PATH/$f"; then
+            cp -f "/usr/share/doc/stagit/$f" "$GIT_SERVE_PATH/$f"
         fi
     done
 
@@ -92,4 +93,9 @@ function stagit-generate-index() {
 }
 
 # Attempt to generate static files for public repository.
-stagit-generate-repo "$1" && stagit-generate-index
+stagit-generate-repo "${1:-}" && stagit-generate-index
+
+# Attempt to run any repo-level hooks.
+if test -x "$GIT_REPO_PATH/hooks/post-receive"; then
+    cd "$GIT_REPO_PATH" && source "$GIT_REPO_PATH/hooks/post-receive"
+fi
