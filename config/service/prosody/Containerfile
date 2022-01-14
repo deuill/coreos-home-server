@@ -1,5 +1,6 @@
 FROM docker.io/debian:bullseye-slim
 ARG VERSION=0.11.12
+ARG MODULES_VERSION=bd0a1f917d98
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl mercurial gnupg ca-certificates apt-transport-https netcat-traditional
@@ -14,7 +15,7 @@ RUN echo "deb https://packages.prosody.im/debian bullseye main" > /etc/apt/sourc
     lua-dbi-mysql lua-event lua-zlib lua-sec lua-luaossl lua-bitop prosody=${VERSION}*
 
 RUN mkdir -p /usr/lib/prosody/community-modules && \
-    hg clone https://hg.prosody.im/prosody-modules /usr/lib/prosody/community-modules
+    hg clone --rev ${MODULES_VERSION} https://hg.prosody.im/prosody-modules /usr/lib/prosody/community-modules
 
 COPY container/config /etc/prosody
 RUN prosodyctl check config

@@ -44,7 +44,6 @@ modules_enabled = {
     -- Not essential, but recommended
     "carbons"; -- Keep multiple clients in sync
     "pep"; -- Enables users to publish their mood, activity, playing music and more
-    "private"; -- Private XML storage (for room bookmarks, etc.)
     "blocklist"; -- Allow users to block communications with other users
     "vcard4"; -- Allow users to set vCards in v4 format.
     "vcard_legacy"; -- Allow users to set vCards in legacy formats.
@@ -61,41 +60,31 @@ modules_enabled = {
     "csi_simple"; -- Enables simple traffic optimisation for clients that have reported themselves as inactive.
     "filter_chatstates"; -- Don't send chat state notifications when client is inactive.
     "throttle_presence"; -- Don't send presence information when client is inactive.
+
+    -- Push notifications
     "cloud_notify"; -- Support for push notifications.
-    "cloud_notify_encrypted"; -- Support for experimental encrypted push notifications.
-    "cloud_notify_priority_tag"; -- Support for the experimental Priority of Notifications specification.
-    "cloud_notify_filters"; -- Support for experimental push notification filtering.
+    "cloud_notify_extensions"; -- Additional, non-standard extensions for push notification support.
+
+    -- Spam/abuse management
+    "spam_reporting"; -- Allow users to report spam/abuse
+    "watch_spam_reports"; -- Alert admins of spam/abuse reports by users
 
     -- Admin interfaces
-    --"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
     "admin_telnet"; -- Opens telnet console interface on localhost port 5582
 
     -- HTTP modules
-    --"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
     "websocket"; -- XMPP over WebSockets
-    -- "http_files"; -- Serve static files from a directory over HTTP
 
     -- Other specific functionality
-    --"limits"; -- Enable bandwidth limiting for XMPP connections
-    --"groups"; -- Shared roster support
-    --"server_contact_info"; -- Publish contact information for this service
-    --"announce"; -- Send announcement to all online users
-    --"welcome"; -- Welcome users who register accounts
-    --"watchregistrations"; -- Alert admins of registrations
-    --"motd"; -- Send a message to users when they log in
-    --"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
     "proxy65"; -- Enables a file transfer proxy service which clients behind NAT can use
     "conversejs"; -- Web-based frontend for XMPP
-    "bookmarks"; -- Next-generation group-chat bookmarks
-    "turncredentials"; -- Connect to TURN/STUN server.
+    "bookmarks2"; -- Next-generation group-chat bookmarks
+    "turncredentials"; -- Connect to TURN/STUN server
 }
 
 -- These modules are auto-loaded, but should you want
 -- to disable them then uncomment them here:
 modules_disabled = {
-    --"offline"; -- Store offline messages
-    --"c2s"; -- Handle client connections
-    --"s2s"; -- Handle server-to-server connections
     "posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
 }
 
