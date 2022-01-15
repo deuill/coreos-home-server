@@ -20,6 +20,7 @@ ignition:
       - local: service/rss2email/spec.ign
       - local: service/navidrome/spec.ign
       - local: service/writefreely/spec.ign
+      - local: service/coturn/spec.ign
 
 passwd:
   users:

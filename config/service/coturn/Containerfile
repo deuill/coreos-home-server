@@ -1,0 +1,16 @@
+FROM debian:bullseye-slim
+ARG VERSION=4.5.2
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends coturn=${VERSION}* gettext ca-certificates
+
+COPY container/config /etc/coturn
+COPY container/run-coturn /run-coturn
+
+# STUN/TURN ports.
+EXPOSE 3478 3478/udp 5349 5349/udp
+
+# Alternative STUN/TURN ports.
+EXPOSE 3479 3479/udp 5350 5350/udp
+
+ENTRYPOINT ["/run-coturn"]

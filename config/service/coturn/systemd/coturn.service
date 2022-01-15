@@ -1,0 +1,25 @@
+[Unit]
+Description=Coturn TURN/STUN server
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+SyslogIdentifier=%N
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+ExecStart=/bin/podman run --replace --name %N --sdnotify=conmon \
+                          --env-file %E/coreos-home-server/%N/%N.env \
+                          --publish 3478:3478 --publish 3478:3478/udp --publish 5349:5349 --publish 5349:5349/udp \
+                          --publish 3479:3479 --publish 3479:3479/udp --publish 5350:5350 --publish 5350:5350/udp \
+                          --publish ${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}:${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}/udp \
+                          --volume %N:/var/lib/%N:z \
+                          --volume letsencrypt:/etc/ssl/private:z,ro \
+                          localhost/%N:latest
+ExecStop=/bin/podman stop --ignore --time 10 %N
+ExecStopPost=/bin/podman rm --ignore --force %N
+
+[Install]
+WantedBy=multi-user.target
