@@ -19,7 +19,7 @@ function sync-coreos-config() {
     local path="$1"
 
     # Search for configuration in any of the local configuration sub-directories.
-    for dir in "$TEMP_CONFIG_PATH"/config/*/"$(basename "$path")"; do
+    for dir in "$TEMP_CONFIG_PATH"/*/"$(basename "$path")"; do
         if test ! -d "$dir"; then
             printf "configuration not found, skipping.\n"
             return

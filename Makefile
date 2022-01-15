@@ -20,27 +20,27 @@ VIRTINSTALL ?= $(call find-cmd,virt-install) --connect=qemu:///system
 NC          ?= $(call find-cmd,nc) -vv -r -l
 
 ## Builds and deploys Fedora CoreOS for HOST on ADDRESS.
-deploy: $(TMPDIR)host/$(HOST)/spec.ign
+deploy: $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf "Serving Ignition config '$<' over HTTP...\n"
 	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "$$(wc -c < $<)" "$$(cat $<)" | $(NC) -s $(ADDRESS) || exit 0
 
 ## Prepares and deploys CoreOS release for local, virtual environment.
-deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)host/$(HOST)/spec.ign
+deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment...\n"
 	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora34 \
 	                  --graphics=none --vcpus=2 --memory=2048 \
 	                  --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
-	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)host/$(HOST)/spec.ign"
+	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign"
 
 ## Stop and remove virtual environment for CoreOS.
 destroy-virtual:
 	$Q $(VIRSH) destroy fcos-$(STREAM)-$(VERSION)-$(ARCH) || true
 	$Q $(VIRSH) undefine --remove-all-storage fcos-$(STREAM)-$(VERSION)-$(ARCH) || true
 
-## Remove configuration files required for build.
+## Remove deployment configuration files required for build.
 clean:
-	@printf "Removing configuration files...\n"
-	$Q rm -Rf $(TMPDIR)config $(TMPDIR)host
+	@printf "Removing deployment configuration files...\n"
+	$Q rm -Rf $(TMPDIR)deploy
 
 ## Remove all temporary files required for build.
 purge:
@@ -57,30 +57,30 @@ help:
 	@printf "\n"
 
 # Copy host configuration in plain-text. Mainly used for development hosts.
-$(TMPDIR)config/$(HOST).env: $(ROOTDIR)host/$(HOST)/$(HOST).env
+$(TMPDIR)deploy/$(HOST).env: $(ROOTDIR)host/$(HOST)/$(HOST).env
 	$Q install -d $(@D)
 	$Q cp -f $< $@
 
 # Copy encrypted host configuration. Used in production hosts.
-$(TMPDIR)config/$(HOST).env.gpg: $(ROOTDIR)host/$(HOST)/$(HOST).env.gpg
+$(TMPDIR)deploy/$(HOST).env.gpg: $(ROOTDIR)host/$(HOST)/$(HOST).env.gpg
 	@printf "Waiting to decrypt configuration for '$(HOST)'...\n"
 	$Q install -d $(@D)
 	$Q $(GPG) -o $@ --decrypt $<
 
 # Copy directory tree if any of the files within are newer than the target directory.
-$(TMPDIR)config/%/: $(shell find $(ROOTDIR)config/$* -type f -newer $(TMPDIR)config/$* 2>/dev/null)
+$(TMPDIR)deploy/%/: $(shell find $(ROOTDIR)$* -type f -newer $(TMPDIR)deploy/$* 2>/dev/null)
 	$Q install -d $(dir $(@D))
-	$Q cp -Ru $(if $(VERBOSE),-v) $(ROOTDIR)config/$* $(dir $(@D))
+	$Q cp -Ru $(if $(VERBOSE),-v) $(ROOTDIR)$* $(dir $(@D))
 	$Q touch $(@D)
 
 # Copy specific file if source file is newer.
-$(TMPDIR)config/%: $(ROOTDIR)config/%
+$(TMPDIR)deploy/%: $(ROOTDIR)%
 	$Q install $(if $(VERBOSE),-v) -D $< $@
 
 # Compile Ignition file from Butane configuration file.
-$(TMPDIR)%.ign: $(ROOTDIR)%.bu
+$(TMPDIR)deploy/%.ign: $(ROOTDIR)%.bu
 	$Q install -d $(@D)
-	$Q $(BUTANE) --pretty --strict --files-dir $(TMPDIR)config -o $@ $<
+	$Q $(BUTANE) --pretty --strict --files-dir $(TMPDIR)deploy -o $@ $<
 
 # Download and, optionally, extract Fedora CoreOS installation image.
 $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
@@ -95,13 +95,13 @@ $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
 # Generate Makefile dependencies from `local:` definitions in BUTANE files.
 $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	@printf "# Automatic prerequisites for Fedora CoreOS configuration." > $@
-	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.bu,$(TMPDIR)%.ign, \
-	         $(i)): $(addprefix $(TMPDIR)config/, $(shell awk -F '[ ]+local:[ ]*' '/^[ ]+(-[ ]+)?local:/ {print $$2}' $(i))))" >> $@
+	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.bu,$(TMPDIR)deploy/%.ign, \
+	         $(i)): $(addprefix $(TMPDIR)deploy/, $(shell awk -F '[ ]+local:[ ]*' '/^[ ]+(-[ ]+)?local:/ {print $$2}' $(i))))" >> $@
 
 # Show help if empty or invalid target has been given.
 .DEFAULT:
-	@printf "Invalid target '$@'...\n"
 	$Q $(MAKE) -s -f $(firstword $(MAKEFILE_LIST)) help
+	@printf "Invalid target '$@', stopping.\n"; exit 1
 
 .PHONY: deploy deploy-virtual destroy-virtual clean purge help
 

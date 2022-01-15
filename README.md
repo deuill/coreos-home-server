@@ -69,7 +69,7 @@ In addition to host-specific configuration, servers will typically include a num
 managed by `systemd` and `podman`. These are intended to be deployed via Ignition on server setup,
 but also be managed throughout the server's life-cycle.
 
-Check the [service documentation](config/service/README.md) for more information.
+Check the [service documentation](service/README.md) for more information.
 
 ## License
 

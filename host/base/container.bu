@@ -4,8 +4,10 @@ storage:
   trees:
     - path: /etc/coreos-home-server
       local: service/
+    - path: /etc/coreos-home-server/base
+      local: host/base/
     - path: /etc/systemd/system
-      local: common/systemd/
+      local: host/base/systemd/
   directories:
     - path: /etc/coreos-home-server
       mode: 0700
@@ -13,7 +15,7 @@ storage:
     - path: /etc/containers/containers.conf
       mode: 0644
       contents:
-        local: common/container/containers.conf
+        local: host/base/service/containers.conf
 systemd:
   units:
     - name: coreos-home-server-update.timer
