@@ -4,4 +4,4 @@
 tmp/
 
 # Ignore files in private directory.
-config/private/
+private/
