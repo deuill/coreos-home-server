@@ -2,8 +2,9 @@ FROM docker.io/debian:bullseye-slim
 ARG VERSION=2.1.0
 
 ARG SKYPE_VERSION=29c860170ca18c3f7f15b5ba7723e06ddc760361
-ARG DISCORD_VERSION=99bdf6fe0c6169feff9e0e4c7edabb805a4c4042
-ENV BUILD_DEPS="curl gnupg apt-transport-https build-essential git libpurple-dev libglib2.0-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat"
+ARG DISCORD_VERSION=dd274a248eea37f75988f6ee9c8fb786c5ba0ec5
+ENV BUILD_DEPS="curl gnupg apt-transport-https build-essential git libpurple-dev libglib2.0-dev \
+                libnss3-dev libqrencode-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat"
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends ca-certificates sudo gettext libjson-glib-1.0-0 ${BUILD_DEPS}
