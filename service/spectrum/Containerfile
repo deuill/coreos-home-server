@@ -4,10 +4,10 @@ ARG VERSION=2.1.0
 ARG SKYPE_VERSION=29c860170ca18c3f7f15b5ba7723e06ddc760361
 ARG DISCORD_VERSION=dd274a248eea37f75988f6ee9c8fb786c5ba0ec5
 ENV BUILD_DEPS="curl gnupg apt-transport-https build-essential git libpurple-dev libglib2.0-dev \
-                libnss3-dev libqrencode-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat"
+                libnss3-dev libqrencode-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat "
 
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends ca-certificates sudo gettext libjson-glib-1.0-0 ${BUILD_DEPS}
+    apt-get install -y --no-install-recommends ca-certificates sudo gettext libjson-glib-1.0-0 libnss3 libqrencode4 ${BUILD_DEPS}
 
 RUN echo "deb https://packages.spectrum.im/spectrum2/ bullseye main" > /etc/apt/sources.list.d/spectrum2.list && \
     echo "deb-src https://packages.spectrum.im/spectrum2/ bullseye main" >> /etc/apt/sources.list.d/spectrum2.list && \
@@ -20,7 +20,7 @@ RUN git clone https://github.com/EionRobb/skype4pidgin.git && \
     rm -Rf /skype4pidgin
 
 RUN git clone https://github.com/EionRobb/purple-discord.git && \
-    cd purple-discord && git checkout ${DISCORD_VERSION} && make && make install && \
+    cd purple-discord && git checkout ${DISCORD_VERSION} && make && make install USE_QRCODE_AUTH=1 && \
     rm -Rf /purple-discord
 
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${BUILD_DEPS}
