@@ -1,5 +1,5 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=0.11.12
+ARG VERSION=0.11.13
 ARG MODULES_VERSION=a1181413a0eb
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
