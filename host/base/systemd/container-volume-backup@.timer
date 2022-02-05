@@ -2,8 +2,8 @@
 Description=Scheduled Backup for Container Volume %i
 
 [Timer]
-OnCalendar=00/12:30
-RandomizedDelaySec=15m
+OnCalendar=02:00
+RandomizedDelaySec=10m
 
 [Install]
 WantedBy=timers.target

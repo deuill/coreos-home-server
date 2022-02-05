@@ -7,10 +7,10 @@ Type=oneshot
 SyslogIdentifier=%N
 ExecStart=/bin/podman run --replace --rm --name %p-%i --entrypoint /bin/bash \
                           --volume %i:/data:z \
-                          --volume %S/backups/coreos-home-server/%i:/backups:z,ro \
+                          --volume %S/backups/coreos-home-server/%i:/backup:z,ro \
                           docker.io/debian:bullseye-slim -c \
                           'test -n "$(ls -A /data)" && echo "Volume %i is not empty, skipping." && exit 0; \
-                           tar -xvpf "/backups/%i-latest.tar.gz" -C /data'
+                           tar --verbose --extract --file "/backup/%i-latest.tar.gz" --directory /data'
 
 [Install]
 WantedBy=multi-user.target
