@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
+    - path: /etc/coreos-home-server/coturn
+      local: service/coturn/
     - path: /etc/systemd/system
       local: service/coturn/systemd/
 systemd:

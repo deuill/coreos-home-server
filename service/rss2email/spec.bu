@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
+    - path: /etc/coreos-home-server/rss2email
+      local: service/rss2email/
     - path: /etc/systemd/system
       local: service/rss2email/systemd/
 systemd:

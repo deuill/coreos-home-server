@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
+    - path: /etc/coreos-home-server/redis
+      local: service/redis/
     - path: /etc/systemd/system
       local: service/redis/systemd/
 systemd:

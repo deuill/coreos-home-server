@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
+    - path: /etc/coreos-home-server/rspamd
+      local: service/rspamd/
     - path: /etc/systemd/system
       local: service/rspamd/systemd/
 systemd:

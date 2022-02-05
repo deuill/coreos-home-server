@@ -2,8 +2,6 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
-    - path: /etc/coreos-home-server
-      local: service/
     - path: /etc/coreos-home-server/base
       local: host/base/
     - path: /etc/systemd/system

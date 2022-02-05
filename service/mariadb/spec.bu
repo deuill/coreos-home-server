@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
+    - path: /etc/coreos-home-server/mariadb
+      local: service/mariadb/
     - path: /etc/systemd/system
       local: service/mariadb/systemd/
 systemd:

@@ -2,6 +2,8 @@ variant: fcos
 version: 1.3.0
 storage:
   trees:
+    - path: /etc/coreos-home-server/writefreely
+      local: service/writefreely/
     - path: /etc/systemd/system
       local: service/writefreely/systemd/
 systemd:
