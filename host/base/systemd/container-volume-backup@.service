@@ -13,7 +13,7 @@ ExecStart=/bin/podman run --replace --rm --name %p-%i --entrypoint /bin/bash \
                            test "$(find /data -type f -newer /backup/%i-latest.tar.gz -print -quit | wc -l)" -eq 0 && exit 0; \
                            name="%i-$(date +%%w%%H)" && \
                            tar --verbose --create --gzip --file "/backup/$name.tar.gz" --directory /data . && \
-                           ln --force "/backup/$name.tar.gz" /backup/%i-latest.tar.gz'
+                           cd /backup && ln --symbolic --force "$name.tar.gz" %i-latest.tar.gz'
 
 [Install]
 WantedBy=multi-user.target
