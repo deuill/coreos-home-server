@@ -21,6 +21,7 @@ ignition:
       - local: service/navidrome/spec.ign
       - local: service/writefreely/spec.ign
       - local: service/coturn/spec.ign
+      - local: service/rclone/spec.ign
 
 passwd:
   users:

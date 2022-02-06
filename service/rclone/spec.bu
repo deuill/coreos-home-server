@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.3.0
+storage:
+  trees:
+    - path: /etc/coreos-home-server/rclone
+      local: service/rclone/
+    - path: /etc/systemd/system
+      local: service/rclone/systemd/

@@ -1,0 +1,15 @@
+[Unit]
+Description=Rclone Sync for /%I
+Wants=container-build@rclone.service
+After=container-build@rclone.service
+ConditionDirectoryNotEmpty=/%I
+
+[Service]
+Type=oneshot
+SyslogIdentifier=%N
+EnvironmentFile=%E/coreos-home-server/rclone/rclone.env
+ExecStart=/bin/podman run --rm --env-file %E/coreos-home-server/rclone/rclone.env \
+                          --volume /%I:/data:z localhost/rclone:latest sync /data ${RCLONE_DEST}
+
+[Install]
+WantedBy=multi-user.target
