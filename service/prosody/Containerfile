@@ -1,18 +1,19 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=0.11.13
-ARG MODULES_VERSION=a1181413a0eb
+ARG VERSION=0.12.0
+ARG MODULES_VERSION=f07c9a6f19b3
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    curl mercurial gnupg ca-certificates apt-transport-https netcat-traditional
+    curl mercurial gnupg ca-certificates apt-transport-https
 
 RUN addgroup --system --gid 10000 prosody
 RUN adduser --system --uid 10000 --ingroup prosody --home /var/lib/prosody prosody
+RUN install --owner prosody --group prosody --directory /run/prosody
 
 RUN echo "deb https://packages.prosody.im/debian bullseye main" > /etc/apt/sources.list.d/prosody.list && \
     echo "deb-src https://packages.prosody.im/debian bullseye main" >> /etc/apt/sources.list.d/prosody.list && \
     curl -o - https://prosody.im/files/prosody-debian-packages.key | apt-key add - && \
     apt-get update -y && apt-get install -y --no-install-recommends \
-    lua-dbi-mysql lua-event lua-zlib lua-sec lua-luaossl lua-bitop prosody=${VERSION}*
+    lua5.2 lua-dbi-sqlite3 lua-zlib lua-sec lua-luaossl lua-bitop lua-unbound prosody=${VERSION}*
 
 RUN mkdir -p /usr/lib/prosody/community-modules && \
     hg clone --rev ${MODULES_VERSION} https://hg.prosody.im/prosody-modules /usr/lib/prosody/community-modules
@@ -21,9 +22,6 @@ COPY container/config /etc/prosody
 RUN prosodyctl check config
 
 VOLUME /var/lib/prosody
-ENV __FLUSH_LOG yes
-
 USER prosody
-EXPOSE 5222 5269 5280 5347
 
 ENTRYPOINT ["prosody"]

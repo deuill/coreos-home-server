@@ -12,12 +12,12 @@ EnvironmentFile=-%E/coreos-home-server/%i/%i.env
 ExecStartPre=/bin/install --mode 0700 --directory /tmp/%N
 ExecStartPre=/bin/sh -c "envsubst < %E/coreos-home-server/prosody/service/component.cfg.lua.template > /tmp/%N/component.cfg.lua"
 ExecStartPre=/bin/podman cp --archive=false /tmp/%N/component.cfg.lua prosody:/etc/prosody/conf.d/%i.cfg.lua
-ExecStartPre=/bin/podman exec prosody sh -c "echo 'config:reload()' | nc -q 1 -w 10 127.0.0.1 5582"
-ExecStart=/bin/podman exec prosody sh -c "echo 'host:activate(\"${PROSODY_COMPONENT_NAME}\")' | nc -q 1 -w 10 127.0.0.1 5582"
+ExecStartPre=/bin/podman exec prosody prosodyctl shell config reload
+ExecStart=/bin/podman exec prosody prosodyctl shell host activate "$PROSODY_COMPONENT_NAME"
 ExecStartPost=/bin/rm -Rf /tmp/%N
-ExecStop=/bin/podman exec prosody sh -c "echo 'host:deactivate(\"${PROSODY_COMPONENT_NAME}\")' | nc -q 1 -w 10 127.0.0.1 5582"
+ExecStop=/bin/podman exec prosody prosodyctl shell host deactivate "$PROSODY_COMPONENT_NAME"
 ExecStopPost=/bin/podman exec --user=root prosody rm -f /etc/prosody/conf.d/%i.cfg.lua
-ExecStopPost=/bin/podman exec prosody sh -c "echo 'config:reload()' | nc -q 1 -w 10 127.0.0.1 5582"
+ExecStartPre=/bin/podman exec prosody prosodyctl shell config reload
 
 [Install]
 WantedBy=multi-user.target

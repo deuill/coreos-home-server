@@ -1,9 +1,0 @@
-[Unit]
-Description=Initialize Prosody XMPP Server
-Wants=mariadb-migrate@prosody.service prosody.service
-After=mariadb-migrate@prosody.service
-Before=prosody.service
-ConditionKernelCommandLine=ignition.firstboot
-
-[Install]
-WantedBy=multi-user.target

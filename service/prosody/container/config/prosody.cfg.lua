@@ -21,14 +21,10 @@
 -- Example: admins = { "user1@example.com", "user2@example.net" }
 admins = {}
 
--- Enable use of libevent for better performance under high load
--- For more information see: https://prosody.im/doc/libevent
-use_libevent = true
-
 -- Prosody will always look in its source directory for modules, but
 -- this option allows you to specify additional locations where Prosody
 -- will look for modules first. For community modules, see https://modules.prosody.im/
-plugin_paths = {"/usr/lib/prosody/community-modules"}
+plugin_paths = {"/usr/lib/prosody/modules", "/usr/lib/prosody/community-modules"}
 
 -- This is the list of modules Prosody will load on startup.
 -- It looks for mod_modulename.lua in the plugins folder, so make sure that exists too.
@@ -40,6 +36,7 @@ modules_enabled = {
     "tls"; -- Add support for secure TLS on c2s/s2s connections
     "dialback"; -- s2s dialback support
     "disco"; -- Service discovery
+    "posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
 
     -- Not essential, but recommended
     "carbons"; -- Keep multiple clients in sync
@@ -53,13 +50,9 @@ modules_enabled = {
     "uptime"; -- Report how long server has been running
     "time"; -- Let others know the time here on this server
     "ping"; -- Replies to XMPP pings with pongs
-    "register"; -- Allow users to register on this server using a client and change passwords
     "mam"; -- Store messages in an archive and allow users to access it
     "smacks"; -- Stream management for resuming dropped connections.
-    "csi"; -- Chat state information.
     "csi_simple"; -- Enables simple traffic optimisation for clients that have reported themselves as inactive.
-    "filter_chatstates"; -- Don't send chat state notifications when client is inactive.
-    "throttle_presence"; -- Don't send presence information when client is inactive.
 
     -- Push notifications
     "cloud_notify"; -- Support for push notifications.
@@ -70,27 +63,20 @@ modules_enabled = {
     "watch_spam_reports"; -- Alert admins of spam/abuse reports by users
 
     -- Admin interfaces
-    "admin_telnet"; -- Opens telnet console interface on localhost port 5582
+    "admin_shell"; -- Allows for Prosody administration over a local shell
 
     -- HTTP modules
     "websocket"; -- XMPP over WebSockets
 
     -- Other specific functionality
-    "proxy65"; -- Enables a file transfer proxy service which clients behind NAT can use
     "conversejs"; -- Web-based frontend for XMPP
-    "bookmarks2"; -- Next-generation group-chat bookmarks
-    "turncredentials"; -- Connect to TURN/STUN server
+    "bookmarks"; -- Next-generation group-chat bookmarks
+    "turn_external"; -- Connect to TURN/STUN server
 }
 
 -- These modules are auto-loaded, but should you want
 -- to disable them then uncomment them here:
-modules_disabled = {
-    "posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
-}
-
--- Disable account creation by default, for security
--- For more information see https://prosody.im/doc/creating_accounts
-allow_registration = false
+modules_disabled = {}
 
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
@@ -136,11 +122,8 @@ authentication = "internal_hashed"
 
 storage = "sql" -- Default is "internal"
 sql = {
-    driver   = "MySQL",
-    host     = os.getenv("PROSODY_DATABASE_HOST") or "localhost",
-    database = os.getenv("PROSODY_DATABASE_NAME") or "prosody",
-    username = os.getenv("PROSODY_DATABASE_USERNAME") or "prosody",
-    password = os.getenv("PROSODY_DATABASE_PASSWORD") or ""
+    driver   = "SQLite3",
+    database = "/var/lib/prosody/prosody.sqlite",
 }
 
 -- For the "sql" backend, you can uncomment *one* of the below to configure:
@@ -163,6 +146,10 @@ archive_expires_after = "1w" -- Remove archived messages after 1 week
 -- For advanced logging see https://prosody.im/doc/logging
 log = {{to = "console", levels = {min = "info"}, timestamps = true}}
 
+-- Set PID file and socket in ephemeral path.
+pidfile = "/run/prosody/prosody.pid"
+admin_socket = "/run/prosody/prosody.sock"
+
 -- Don't show banner when performing console commands.
 console_banner = ""
 
@@ -180,8 +167,8 @@ auth_imap_ssl = {
 }
 
 -- Configuration for TURN/STUN.
-turncredentials_host   = os.getenv("PROSODY_TURN_HOST") or "localhost"
-turncredentials_secret = os.getenv("PROSODY_TURN_SECRET") or ""
+turn_external_host   = os.getenv("PROSODY_TURN_HOST") or "localhost"
+turn_external_secret = os.getenv("PROSODY_TURN_SECRET") or ""
 
 -- Uncomment to enable statistics
 -- For more info see https://prosody.im/doc/statistics
@@ -195,7 +182,7 @@ turncredentials_secret = os.getenv("PROSODY_TURN_SECRET") or ""
 -- (from e.g. Let's Encrypt) see https://prosody.im/doc/certificates
 
 -- Location of directory to find certificates in (relative to main config file):
-certificates = "certificates"
+certificates = "/etc/ssl/private/certificates"
 
 -- Listen on all interfaces for component connections.
 component_interface = "0.0.0.0"

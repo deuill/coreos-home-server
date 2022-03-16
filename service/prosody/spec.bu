@@ -8,7 +8,5 @@ storage:
       local: service/prosody/systemd/
 systemd:
   units:
-    - name: prosody-firstboot.target
-      enabled: true
     - name: prosody.service
       enabled: true
