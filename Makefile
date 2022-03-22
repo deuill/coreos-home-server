@@ -1,6 +1,6 @@
 # CoreOS options.
 STREAM    := stable
-VERSION   := 35.20220103.3.0
+VERSION   := 35.20220227.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
