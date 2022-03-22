@@ -78,6 +78,9 @@ modules_enabled = {
 -- to disable them then uncomment them here:
 modules_disabled = {}
 
+-- Enable direct TLS connections for clients.
+c2s_direct_tls_ports = {5223}
+
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
 c2s_require_encryption = true
@@ -94,15 +97,13 @@ s2s_require_encryption = true
 -- For more information see https://prosody.im/doc/s2s#security
 s2s_secure_auth = true
 
--- Some servers have invalid or self-signed certificates. You can list
--- remote domains here that will not be required to authenticate using
--- certificates. They will be authenticated using DNS instead, even
--- when s2s_secure_auth is enabled.
---s2s_insecure_domains = { "insecure.example" }
+-- HTTP interface and port configuration.
+http_ports = {5280}
+http_interfaces = {"*", "::"}
 
--- Even if you leave s2s_secure_auth disabled, you can still require valid
--- certificates for some domains by specifying a list here.
---s2s_secure_domains = { "jabber.org" }
+-- Explicitly disable HTTPS, as we're intended to use a reverse proxy in front of Prosody.
+https_ports = {}
+https_interfaces = {}
 
 -- WebSockets configuration
 consider_websocket_secure = true
@@ -125,11 +126,6 @@ sql = {
     driver   = "SQLite3",
     database = "/var/lib/prosody/prosody.sqlite",
 }
-
--- For the "sql" backend, you can uncomment *one* of the below to configure:
---sql = { driver = "SQLite3", database = "prosody.sqlite" } -- Default. 'database' is the filename.
---sql = { driver = "MySQL", database = "prosody", username = "prosody", password = "secret", host = "localhost" }
---sql = { driver = "PostgreSQL", database = "prosody", username = "prosody", password = "secret", host = "localhost" }
 
 -- Archiving configuration
 -- If mod_mam is enabled, Prosody will store a copy of every message. This
