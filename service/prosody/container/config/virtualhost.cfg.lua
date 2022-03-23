@@ -33,6 +33,8 @@ Component(host_external) "http_file_share"
   http_file_share_size_limit   = 1024 * 1024 * 32
   http_file_share_daily_quota  = 1024 * 1024 * 128
   http_file_share_global_quota = 1024 * 1024 * 1024 * 5
+  http_host                    = host_external
+  http_external_url            = "https://" .. host_external .. "/"
   http_paths = {
     file_share = "/upload"
   }
