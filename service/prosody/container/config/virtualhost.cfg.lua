@@ -24,7 +24,8 @@ Component(host_external) "muc"
   max_history_messages   = 100
   modules_enabled = {
     "muc_mam",
-    "vcard_muc"
+    "vcard_muc",
+    "muc_offline_delivery"
   }
 
 -- The component responsible for HTTP file uploads.

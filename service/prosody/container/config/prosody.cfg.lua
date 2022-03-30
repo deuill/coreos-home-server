@@ -56,6 +56,7 @@ modules_enabled = {
 
     -- Push notifications
     "cloud_notify"; -- Support for push notifications.
+    "cloud_notify_filters"; -- Non-standard extensions for push notification filtering preferences.
     "cloud_notify_extensions"; -- Additional, non-standard extensions for push notification support.
 
     -- Spam/abuse management
