@@ -20,6 +20,7 @@ ExecStart=/bin/podman run --replace --name %N --sdnotify=conmon \
                           localhost/%N:latest
 ExecStop=/bin/podman stop --ignore --time 10 %N
 ExecStopPost=/bin/podman rm --ignore --force %N
+ExecReload=/bin/podman exec %N sh -c 'kill -USR2 $(pidof turnserver)'
 
 [Install]
 WantedBy=multi-user.target
