@@ -6,10 +6,11 @@ After=rspamd.service
 [Service]
 Type=oneshot
 SyslogIdentifier=%N
+StandardOutput=tty
 ExecStartPre=/bin/podman exec rspamd install -d /var/lib/rspamd/dkim
 ExecStart=/bin/podman exec rspamd openssl genrsa -out /var/lib/rspamd/dkim/%i.dkim.key 1024
 ExecStartPost=/bin/podman exec rspamd chmod 644 /var/lib/rspamd/dkim/%i.dkim.key
-ExecStartPost=/bin/podman exec rspamd sh -c 'echo "Public DKIM key:"; openssl rsa -in /var/lib/rspamd/dkim/%i.dkim.key -pubout -outform der 2> /dev/null | openssl base64 -A'
+ExecStartPost=/bin/podman exec rspamd sh -c 'echo "Public DKIM key:"; openssl rsa -in /var/lib/rspamd/dkim/%i.dkim.key -pubout -outform der 2> /dev/null | openssl base64 -A; echo'
 
 [Install]
 WantedBy=multi-user.target
