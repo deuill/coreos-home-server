@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -eu
+
+# Set up shared variables.
+GIT_REPO="$1"
+GIT_BRANCH="$2"
+
+# Ensure correct usage and state.
+if test -z "$GIT_REPO"; then
+    echo "Git repository path is empty, please provide a valid path as the first argument."
+    exit 1
+elif test -z "$GIT_BRANCH"; then
+    echo "Git branch name is empty, please provide a valid branch name as the second argument."
+    exit 1
+elif test ! -e "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}"; then
+    echo "Unable to find HEAD reference for '${GIT_REPO}', branch '${GIT_BRANCH}', is this a valid Git repository?"
+    exit 2
+fi
+
+chown -R hugo:hugo /dest
+
+# Wait for updates to watched branch for the given site, and build static content anew.
+while true; do
+    gosu hugo /usr/bin/git clone --quiet --shared "/src/${GIT_REPO}" /tmp/src
+    gosu hugo /bin/hugo --verbose --source /tmp/src --destination /dest && rm -Rf /tmp/src
+    inotifywait -qq --event modify "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}" && break
+done

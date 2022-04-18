@@ -19,6 +19,8 @@ ignition:
       - local: service/spectrum/spec.ign
       - local: service/radicale/spec.ign
       - local: service/navidrome/spec.ign
+      - local: service/rclone/spec.ign
+      - local: service/hugo/spec.ign
       - local: private/spec.ign
 
 passwd:

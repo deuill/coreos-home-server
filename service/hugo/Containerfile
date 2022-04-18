@@ -1,0 +1,15 @@
+FROM docker.io/debian:bullseye-slim
+ARG VERSION=0.97.2
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates curl git inotify-tools gosu
+
+ENV PACKAGE_URL https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz
+RUN curl -L ${PACKAGE_URL} | tar -C /bin --no-same-owner -xvzf - hugo && chmod +x /bin/hugo
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+
+RUN addgroup --system --gid 10000 hugo
+RUN adduser --system --uid 10000 --ingroup hugo --no-create-home hugo
+
+COPY container/run-hugo /run-hugo
+ENTRYPOINT ["/run-hugo"]

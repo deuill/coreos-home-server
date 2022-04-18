@@ -22,6 +22,7 @@ ignition:
       - local: service/writefreely/spec.ign
       - local: service/coturn/spec.ign
       - local: service/rclone/spec.ign
+      - local: service/hugo/spec.ign
 
 passwd:
   users:

@@ -1,0 +1,21 @@
+[Unit]
+Description=Hugo Build for Local %I Repository
+Wants=container-build@hugo.service container-volume@hugo-build-%i.service git.service
+After=container-build@hugo.service container-volume@hugo-build-%i.service git.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+SyslogIdentifier=%N
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Environment=GIT_REPO=%i.git GIT_BRANCH=master
+ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmon \
+                          --volume git:/src:z,ro \
+                          --volume hugo-build-%i:/dest:z \
+                          localhost/hugo:latest $GIT_REPO $GIT_BRANCH
+ExecStop=/bin/podman stop --ignore --time 10 %p-%i
+ExecStopPost=/bin/podman rm --ignore --force %p-%i
+
+[Install]
+WantedBy=multi-user.target
