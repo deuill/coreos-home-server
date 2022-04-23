@@ -22,7 +22,7 @@ chown -R hugo:hugo /dest
 
 # Wait for updates to watched branch for the given site, and build static content anew.
 while true; do
-    gosu hugo /usr/bin/git clone --quiet --shared "/src/${GIT_REPO}" /tmp/src
-    gosu hugo /bin/hugo --verbose --source /tmp/src --destination /dest && rm -Rf /tmp/src
+    gosu hugo git clone --quiet --shared --branch "${GIT_BRANCH}" "/src/${GIT_REPO}" /tmp/src
+    gosu hugo hugo --verbose --source /tmp/src --destination /dest && rm -Rf /tmp/src
     inotifywait -qq --event modify "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}" && break
 done
