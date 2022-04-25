@@ -23,6 +23,8 @@ ignition:
       - local: service/coturn/spec.ign
       - local: service/rclone/spec.ign
       - local: service/hugo/spec.ign
+      - local: service/prometheus/spec.ign
+      - local: service/grafana/spec.ign
 
 passwd:
   users:
@@ -116,6 +118,14 @@ systemd:
           contents: |
             [Service]
             Environment=UPSTREAM_HOST=writefreely UPSTREAM_PORT=8080
+
+    - name: nginx-proxy-http@metrics.localhost.service
+      enabled: true
+      dropins:
+        - name: grafana-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=grafana UPSTREAM_PORT=8080
 
     - name: letsencrypt-dns-register@localhost.service
       enabled: true

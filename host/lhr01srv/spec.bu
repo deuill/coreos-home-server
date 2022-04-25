@@ -21,6 +21,8 @@ ignition:
       - local: service/navidrome/spec.ign
       - local: service/rclone/spec.ign
       - local: service/hugo/spec.ign
+      - local: service/prometheus/spec.ign
+      - local: service/grafana/spec.ign
       - local: private/spec.ign
 
 passwd:

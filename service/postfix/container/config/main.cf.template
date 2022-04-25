@@ -160,7 +160,7 @@ virtual_mailbox_domains = mysql:/etc/postfix/mysql-domains.cf
 virtual_uid_maps = static:5000
 virtual_gid_maps = static:5000
 
-# Pass messages through 'opendkim' and 'rmilter'.
+# Pass messages through 'rspamd'.
 smtpd_milters = ${POSTFIX_MAIL_MILTER_PATH}
 milter_protocol = 6
 milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen}

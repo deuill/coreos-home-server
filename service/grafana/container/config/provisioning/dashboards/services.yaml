@@ -1,0 +1,10 @@
+# Service dashboards provisioned by services.
+apiVersion: 1
+providers:
+  - name: 'Services'
+    folder: 'Services'
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards

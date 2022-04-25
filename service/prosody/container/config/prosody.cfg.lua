@@ -68,6 +68,7 @@ modules_enabled = {
 
     -- HTTP modules
     "websocket"; -- XMPP over WebSockets
+    "http_openmetrics"; -- Enables metrics collection in OpenMetrics-compatible format.
 
     -- Other specific functionality
     "conversejs"; -- Web-based frontend for XMPP
@@ -169,7 +170,9 @@ turn_external_secret = os.getenv("PROSODY_TURN_SECRET") or ""
 
 -- Uncomment to enable statistics
 -- For more info see https://prosody.im/doc/statistics
--- statistics = "internal"
+statistics = "internal"
+statistics_interval = "manual"
+openmetrics_allow_cidr = "10.89.0.0/16"
 
 -- Certificates
 -- Every virtual host and component needs a certificate so that clients and

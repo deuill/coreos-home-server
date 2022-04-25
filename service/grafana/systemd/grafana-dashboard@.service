@@ -1,0 +1,16 @@
+[Unit]
+Description=Register Grafana Dashboard for %I
+Wants=grafana.service
+After=grafana.service
+ConditionPathExists=%E/coreos-home-server/%i/service/%p.json
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+SyslogIdentifier=%N
+ExecStartPre=/bin/podman exec grafana mkdir -p /var/lib/grafana/dashboards
+ExecStart=/bin/podman cp %E/coreos-home-server/%i/service/%p.json grafana:/var/lib/grafana/dashboards/%i.json
+ExecStop=/bin/podman exec grafana rm -f /var/lib/grafana/dashboards/%i.json
+
+[Install]
+WantedBy=multi-user.target

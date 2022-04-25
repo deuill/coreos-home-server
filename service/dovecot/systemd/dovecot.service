@@ -1,7 +1,8 @@
 [Unit]
 Description=Dovecot POP3/IMAP Server
-Wants=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service
+Wants=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service grafana-dashboard@dovecot.service
 After=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service
+Before=grafana-dashboard@dovecot.service
 
 [Service]
 Type=notify

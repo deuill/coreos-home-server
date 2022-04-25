@@ -1,0 +1,2 @@
+FROM docker.io/grafana/grafana:8.5.0
+COPY container/config /etc/grafana

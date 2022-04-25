@@ -1,7 +1,7 @@
 [Unit]
 Description=Prosody XMPP server
-Wants=container-build@%N.service container-volume@%N.service dovecot.service
-After=container-build@%N.service container-volume@%N.service dovecot.service
+Wants=container-build@%N.service container-volume@%N.service dovecot.service grafana-dashboard@prosody.service
+After=container-build@%N.service container-volume@%N.service dovecot.service grafana-dashboard@prosody.service
 
 [Service]
 Type=notify

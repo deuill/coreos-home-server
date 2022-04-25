@@ -1,0 +1,19 @@
+[Unit]
+Description=Register Prometheus Metrics for %I
+Wants=prometheus.service
+After=prometheus.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+SyslogIdentifier=%N
+Environment=SERVICE_HOST=%i
+Environment=PROMETHEUS_CONF=%E/coreos-home-server/prometheus/service/%p.yml.template
+ExecStart=/bin/sh -c "envsubst '$SERVICE_HOST' < ${PROMETHEUS_CONF} > /tmp/%i.yml"
+ExecStartPost=/bin/sh -c 'podman cp --archive=false /tmp/%i.yml prometheus:/etc/prometheus/service.d/%i.yml && rm -f /tmp/%i.yml'
+ExecStartPost=/bin/podman exec prometheus sh -c 'kill -HUP $(pidof prometheus)'
+ExecStop=/bin/podman exec --user=root prometheus rm -f /etc/prometheus/service.d/%i.yml
+ExecStopPost=/bin/podman exec prometheus sh -c 'kill -HUP $(pidof prometheus)'
+
+[Install]
+WantedBy=multi-user.target
