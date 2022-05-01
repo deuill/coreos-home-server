@@ -9,10 +9,10 @@ RemainAfterExit=true
 SyslogIdentifier=%N
 Environment=PROSODY_COMPONENT_NAME=%i
 EnvironmentFile=-%E/coreos-home-server/%i/%i.env
-ExecCondition=/bin/sh -c "podman exec prosody prosodyctl shell host list | grep --quiet $PROSODY_COMPONENT_NAME; test $? -ne 0"
 ExecStartPre=/bin/install --mode 0700 --directory /tmp/%N
 ExecStartPre=/bin/sh -c "envsubst < %E/coreos-home-server/prosody/service/component.cfg.lua.template > /tmp/%N/component.cfg.lua"
 ExecStartPre=/bin/podman cp --archive=false /tmp/%N/component.cfg.lua prosody:/etc/prosody/conf.d/%i.cfg.lua
+ExecStartPre=/bin/sh -c 'podman exec prosody prosodyctl shell host deactivate "$PROSODY_COMPONENT_NAME" || true'
 ExecStartPre=/bin/podman exec prosody prosodyctl shell config reload
 ExecStart=/bin/podman exec prosody prosodyctl shell host activate "$PROSODY_COMPONENT_NAME"
 ExecStartPost=/bin/rm -Rf /tmp/%N
