@@ -80,3 +80,7 @@ enable_public_registration=${SPECTRUM_REGISTRATION_ENABLED}
 # local_username_label=Local username (without @server.tld):
 # local_account_server=localhost
 # local_account_server_timeout=10000
+
+[purple]
+# Improve compatibility with WhatsApp protocol plugin.
+bridge-compatibility=true
