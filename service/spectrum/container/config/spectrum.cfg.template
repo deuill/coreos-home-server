@@ -32,6 +32,10 @@ backend = /usr/bin/spectrum2_libpurple_backend
 # So for example: prpl-jabber.hanzz.k%gmail.com@domain.tld
 protocol = ${SPECTRUM_PROTOCOL}
 
+# Where to re-host files uploaded by legacy protocol buddies, and which URL to return to XMPP.
+web_directory=/var/lib/spectrum2-media
+web_url=https://${PROSODY_HOST_EXTERNAL}/spectrum
+
 # If enabled, your legacy network buddies will be removed when you unsubscribe from them in the XMPP.
 # enable_remove_buddy = true
 
