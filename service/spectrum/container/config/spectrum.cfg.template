@@ -84,3 +84,6 @@ enable_public_registration=${SPECTRUM_REGISTRATION_ENABLED}
 [purple]
 # Improve compatibility with WhatsApp protocol plugin.
 bridge-compatibility=true
+
+# Handle link-only messages for up to 2MB as media messages instead for WhatsApp.
+embed-max-file-size=2
