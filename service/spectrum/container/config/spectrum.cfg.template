@@ -37,7 +37,7 @@ protocol = ${SPECTRUM_PROTOCOL}
 
 [identity]
 # Name of Spectrum instance in service discovery
-name = Spectrum Jabber Transport
+name = Spectrum Transport (${SPECTRUM_PROTOCOL})
 
 # Type of transport ("msn", "icq", "xmpp").
 # Check http://xmpp.org/registrar/disco-categories.html#gateway

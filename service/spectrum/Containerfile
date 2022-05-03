@@ -1,11 +1,35 @@
+FROM docker.io/debian:bullseye-slim AS builder
+ARG SKYPE_VERSION=29c860170ca18c3f7f15b5ba7723e06ddc760361
+ARG DISCORD_VERSION=698907f0573692ed79f35e86abcd67ae85b64e89
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates build-essential gettext git libpurple-dev libglib2.0-dev libnss3-dev \
+    libqrencode-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat
+
+RUN git clone https://github.com/EionRobb/skype4pidgin.git && \
+    cd skype4pidgin/skypeweb && git checkout ${SKYPE_VERSION} && make && make install DESTDIR=/spectrum-plugins && \
+    rm -Rf /skype4pidgin
+
+RUN git clone https://github.com/EionRobb/purple-discord.git && \
+    cd purple-discord && git checkout ${DISCORD_VERSION} && make && make install DESTDIR=/spectrum-plugins && \
+    rm -Rf /purple-discord
+
+FROM docker.io/golang:1.18 AS golang-builder
+ARG WHATSAPP_VERSION=6722b2312c4fab6c1725cb17837c5d7b498b575a
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates build-essential cmake git libpurple-dev
+
+RUN git clone https://github.com/hoehermann/purple-gowhatsapp.git && \
+    cd purple-gowhatsapp && git checkout ${WHATSAPP_VERSION} && mkdir -p build && cd build && \
+    cmake .. && cmake --build . && make install DESTDIR=/spectrum-plugins && \
+    rm -Rf /purple-gowhatsapp
+
 FROM docker.io/debian:bullseye-slim
 ARG VERSION=2.1.3
 
-ENV BUILD_DEPS="curl gnupg apt-transport-https build-essential git libpurple-dev libglib2.0-dev \
-                libnss3-dev libqrencode-dev libjson-glib-dev libhttp-parser-dev graphicsmagick-imagemagick-compat"
-
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends ca-certificates sudo gettext libnss3 libqrencode4 libjson-glib-1.0-0 ${BUILD_DEPS}
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates curl gnupg apt-transport-https gettext libnss3 libqrencode4 libjson-glib-1.0-0
 
 RUN echo "deb https://packages.spectrum.im/spectrum2/ bullseye main" > /etc/apt/sources.list.d/spectrum2.list && \
     echo "deb-src https://packages.spectrum.im/spectrum2/ bullseye main" >> /etc/apt/sources.list.d/spectrum2.list && \
@@ -13,17 +37,8 @@ RUN echo "deb https://packages.spectrum.im/spectrum2/ bullseye main" > /etc/apt/
     apt-get update -y && \
     apt-get install -y --no-install-recommends spectrum2=1:${VERSION}"*" spectrum2-backend-libpurple=1:${VERSION}"*"
 
-ARG SKYPE_VERSION=29c860170ca18c3f7f15b5ba7723e06ddc760361
-RUN git clone https://github.com/EionRobb/skype4pidgin.git && \
-    cd skype4pidgin/skypeweb && git checkout ${SKYPE_VERSION} && make && make install && \
-    rm -Rf /skype4pidgin
-
-ARG DISCORD_VERSION=698907f0573692ed79f35e86abcd67ae85b64e89
-RUN git clone https://github.com/EionRobb/purple-discord.git && \
-    cd purple-discord && git checkout ${DISCORD_VERSION} && make && make install && \
-    rm -Rf /purple-discord
-
-RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${BUILD_DEPS}
+COPY --from=builder /spectrum-plugins /
+COPY --from=golang-builder /spectrum-plugins /
 
 RUN addgroup --system --gid 10000 spectrum
 RUN adduser --system --uid 10000 --ingroup spectrum --home /var/lib/spectrum2 spectrum
