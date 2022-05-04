@@ -72,7 +72,7 @@ type = sqlite3
 
 [registration]
 # Enable public registrations
-enable_public_registration=${SPECTRUM_REGISTRATION_ENABLED}
+enable_public_registration = ${SPECTRUM_REGISTRATION_ENABLED}
 
 # Text to display upon user registration form
 # username_label=Jabber JID (e.g. user@server.tld):
@@ -86,8 +86,11 @@ enable_public_registration=${SPECTRUM_REGISTRATION_ENABLED}
 # local_account_server_timeout=10000
 
 [purple]
+# Download user icons for WhatsApp.
+get-icons = true
+
 # Improve compatibility with WhatsApp protocol plugin.
-bridge-compatibility=true
+bridge-compatibility = true
 
 # Handle link-only messages for up to 2MB as media messages instead for WhatsApp.
-embed-max-file-size=2
+embed-max-file-size = 2

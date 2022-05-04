@@ -6,4 +6,8 @@ for file in /etc/spectrum2/*.template; do
 	envsubst "${ENV_NAMES}" < "${file}" > $(echo "${file}" | awk -F '.template$' '{print $1}')
 done
 
+# Correct permissions for data files.
+chown -R spectrum:spectrum /var/lib/spectrum2 /var/lib/spectrum2-media
+
+# Run entrypoint.
 /usr/bin/spectrum2 -n /etc/spectrum2/spectrum.cfg

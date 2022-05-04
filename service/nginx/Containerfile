@@ -1,7 +1,11 @@
 FROM docker.io/nginx:1.21
 
+RUN addgroup --system --gid 10000 nginx-shared
+RUN gpasswd --add nginx nginx-shared
+
 COPY container/config /etc/nginx
 COPY container/run-nginx /run-nginx
+
 RUN nginx -t
 
 EXPOSE 80 443
