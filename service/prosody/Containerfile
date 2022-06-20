@@ -1,6 +1,6 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=0.12.0
-ARG MODULES_VERSION=f07c9a6f19b3
+ARG VERSION=0.12.1
+ARG MODULES_VERSION=5a3031613dbc
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl mercurial gnupg ca-certificates apt-transport-https
