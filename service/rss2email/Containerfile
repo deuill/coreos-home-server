@@ -1,5 +1,5 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=4a088c7efe1c76fa1ebe842adc8e2a796df8f313
+ARG VERSION=4fa34da9fbfcaa5e5496b13c4bdd17362c383568
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git gettext gosu \
