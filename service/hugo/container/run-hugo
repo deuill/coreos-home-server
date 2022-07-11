@@ -19,10 +19,14 @@ elif test ! -e "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}"; then
 fi
 
 chown -R hugo:hugo /dest
+gosu hugo git clone --quiet --shared --branch "${GIT_BRANCH}" "/src/${GIT_REPO}" /tmp/src
 
 # Wait for updates to watched branch for the given site, and build static content anew.
-while true; do
-    gosu hugo git clone --quiet --shared --branch "${GIT_BRANCH}" "/src/${GIT_REPO}" /tmp/src
-    gosu hugo hugo --verbose --source /tmp/src --destination /dest && rm -Rf /tmp/src
-    inotifywait -qq --event modify "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}" && break
-done
+(
+    cd /tmp/src
+    while inotifywait -qq --event modify "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}"; do
+        gosu hugo git fetch origin "${GIT_BRANCH}" && gosu hugo git reset --hard "${GIT_BRANCH}"
+    done
+) &
+
+gosu hugo hugo watch --verbose --source /tmp/src --destination /dest
