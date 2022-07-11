@@ -1,4 +1,4 @@
-FROM docker.io/nginx:1.21
+FROM docker.io/nginx:1.23
 
 RUN addgroup --system --gid 10000 nginx-shared
 RUN gpasswd --add nginx nginx-shared
