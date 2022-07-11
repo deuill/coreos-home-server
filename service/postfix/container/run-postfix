@@ -13,4 +13,4 @@ postalias /etc/postfix/aliases
 postfix set-permissions
 
 # Run master daemon for Postfix.
-/usr/lib/postfix/sbin/master -c /etc/postfix -d
+/usr/sbin/postfix -c /etc/postfix start-fg
