@@ -134,12 +134,8 @@ systemd:
           contents: |
             [Service]
             ExecStart=
-            ExecStart=/bin/podman create --replace --pull never --name letsencrypt-register-%i \
-                                         --volume letsencrypt:/var/lib/letsencrypt:z \
-                                         --entrypoint true localhost/letsencrypt:latest
-            ExecStartPost=/bin/podman init letsencrypt-register-%i
-            ExecStartPost=/bin/podman cp /etc/ssl/private/certificates/ letsencrypt-register-%i:/var/lib/letsencrypt
-            ExecStartPost=/bin/podman rm letsencrypt-register-%i
+            ExecStart=/bin/sh -c "V=$(podman volume mount letsencrypt) && cp -Rv /etc/ssl/private/certificates $V"
+            ExecStartPost=/bin/podman volume unmount letsencrypt
 
 storage:
   files:
