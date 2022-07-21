@@ -1,2 +1,2 @@
-FROM docker.io/mariadb:10.8
+FROM docker.io/mariadb:10.7
 USER mysql
