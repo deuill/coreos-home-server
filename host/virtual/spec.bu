@@ -25,6 +25,7 @@ ignition:
       - local: service/hugo/spec.ign
       - local: service/prometheus/spec.ign
       - local: service/grafana/spec.ign
+      - local: service/gitea/spec.ign
 
 passwd:
   users:
@@ -127,12 +128,21 @@ systemd:
             [Service]
             Environment=UPSTREAM_HOST=grafana UPSTREAM_PORT=8080
 
+    - name: nginx-proxy-http@gitea.localhost.service
+      enabled: true
+      dropins:
+        - name: gitea-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=gitea UPSTREAM_PORT=8080
+
     - name: letsencrypt-dns-register@localhost.service
       enabled: true
       dropins:
         - name: use-local-files.conf
           contents: |
             [Service]
+            ExecStartPre=/bin/podman volume create letsencrypt
             ExecStart=
             ExecStart=/bin/sh -c "V=$(podman volume mount letsencrypt) && cp -Rv /etc/ssl/private/certificates $V"
             ExecStartPost=/bin/podman volume unmount letsencrypt

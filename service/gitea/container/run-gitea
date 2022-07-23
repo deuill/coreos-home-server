@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -eu
+
+# Export shared variables.
+export GITEA_WORK_DIR=/var/lib/gitea
+
+# Create configuration file from collected templates.
+envsubst < /etc/gitea/config.ini.template > /etc/gitea/config.ini
+
+# Create data directories and correct permissions for data files.
+install --owner git --group git --mode 700 --directory /var/lib/gitea
+chown -R git:git /etc/gitea
+
+# Initialize default condiguration if needed.
+if ! test -f /var/lib/gitea/gitea.db; then
+    # Set up database.
+    gosu git /usr/bin/gitea -c /etc/gitea/config.ini migrate
+
+    # Set up SMTP authentication via local service.
+    gosu git /usr/bin/gitea -c /etc/gitea/config.ini admin auth add-smtp --name postfix --active \
+                            --host "${GITEA_AUTH_SMTP_HOST}" --port "${GITEA_AUTH_SMTP_PORT}"
+fi
+
+# Run entrypoint under specific user.
+gosu git /usr/bin/gitea -c /etc/gitea/config.ini web "$@"

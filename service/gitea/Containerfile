@@ -1,0 +1,20 @@
+FROM docker.io/debian:bullseye-slim
+ARG VERSION=1.16.9
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl ca-certificates gettext gosu \
+                    git openssh-client gnupg
+
+ENV PACKAGE_URL https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64
+RUN curl -L -o /usr/bin/gitea ${PACKAGE_URL} && chmod +x /usr/bin/gitea
+
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+
+RUN addgroup --system --gid 10000 git
+RUN adduser --system --uid 10000 --ingroup git --home /var/lib/gitea git
+
+COPY container/config /etc/gitea
+COPY container/run-gitea /run-gitea
+
+EXPOSE 8080 7920
+ENTRYPOINT ["/run-gitea"]
