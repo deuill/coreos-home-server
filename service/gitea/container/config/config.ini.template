@@ -3,7 +3,9 @@ RUN_USER = git
 RUN_MODE = prod
 
 [repository]
-ROOT = /var/lib/gitea/repositories
+ROOT                    = /var/lib/gitea/repositories
+ENABLE_PUSH_CREATE_USER = true
+DEFAULT_PRIVATE         = true
 
 [repository.local]
 LOCAL_COPY_PATH = /var/lib/gitea/tmp/local-repo
@@ -12,13 +14,15 @@ LOCAL_COPY_PATH = /var/lib/gitea/tmp/local-repo
 TEMP_PATH = /var/lib/gitea/tmp/uploads
 
 [server]
-APP_DATA_PATH   = /var/lib/gitea
-ROOT_URL        = https://${GITEA_DOMAIN}/
-DOMAIN          = ${GITEA_DOMAIN}
-SSH_DOMAIN      = ${GITEA_SSH_DOMAIN}
-HTTP_PORT       = 8080
-SSH_PORT        = ${GITEA_SSH_PORT}
-SSH_LISTEN_PORT = 7920
+APP_DATA_PATH    = /var/lib/gitea
+ROOT_URL         = https://${GITEA_DOMAIN}/
+DOMAIN           = ${GITEA_DOMAIN}
+START_SSH_SERVER = true
+SSH_DOMAIN       = ${GITEA_SSH_DOMAIN}
+HTTP_PORT        = 8080
+SSH_PORT         = ${GITEA_SSH_PORT}
+SSH_LISTEN_PORT  = 7920
+LANDING_PAGE     = explore
 
 [database]
 DB_TYPE = sqlite3
@@ -57,8 +61,8 @@ REQUIRE_SIGNIN_VIEW  = ${GITEA_REQUIRE_SIGNIN_VIEW}
 [mailer]
 ENABLED        = true
 MAILER_TYPE    = smtp
-IS_TLS_ENABLED = true
+IS_TLS_ENABLED = false
 FROM           = ${GITEA_MAILER_FROM}
 HOST           = ${GITEA_MAILER_HOST}
 USER           = ${GITEA_MAILER_USER}
-PASSWD         = ${GITEA_MAILER_PASSWD}
+PASSWD         = `${GITEA_MAILER_PASSWD}`
