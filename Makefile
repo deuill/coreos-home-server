@@ -9,10 +9,14 @@ HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
 VERBOSE :=
 ROOTDIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 TMPDIR  := $(shell ls -d /var/tmp/fcos-build.???? 2>/dev/null || mktemp -d /var/tmp/fcos-build.XXXX && chmod 0755 /var/tmp/fcos-build.????)/
-ADDRESS =  $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
+
+# Target-specific variables.
+ADDRESS        = $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
+CONTAINERFILES = $(wildcard service/*/Containerfile)
 
 # Build-time dependencies.
 BUTANE      ?= $(call find-cmd,butane)
+PODMAN      ?= $(call find-cmd,podman)
 CURL        ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar) --fail
 GPG         ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
 VIRSH       ?= $(call find-cmd,virsh) --connect=qemu:///system $(if $(VERBOSE),,-q)
@@ -28,7 +32,7 @@ deploy: $(TMPDIR)deploy/host/$(HOST)/spec.ign
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment...\n"
 	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora34 \
-	                  --graphics=none --vcpus=2 --memory=2048 \
+	                  --graphics=none --vcpus=2 --memory=2048 --cpu=host --virt-type=kvm \
 	                  --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
 	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign"
 
@@ -55,6 +59,11 @@ help:
 	@printf "$(UNDERLINE)Available Tasks$(RESET)\n\n"
 	@awk -F ':|##' '/^##/ {c=$$2; getline; printf "$(BLUE)%16s$(RESET)%s\n", $$1, c}' $(MAKEFILE_LIST)
 	@printf "\n"
+
+# Build container file locally using 'podman build'.
+$(CONTAINERFILES):
+	@printf "Building container for '$(notdir $(@D))'...\n"
+	$Q cd "$(abspath $(@D))" && $(PODMAN) build .
 
 # Copy host configuration in plain-text. Mainly used for development hosts.
 $(TMPDIR)deploy/$(HOST).env: $(ROOTDIR)host/$(HOST)/$(HOST).env
@@ -103,7 +112,7 @@ $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	$Q $(MAKE) -s -f $(firstword $(MAKEFILE_LIST)) help
 	@printf "Invalid target '$@', stopping.\n"; exit 1
 
-.PHONY: deploy deploy-virtual destroy-virtual clean purge help
+.PHONY: deploy deploy-virtual destroy-virtual clean purge help $(CONTAINERFILES)
 
 # Conditional command echo control.
 Q := $(if $(VERBOSE),,@)
