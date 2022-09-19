@@ -1,7 +1,7 @@
 # Ignore various common temporary files.
 .DS_Store
 .idea
-tmp/
+.tmp/
 
 # Ignore custom hosts.
 host/

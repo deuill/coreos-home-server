@@ -16,40 +16,45 @@ SYSTEMD_CONFIG_PATH="/etc/systemd/system"
 
 # Synchronize CoreOS home-server configuration for specific path.
 function sync-coreos-config() {
-    local path="$1"
+    local hostdir="$1"
+    local dirname="$(basename "$hostdir")"
 
-    # Search for configuration in any of the local configuration sub-directories.
-    for dir in "$TEMP_CONFIG_PATH"/*/"$(basename "$path")"; do
-        if test ! -d "$dir"; then
-            printf "configuration not found, skipping.\n"
-            return
-        fi
+    # Check if any remote configuration exists for the name given.
+    if ! compgen -G "$TEMP_CONFIG_PATH"/*/"$dirname" > /dev/null; then
+        printf "configuration not found, skipping.\n"
+        return
+    fi
 
-        # Remove files that only exist in local configuration.
-        for f in $(comm -23 <(cd "$path"; find . | sort) <(cd "$dir"; find . | sort)); do
-            # Don't delete environment files, as these are required for active services.
-            if test "$(basename --suffix=.env "$f")" != "$(basename "$f")"; then
-                continue
-            fi
-
-            rm --verbose --recursive --force "$(realpath --quiet "$path/$f")"
-        done
-
-        # Update timestamp for temporary file to match last commit time, in order to ensure
-        # correct partial updates.
-        for f in "$dir/"**; do
+    # Collect remote configuration files across base directories.
+    for tmpdir in "$TEMP_CONFIG_PATH"/*/"$dirname"; do
+        # Update timestamp for temporary file to match last commit time, in order to ensure correct partial updates.
+        for f in "$tmpdir/"**; do
             # Skip directories, as updating their commit times will have all files within be synchronized.
             if test -d "$f"; then
                 continue
             fi
 
-            touch -t "$(cd "$dir" && git log -n 1 --pretty=format:%cd --date=format-local:%Y%m%d%H%M.%S --date-order -- "$f")" -- "$f"
+            touch -t "$(cd "$tmpdir" && git log -n 1 --pretty=format:%cd --date=format-local:%Y%m%d%H%M.%S --date-order -- "$f")" -- "$f"
         done
 
-        # Copy files from temporary directory to host configuration directory.
-        cp --verbose --recursive --update --target-directory "$path" "$dir"/*
-        printf "done.\n"
+        # Link source files into temporary destination directory.
+        mkdir --parents "$TEMP_CONFIG_PATH/.tmp/$dirname"
+        cp --archive --force --target-directory "$TEMP_CONFIG_PATH/.tmp/$dirname" "$tmpdir"/.
     done
+
+    # Remove files that only exist in local configuration.
+    for f in $(comm -23 <(cd "$hostdir"; find . | sort) <(cd "$TEMP_CONFIG_PATH/.tmp/$dirname"; find . | sort)); do
+        # Don't delete environment files, as these are required for active services.
+        if test "$(basename --suffix=.env "$f")" != "$(basename "$f")"; then
+            continue
+        fi
+
+        rm --verbose --recursive --force "$(realpath --quiet "$hostdir/$f")"
+    done
+
+    # Copy files from temporary directory to host configuration directory.
+    cp --verbose --recursive --update --target-directory "$hostdir" "$TEMP_CONFIG_PATH/.tmp/$dirname"/*
+    printf "done.\n"
 }
 
 # Synchronize systemd service files from CoreOS home-server configuration.
@@ -59,21 +64,21 @@ function sync-systemd-services() {
     # Copy service files if newer than destination.
     for src in "$HOST_CONFIG_PATH"/*/systemd/*; do
         tmp="$(cp --verbose --recursive --update --target-directory "$SYSTEMD_CONFIG_PATH" "$src")"
-        buffer="${buffer}${tmp}"
+        if test -n "$tmp"; then buffer="${buffer}"$'\n'"${tmp}"; fi
     done
 
-    printf "%s done.\n" "$buffer"
+    printf "%s\ndone.\n" "$buffer"
     if test -n "$buffer"; then return 0; else return 1; fi
 }
 
 # Synchronize all existing CoreOS home-server configuration.
-for dir in "$HOST_CONFIG_PATH"/*; do
-    if test ! -d "$dir"; then
+for hostdir in "$HOST_CONFIG_PATH"/*; do
+    if test ! -d "$hostdir"; then
         continue
     fi
 
-    printf "Synchronizing host configuration for '%s'... " "$dir"
-    sync-coreos-config "$dir"
+    printf "Synchronizing host configuration for '%s'... " "$hostdir"
+    sync-coreos-config "$hostdir"
 done
 
 # Synchronize systemd services from local CoreOS home-server configuration.
