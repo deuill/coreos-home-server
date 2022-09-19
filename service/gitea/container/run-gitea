@@ -17,9 +17,15 @@ if ! test -f /var/lib/gitea/gitea.db; then
     # Set up database.
     gosu git /usr/bin/gitea -c /etc/gitea/config.ini migrate
 
-    # Set up SMTP authentication via local service.
-    gosu git /usr/bin/gitea -c /etc/gitea/config.ini admin auth add-smtp --name postfix --active \
-                            --host "${GITEA_AUTH_SMTP_HOST}" --port "${GITEA_AUTH_SMTP_PORT}"
+    # Set up LDAP authentication via local service.
+    gosu git /usr/bin/gitea -c /etc/gitea/config.ini admin auth add-ldap --name "LDAP" \
+                            --host "${GITEA_AUTH_LDAP_HOST}" --port "${GITEA_AUTH_LDAP_PORT}" \
+                            --synchronize-users --security-protocol unencrypted \
+                            --bind-dn "uid=${GITEA_AUTH_LDAP_BIND_UID},ou=people,dc=ldap,dc=local" --bind-password "${GITEA_AUTH_LDAP_BIND_PASSWORD}" \
+                            --user-search-base "ou=people,dc=ldap,dc=local" --user-filter "(&(memberof=cn=gitea_user,ou=groups,dc=ldap,dc=local)(|(uid=%[1]s)(mail=%[1]s)))" \
+                            --admin-filter "(memberof=cn=gitea_admin,ou=groups,dc=ldap,dc=local)" \
+                            --username-attribute "uid" --email-attribute "mail" \
+                            --firstname-attribute "givenName" --surname-attribute "sn" --avatar-attribute "jpegPhoto"
 fi
 
 # Run entrypoint under specific user.
