@@ -26,6 +26,7 @@ ignition:
       - local: service/prometheus/spec.ign
       - local: service/grafana/spec.ign
       - local: service/gitea/spec.ign
+      - local: service/lldap/spec.ign
 
 passwd:
   users:
@@ -135,6 +136,14 @@ systemd:
           contents: |
             [Service]
             Environment=UPSTREAM_HOST=gitea UPSTREAM_PORT=8080
+
+    - name: nginx-proxy-http@lldap.localhost.service
+      enabled: true
+      dropins:
+        - name: lldap-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=lldap UPSTREAM_PORT=8080
 
     - name: letsencrypt-dns-register@localhost.service
       enabled: true

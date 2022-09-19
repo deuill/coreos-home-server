@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+# Create configuration file from collected templates.
+envsubst < /etc/lldap/config.toml.template > /etc/lldap/config.toml
+
+# Create data directories and correct permissions for data files.
+install --owner lldap --group lldap --mode 700 --directory /var/lib/lldap
+chown -R lldap:lldap /etc/lldap /var/lib/lldap
+
+# Run entrypoint under specific user.
+cd /opt/lldap && gosu lldap /opt/lldap/lldap run --config-file /etc/lldap/config.toml "$@"

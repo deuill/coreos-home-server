@@ -1,0 +1,60 @@
+## The port on which to have the LDAP server.
+ldap_port = 3890
+
+## The port on which to have the HTTP server, for user login and administration.
+http_port = 8080
+
+## The public URL of the server, for password reset links.
+http_url = "https://${LLDAP_HOST}"
+
+## Random secret for JWT signature.
+jwt_secret = "${LLDAP_JWT_SECRET}"
+
+## Base DN for LDAP.
+## This is usually your domain name, and is used as a namespace for your users. The choice is
+## arbitrary, but will be needed to configure the LDAP integration with other services. The sample
+## value is for "example.com", but you can extend it with as many "dc" as you want, and you don't
+## actually need to own the domain name.
+ldap_base_dn = "dc=ldap,dc=local"
+
+## Admin email.
+## Email for the admin account. It is only used when initially creating the admin user, and can
+## safely be omitted.
+ldap_user_email = "${LLDAP_ADMIN_EMAIL}"
+
+## Admin username.
+## For the LDAP interface, a value of "admin" here will create the LDAP user
+## "cn=admin,ou=people,dc=example,dc=com" (with the base DN above). For the administration
+## interface, this is the username.
+ldap_user_dn = "${LLDAP_ADMIN_USERNAME}"
+
+## Admin password.
+## Password for the admin account, both for the LDAP bind and for the
+## administration interface. It is only used when initially creating
+## the admin user.
+## It should be minimum 8 characters long.
+ldap_user_pass = "${LLDAP_ADMIN_PASSWORD}"
+
+## Database URL.
+## This encodes the type of database (SQlite, MySQL and so on), the path, the user, password, and
+## sometimes the mode (when relevant).
+## Note: Currently, only SQlite is supported. SQlite should come with "?mode=rwc" to create the DB
+## if not present.
+##
+## Example URLs:
+##  - "postgres://postgres-user:password@postgres-server/my-database"
+##  - "mysql://mysql-user:password@mysql-server/my-database"
+database_url = "sqlite:///var/lib/lldap/lldap.db?mode=rwc"
+
+## Private key file.
+## Contains the secret private key used to store the passwords safely. Note that even with a
+## database dump and the private key, an attacker would still have to perform an (expensive) brute
+## force attack to find each password.
+## Randomly generated on first run if it doesn't exist.
+key_file = "/var/lib/lldap/private.key"
+
+## Options to configure SMTP parameters, to send password reset emails. To set these options from
+## environment variables, use the following format
+[smtp_options]
+## Whether to enabled password reset via email, from LLDAP.
+enable_password_reset=false
