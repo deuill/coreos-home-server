@@ -9,7 +9,6 @@ ignition:
       - local: service/mariadb/spec.ign
       - local: service/nginx/spec.ign
       - local: service/letsencrypt/spec.ign
-      - local: service/git/spec.ign
       - local: service/dovecot/spec.ign
       - local: service/postfix/spec.ign
       - local: service/rspamd/spec.ign
@@ -19,7 +18,6 @@ ignition:
       - local: service/spectrum/spec.ign
       - local: service/rss2email/spec.ign
       - local: service/navidrome/spec.ign
-      - local: service/writefreely/spec.ign
       - local: service/coturn/spec.ign
       - local: service/rclone/spec.ign
       - local: service/hugo/spec.ign
@@ -79,16 +77,6 @@ systemd:
     - name: nginx-proxy-http@php.localhost.service
       enabled: true
 
-    - name: nginx-serve-volume@git-serve.service
-      enabled: true
-    - name: nginx-proxy-http@git.localhost.service
-      enabled: true
-      dropins:
-        - name: git-volume-upstream.conf
-          contents: |
-            [Service]
-            Environment=UPSTREAM_HOST=nginx-serve-volume-git-serve UPSTREAM_PORT=8080
-
     - name: nginx-proxy-http@chat.localhost.service
       enabled: true
       dropins:
@@ -112,14 +100,6 @@ systemd:
           contents: |
             [Service]
             Environment=UPSTREAM_HOST=navidrome UPSTREAM_PORT=4533
-
-    - name: nginx-proxy-http@writefreely.localhost.service
-      enabled: true
-      dropins:
-        - name: writefreely-upstream.conf
-          contents: |
-            [Service]
-            Environment=UPSTREAM_HOST=writefreely UPSTREAM_PORT=8080
 
     - name: nginx-proxy-http@metrics.localhost.service
       enabled: true
