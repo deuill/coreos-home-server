@@ -15,7 +15,7 @@ RUN git clone https://github.com/EionRobb/purple-discord.git && \
     rm -Rf /purple-discord
 
 FROM docker.io/golang:1.18 AS golang-builder
-ARG WHATSAPP_VERSION=0ac1eae3ebc9e83eb4bf3c226b7cf8daea3619b7
+ARG WHATSAPP_VERSION=94995ce037c194f0727619b0ab395aae6bf21238
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential cmake git libpurple-dev
