@@ -1,7 +1,7 @@
 [Unit]
 Description=Gitea Self-Hosted Git Service
-Wants=container-build@%N.service container-volume@%N.service
-After=container-build@%N.service container-volume@%N.service
+Wants=container-build@%N.service container-volume@%N.service lldap.service
+After=container-build@%N.service container-volume@%N.service lldap.service
 
 [Service]
 Type=notify
