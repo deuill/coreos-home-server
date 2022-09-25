@@ -11,8 +11,7 @@ local host_external = os.getenv("PROSODY_HOST_EXTERNAL") or "external.localhost"
 VirtualHost(host_base)
   http_host         = host_external
   http_external_url = "https://" .. host_external .. "/"
-  authentication    = "imap"
-  auth_append_host  = true
+  authentication    = "ldap"
   http_paths = {
     conversejs = "/web"
   }

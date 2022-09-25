@@ -13,7 +13,7 @@ RUN echo "deb https://packages.prosody.im/debian bullseye main" > /etc/apt/sourc
     echo "deb-src https://packages.prosody.im/debian bullseye main" >> /etc/apt/sources.list.d/prosody.list && \
     curl -o - https://prosody.im/files/prosody-debian-packages.key | apt-key add - && \
     apt-get update -y && apt-get install -y --no-install-recommends \
-    lua5.2 lua-dbi-sqlite3 lua-zlib lua-sec lua-luaossl lua-bitop lua-unbound prosody=${VERSION}*
+    lua5.2 lua-dbi-sqlite3 lua-zlib lua-sec lua-luaossl lua-bitop lua-unbound lua-ldap prosody=${VERSION}*
 
 RUN mkdir -p /usr/lib/prosody/community-modules && \
     hg clone --rev ${MODULES_VERSION} https://hg.prosody.im/prosody-modules /usr/lib/prosody/community-modules

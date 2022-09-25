@@ -156,13 +156,13 @@ conversejs_options = {
     view_mode = "fullscreen";
 }
 
--- Configuration for IMAP authentication.
-imap_auth_host = os.getenv("PROSODY_IMAP_AUTH_HOST") or "localhost"
-imap_auth_port = os.getenv("PROSODY_IMAP_AUTH_PORT") or 993
-auth_imap_ssl = {
-    mode = "client",
-    protocol = "tlsv1_2"
-}
+-- Configuration for LDAP authentication.
+ldap_server       = os.getenv("PROSODY_AUTH_LDAP_HOST") or "localhost"
+ldap_base         = "ou=people,dc=ldap,dc=local"
+ldap_rootdn       = "uid=" .. (os.getenv("PROSODY_AUTH_LDAP_BIND_UID") or "admin") .. ",ou=people,dc=ldap,dc=local"
+ldap_password     = os.getenv("PROSODY_AUTH_LDAP_BIND_PASSWORD") or ""
+ldap_filter       = "(&(memberof=cn=prosody_user,ou=groups,dc=ldap,dc=local)(|(uid=$user)(mail=$user@$host)))"
+ldap_admin_filter = "(memberof=cn=prosody_admin,ou=groups,dc=ldap,dc=local)"
 
 -- Configuration for TURN/STUN.
 turn_external_host   = os.getenv("PROSODY_TURN_HOST") or "localhost"
