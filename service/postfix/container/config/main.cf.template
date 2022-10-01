@@ -102,9 +102,7 @@ smtpd_client_restrictions =
     permit_mynetworks,
     permit_sasl_authenticated,
     warn_if_reject reject_unknown_reverse_client_hostname,
-    reject_unauth_pipelining,
-    reject_rbl_client sbl.spamhaus.org,
-    reject_rbl_client blackholes.easynet.nl
+    reject_unauth_pipelining
 
 # Requirements for mail relay.
 smtpd_relay_restrictions =
