@@ -7,7 +7,7 @@ RemainAfterExit=true
 SyslogIdentifier=%N
 ExecStart=/bin/sh -c "V=$(podman volume mount rss2email-feeds) && printf '[feed.%%s]\nurl = %I\n' $(md5sum <<< '%i' | cut -c-32) > $V/%i.conf"
 ExecStartPost=/bin/podman volume unmount rss2email-feeds
-ExecStop=/bin/sh -c "V=$(podman volume mount rss2email-feeds) && rf -f $V/%i.conf"
+ExecStop=/bin/sh -c "V=$(podman volume mount rss2email-feeds) && rm -f $V/%i.conf"
 ExecStopPost=/bin/podman volume unmount rss2email-feeds
 
 [Install]
