@@ -53,7 +53,7 @@ function sync-coreos-config() {
     done
 
     # Copy files from temporary directory to host configuration directory.
-    cp --verbose --recursive --update --target-directory "$hostdir" "$TEMP_CONFIG_PATH/.tmp/$dirname"/*
+    (cd "$TEMP_CONFIG_PATH/.tmp/$dirname" && cp --verbose --recursive --update --target-directory "$hostdir" -- *)
     printf "done.\n"
 }
 
