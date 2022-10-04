@@ -9,25 +9,23 @@ multipart-html = True
 use-css = True
 css =
     html {
-        max-width: 70ch;
-        padding: 3em 1em;
-        margin: auto;
+        font-size: 1.1em;
         line-height: 1.75;
-        font-size: 1.25em;
+        margin: 0 auto;
+        max-width: 900px;
+        padding: 1em 0;
     }
-
     h1, h2, h3, h4, h5, h6 {
-        margin: 3em 0 1em;
+        margin: 1em 0;
+        text-decoration: none;
     }
-
     img {
         max-width: 100%;
     }
-
     p, ul, ol {
-        margin-bottom: 2em;
         color: #1d1d1d;
         font-family: sans-serif;
+        margin-bottom: 1em;
     }
 email-protocol = smtp
 smtp-auth = True
