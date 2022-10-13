@@ -1,6 +1,7 @@
 # CoreOS options.
+NAME      := coreos-home-server
 STREAM    := stable
-VERSION   := 36.20220820.3.0
+VERSION   := 36.20220918.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
@@ -8,7 +9,7 @@ HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
 # Default Makefile options.
 VERBOSE :=
 ROOTDIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-TMPDIR  := $(shell ls -d /var/tmp/fcos-build.???? 2>/dev/null || mktemp -d /var/tmp/fcos-build.XXXX && chmod 0755 /var/tmp/fcos-build.????)/
+TMPDIR  := $(shell ls -d /var/tmp/$(NAME).???? 2>/dev/null || mktemp -d /var/tmp/$(NAME).XXXX && chmod 0755 /var/tmp/$(NAME).????)/
 
 # Target-specific variables.
 ADDRESS        = $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
@@ -31,15 +32,15 @@ deploy: $(TMPDIR)deploy/host/$(HOST)/spec.ign
 ## Prepares and deploys CoreOS release for local, virtual environment.
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment...\n"
-	$Q $(VIRTINSTALL) --import --name="fcos-$(STREAM)-$(VERSION)-$(ARCH)" --os-variant=fedora34 \
+	$Q $(VIRTINSTALL) --import --name=$(NAME) --os-variant=fedora36 \
 	                  --graphics=none --vcpus=2 --memory=2048 --cpu=host --virt-type=kvm \
-	                  --disk="size=10,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
+	                  --disk="size=20,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
 	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign"
 
 ## Stop and remove virtual environment for CoreOS.
 destroy-virtual:
-	$Q $(VIRSH) destroy fcos-$(STREAM)-$(VERSION)-$(ARCH) || true
-	$Q $(VIRSH) undefine --remove-all-storage fcos-$(STREAM)-$(VERSION)-$(ARCH) || true
+	$Q $(VIRSH) destroy $(NAME) || true
+	$Q $(VIRSH) undefine --remove-all-storage $(NAME) || true
 
 ## Remove deployment configuration files required for build.
 clean:
@@ -106,11 +107,6 @@ $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	@printf "# Automatic prerequisites for Fedora CoreOS configuration." > $@
 	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.bu,$(TMPDIR)deploy/%.ign, \
 	         $(i)): $(addprefix $(TMPDIR)deploy/, $(shell awk -F '[ ]+local:[ ]*' '/^[ ]+(-[ ]+)?local:/ {print $$2}' $(i))))" >> $@
-
-# Show help if empty or invalid target has been given.
-.DEFAULT:
-	$Q $(MAKE) -s -f $(firstword $(MAKEFILE_LIST)) help
-	@printf "Invalid target '$@', stopping.\n"; exit 1
 
 .PHONY: deploy deploy-virtual destroy-virtual clean purge help $(CONTAINERFILES)
 

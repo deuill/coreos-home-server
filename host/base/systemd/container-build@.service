@@ -7,7 +7,6 @@ ConditionPathExists=%E/coreos-home-server/%i/Containerfile
 [Service]
 Type=oneshot
 SyslogIdentifier=%N
-Environment=PODMAN_BUILD_OPTIONS=
 ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file %E/coreos-home-server/%i/Containerfile --tag localhost/%i:latest %E/coreos-home-server/%i
 
 [Install]

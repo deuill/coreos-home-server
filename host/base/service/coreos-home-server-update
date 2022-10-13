@@ -71,19 +71,24 @@ function sync-systemd-services() {
     if test -n "$buffer"; then return 0; else return 1; fi
 }
 
-# Synchronize all existing CoreOS home-server configuration.
-for hostdir in "$HOST_CONFIG_PATH"/*; do
-    if test ! -d "$hostdir"; then
-        continue
+# Entrypoint for script. Process all services present in host configuration against remote state.
+function main() {
+    # Synchronize all existing CoreOS home-server configuration.
+    for hostdir in "$HOST_CONFIG_PATH"/*; do
+        if test ! -d "$hostdir"; then
+            continue
+        fi
+
+        printf "Synchronizing host configuration for '%s'... " "$hostdir"
+        sync-coreos-config "$hostdir"
+    done
+
+    # Synchronize systemd services from local CoreOS home-server configuration.
+    printf "Synchronizing systemd service files... "
+    if sync-systemd-services; then
+        printf "Reloading systemd daemon after service updates...\n"
+        systemctl daemon-reload
     fi
+}
 
-    printf "Synchronizing host configuration for '%s'... " "$hostdir"
-    sync-coreos-config "$hostdir"
-done
-
-# Synchronize systemd services from local CoreOS home-server configuration.
-printf "Synchronizing systemd service files... "
-if sync-systemd-services; then
-    printf "Reloading systemd daemon after service updates...\n"
-    systemctl daemon-reload
-fi
+main "$@"

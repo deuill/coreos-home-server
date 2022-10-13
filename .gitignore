@@ -4,9 +4,9 @@
 .tmp/
 
 # Ignore custom hosts.
-host/
-!host/base
-!host/virtual
+host/*
+!host/base/
+!host/virtual/
 
 # Ignore files in private directory.
 private/
