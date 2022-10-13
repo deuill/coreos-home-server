@@ -9,14 +9,12 @@ multipart-html = True
 use-css = True
 css =
     html {
-        font-size: 1.1em;
-        line-height: 1.75;
         margin: 0 auto;
         max-width: 900px;
         padding: 1em 0;
     }
     h1, h2, h3, h4, h5, h6 {
-        margin: 1em 0;
+        margin: 0.5em 0;
         text-decoration: none;
     }
     img {
@@ -25,6 +23,7 @@ css =
     p, ul, ol {
         color: #1d1d1d;
         font-family: sans-serif;
+        line-height: 1.5;
         margin-bottom: 1em;
     }
 email-protocol = smtp
