@@ -1,17 +1,18 @@
-FROM docker.io/rust:1.63 AS builder
-ARG VERSION=8b01271e94671df88c68abbc69efb9bcec117498
+FROM docker.io/rust:1.64 AS builder
+ARG VERSION=v0.4.1
+ARG ROLLUP_VERSION=v2.79.1
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     git npm wget
 
 RUN cargo install wasm-pack && rustup target add wasm32-unknown-unknown
-RUN npm install -g rollup
+RUN npm install -g rollup@${ROLLUP_VERSION}
 
 RUN git clone https://github.com/nitnelave/lldap.git /lldap && \
     cd /lldap && git reset --hard ${VERSION} && \
-    cargo build --release -p lldap -p migration-tool && app/build.sh
+    cargo build --release -p lldap -p migration-tool
 
-RUN cd /lldap/app/static && \
+RUN /lldap/app/build.sh && cd /lldap/app/static && \
     for file in $(cat libraries.txt); do wget "$file"; done && \
     for file in $(cat fonts/fonts.txt); do wget -P fonts "$file"; done
 
@@ -27,7 +28,7 @@ RUN mkdir -p /opt/lldap/app
 COPY --from=builder /lldap/app/index_local.html /opt/lldap/app/index.html
 COPY --from=builder /lldap/app/static /opt/lldap/app/static
 COPY --from=builder /lldap/app/pkg /opt/lldap/app/pkg
-COPY --from=builder /lldap/target/release/lldap /lldap/target/release/migration-tool /opt/lldap
+COPY --from=builder /lldap/target/release/lldap /lldap/target/release/migration-tool /opt/lldap/
 
 COPY container/config /etc/lldap
 COPY container/run-lldap /run-lldap
