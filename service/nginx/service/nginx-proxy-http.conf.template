@@ -12,7 +12,7 @@ server {
     ssl_certificate_key /etc/ssl/private/certificates/${SSL_CERT_NAME}.key;
 
     include resolver.conf;
-    set $upstream_endpoint http://${UPSTREAM_HOST}:${UPSTREAM_PORT};
+    set $upstream_endpoint http://${UPSTREAM_ENDPOINT};
 
     location / {
         proxy_set_header Host $host;

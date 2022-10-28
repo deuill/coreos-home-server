@@ -83,7 +83,7 @@ systemd:
         - name: prosody-upstream.conf
           contents: |
             [Service]
-            Environment=UPSTREAM_HOST=prosody UPSTREAM_PORT=5280
+            Environment=UPSTREAM_ENDPOINT=prosody:5280
 
     - name: nginx-proxy-http@dav.localhost.service
       enabled: true
@@ -91,7 +91,7 @@ systemd:
         - name: radicale-upstream.conf
           contents: |
             [Service]
-            Environment=UPSTREAM_HOST=radicale UPSTREAM_PORT=5232
+            Environment=UPSTREAM_ENDPOINT=radicale:5232
 
     - name: nginx-proxy-http@music.localhost.service
       enabled: true
@@ -99,7 +99,7 @@ systemd:
         - name: navidrome-upstream.conf
           contents: |
             [Service]
-            Environment=UPSTREAM_HOST=navidrome UPSTREAM_PORT=4533
+            Environment=UPSTREAM_ENDPOINT=navidrome:4533
 
     - name: nginx-proxy-http@metrics.localhost.service
       enabled: true
@@ -107,7 +107,7 @@ systemd:
         - name: grafana-upstream.conf
           contents: |
             [Service]
-            Environment=UPSTREAM_HOST=grafana UPSTREAM_PORT=8080
+            Environment=UPSTREAM_ENDPOINT=grafana:8080
 
     - name: nginx-proxy-http@gitea.localhost.service
       enabled: true
@@ -115,7 +115,7 @@ systemd:
         - name: gitea-upstream.conf
           contents: |
             [Service]
-            Environment=UPSTREAM_HOST=gitea UPSTREAM_PORT=8080
+            Environment=UPSTREAM_ENDPOINT=gitea:8080
 
     - name: nginx-proxy-http@lldap.localhost.service
       enabled: true
@@ -123,7 +123,7 @@ systemd:
         - name: lldap-upstream.conf
           contents: |
             [Service]
-            Environment=UPSTREAM_HOST=lldap UPSTREAM_PORT=8080
+            Environment=UPSTREAM_ENDPOINT=lldap:8080
 
     - name: letsencrypt-dns-register@localhost.service
       enabled: true
