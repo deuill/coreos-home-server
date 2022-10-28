@@ -1,0 +1,76 @@
+---
+# Webhook for Github.
+- id: github
+  execute-command: /etc/hugo/deploy.sh
+  command-working-directory: /tmp
+  include-command-output-in-response: true
+  include-command-output-in-response-on-error: true
+  pass-arguments-to-command:
+    - source: payload
+      name: repository.ssh_url
+    - source: string
+      name: ${HUGO_DEPLOY_BRANCH}
+  trigger-rule:
+    and:
+      - match:
+          type: payload-hmac-sha256
+          secret: ${HUGO_DEPLOY_SECRET}
+          parameter:
+            source: header
+            name: X-Hub-Signature-256
+      - match:
+          type: value
+          value: refs/heads/${HUGO_DEPLOY_BRANCH}
+          parameter:
+            source: payload
+            name: ref
+# Webhook for Gitea.
+- id: gitea
+  execute-command: /etc/hugo/deploy.sh
+  command-working-directory: /tmp
+  include-command-output-in-response: true
+  include-command-output-in-response-on-error: true
+  pass-arguments-to-command:
+    - source: payload
+      name: repository.ssh_url
+    - source: string
+      name: ${HUGO_DEPLOY_BRANCH}
+  trigger-rule:
+    and:
+      - match:
+          type: payload-hmac-sha256
+          secret: ${HUGO_DEPLOY_SECRET}
+          parameter:
+            source: header
+            name: X-Hub-Signature-256
+      - match:
+          type: value
+          value: refs/heads/${HUGO_DEPLOY_BRANCH}
+          parameter:
+            source: payload
+            name: ref
+# Webhook for Gitlab.
+- id: gitlab
+  execute-command: /etc/hugo/deploy.sh
+  command-working-directory: /tmp
+  include-command-output-in-response: true
+  include-command-output-in-response-on-error: true
+  pass-arguments-to-command:
+    - source: payload
+      name: repository.git_ssh_url
+    - source: string
+      name: ${HUGO_DEPLOY_BRANCH}
+  trigger-rule:
+    and:
+      - match:
+          type: value
+          value: ${HUGO_DEPLOY_SECRET}
+          parameter:
+            source: header
+            name: X-Gitlab-Token
+      - match:
+          type: value
+          value: refs/heads/${HUGO_DEPLOY_BRANCH}
+          parameter:
+            source: payload
+            name: ref

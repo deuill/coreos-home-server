@@ -2,31 +2,19 @@
 
 set -eu
 
-# Set up shared variables.
-GIT_REPO="$1"
-GIT_BRANCH="$2"
+# Generate host keys if none were found.
+for t in rsa ecdsa ed25519; do
+    if test ! -f /etc/ssh/keys/ssh_host_${t}_key; then
+        ssh-keygen -q -t $t -f /etc/ssh/keys/ssh_host_${t}_key -C '' -N '' > /dev/null
+        chown hugo:hugo /etc/ssh/keys/ssh_host_${t}_key*
+    fi
 
-# Ensure correct usage and state.
-if test -z "$GIT_REPO"; then
-    echo "Git repository path is empty, please provide a valid path as the first argument."
-    exit 1
-elif test -z "$GIT_BRANCH"; then
-    echo "Git branch name is empty, please provide a valid branch name as the second argument."
-    exit 1
-elif test ! -e "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}"; then
-    echo "Unable to find HEAD reference for '${GIT_REPO}', branch '${GIT_BRANCH}', is this a valid Git repository?"
-    exit 2
-fi
+    echo "Host key type '$t' for SSH authentication:"
+    cat /etc/ssh/keys/ssh_host_${t}_key.pub
+done
 
-chown -R hugo:hugo /dest
-gosu hugo git clone --quiet --shared --branch "${GIT_BRANCH}" "/src/${GIT_REPO}" /tmp/src
+# Create configuration file from collected templates.
+envsubst < /etc/hugo/hooks.yaml.template > /etc/hugo/hooks.yaml
 
-# Wait for updates to watched branch for the given site, and build static content anew.
-(
-    cd /tmp/src
-    while inotifywait -qq --event modify "/src/${GIT_REPO}/refs/heads/${GIT_BRANCH}"; do
-        gosu hugo git fetch origin "${GIT_BRANCH}" && gosu hugo git reset --hard "${GIT_BRANCH}"
-    done
-) &
-
-gosu hugo hugo --watch --verbose --source /tmp/src --destination /dest
+# Run webhook listener for configured hooks.
+gosu hugo /bin/webhook -verbose -port 8080 -hooks /etc/hugo/hooks.yaml

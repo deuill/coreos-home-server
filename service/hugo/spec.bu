@@ -6,3 +6,7 @@ storage:
       local: service/hugo/
     - path: /etc/systemd/system
       local: service/hugo/systemd/
+systemd:
+  units:
+    - name: hugo.service
+      enabled: true
