@@ -6,7 +6,6 @@ set -eu
 for t in rsa ecdsa ed25519; do
     if test ! -f /etc/ssh/keys/ssh_host_${t}_key; then
         ssh-keygen -q -t $t -f /etc/ssh/keys/ssh_host_${t}_key -C '' -N '' > /dev/null
-        chown hugo:hugo /etc/ssh/keys/ssh_host_${t}_key*
     fi
 
     echo "Host key type '$t' for SSH authentication:"
@@ -15,6 +14,10 @@ done
 
 # Create configuration file from collected templates.
 envsubst < /etc/hugo/hooks.yaml.template > /etc/hugo/hooks.yaml
+
+# Correct permissions where needed.
+chown hugo:hugo /etc/ssh/keys/ssh_host_*
+chown -R hugo:hugo /build
 
 # Run webhook listener for configured hooks.
 gosu hugo /bin/webhook -verbose -port 8080 -hooks /etc/hugo/hooks.yaml
