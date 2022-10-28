@@ -1,1 +1,1 @@
-FROM docker.io/rclone/rclone:1.59
+FROM docker.io/rclone/rclone:1.60
