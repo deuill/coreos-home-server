@@ -2,7 +2,7 @@
 set -eu
 
 GIT_REPO_URL="$1"
-GIT_BRANCH="$2"
+GIT_BRANCH=$(basename "$2")
 
 if test -z "$GIT_REPO_URL"; then
     echo "Repository URL not defined, aborting..." >&2

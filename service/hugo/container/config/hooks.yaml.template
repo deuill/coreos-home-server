@@ -9,7 +9,7 @@
     - source: payload
       name: repository.ssh_url
     - source: string
-      name: ${HUGO_DEPLOY_BRANCH}
+      name: ${HUGO_DEPLOY_DEFAULT_BRANCH}
   trigger-rule:
     and:
       - match:
@@ -20,7 +20,7 @@
             name: X-Hub-Signature-256
       - match:
           type: value
-          value: refs/heads/${HUGO_DEPLOY_BRANCH}
+          value: refs/heads/${HUGO_DEPLOY_DEFAULT_BRANCH}
           parameter:
             source: payload
             name: ref
@@ -33,8 +33,8 @@
   pass-arguments-to-command:
     - source: payload
       name: repository.ssh_url
-    - source: string
-      name: ${HUGO_DEPLOY_BRANCH}
+    - source: payload
+      name: ref
   trigger-rule:
     and:
       - match:
@@ -43,12 +43,6 @@
           parameter:
             source: header
             name: X-Hub-Signature-256
-      - match:
-          type: value
-          value: refs/heads/${HUGO_DEPLOY_BRANCH}
-          parameter:
-            source: payload
-            name: ref
 # Webhook for Gitlab.
 - id: gitlab
   execute-command: /etc/hugo/deploy.sh
@@ -58,8 +52,8 @@
   pass-arguments-to-command:
     - source: payload
       name: repository.git_ssh_url
-    - source: string
-      name: ${HUGO_DEPLOY_BRANCH}
+    - source: payload
+      name: ref
   trigger-rule:
     and:
       - match:
@@ -68,9 +62,3 @@
           parameter:
             source: header
             name: X-Gitlab-Token
-      - match:
-          type: value
-          value: refs/heads/${HUGO_DEPLOY_BRANCH}
-          parameter:
-            source: payload
-            name: ref
