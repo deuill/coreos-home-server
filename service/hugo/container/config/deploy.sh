@@ -22,9 +22,9 @@ export GIT_SSH_COMMAND
 
 if test -d "$GIT_DIR_NAME"; then
     cd "$GIT_DIR_NAME"
-    git fetch origin "$GIT_BRANCH"
+    git fetch origin "$GIT_BRANCH" && git reset --hard "$GIT_BRANCH"
 else
-    git clone --branch "$GIT_BRANCH" -- "$GIT_REPO_URL" "$GIT_DIR_NAME"
+    git clone --depth 1 --branch "$GIT_BRANCH" -- "$GIT_REPO_URL" "$GIT_DIR_NAME"
     cd "$GIT_DIR_NAME"
 fi
 
