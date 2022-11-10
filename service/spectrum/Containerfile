@@ -1,6 +1,6 @@
 FROM docker.io/debian:bullseye-slim AS builder
 ARG SKYPE_VERSION=29c860170ca18c3f7f15b5ba7723e06ddc760361
-ARG DISCORD_VERSION=698907f0573692ed79f35e86abcd67ae85b64e89
+ARG DISCORD_VERSION=df93a225cbaa2ca44baebafb540b840b78d43a7a
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential gettext git libpurple-dev libglib2.0-dev libnss3-dev \
@@ -14,8 +14,8 @@ RUN git clone https://github.com/EionRobb/purple-discord.git && \
     cd purple-discord && git checkout ${DISCORD_VERSION} && make && make install DESTDIR=/spectrum-plugins && \
     rm -Rf /purple-discord
 
-FROM docker.io/golang:1.18 AS golang-builder
-ARG WHATSAPP_VERSION=94995ce037c194f0727619b0ab395aae6bf21238
+FROM docker.io/golang:1.19 AS golang-builder
+ARG WHATSAPP_VERSION=51b921da925f64a8b63a353b37d920d0bb40e844
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential cmake git libpurple-dev
