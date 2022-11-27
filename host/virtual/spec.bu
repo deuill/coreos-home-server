@@ -25,6 +25,7 @@ ignition:
       - local: service/grafana/spec.ign
       - local: service/gitea/spec.ign
       - local: service/lldap/spec.ign
+      - local: service/gotosocial/spec.ign
 
 passwd:
   users:
@@ -124,6 +125,14 @@ systemd:
           contents: |
             [Service]
             Environment=UPSTREAM_HOST=lldap UPSTREAM_PORT=8080
+
+    - name: nginx-proxy-http@social.localhost.service
+      enabled: true
+      dropins:
+        - name: gotosocial-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=gotosocial UPSTREAM_PORT=8080
 
     - name: letsencrypt-dns-register@localhost.service
       enabled: true

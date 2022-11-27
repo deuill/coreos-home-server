@@ -1,0 +1,20 @@
+FROM docker.io/debian:bullseye-slim
+ARG VERSION=0.5.2
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl ca-certificates gettext gosu
+
+ENV PACKAGE_URL https://github.com/superseriousbusiness/gotosocial/releases/download/v${VERSION}/gotosocial_${VERSION}_linux_amd64.tar.gz
+RUN mkdir -p /opt/gotosocial && curl -L ${PACKAGE_URL} | tar -C /opt/gotosocial --no-same-owner -xvzf - && \
+    mv /opt/gotosocial/gotosocial /bin/gotosocial && chmod +x /bin/gotosocial
+
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+
+RUN addgroup --system --gid 10000 gotosocial
+RUN adduser --system --uid 10000 --ingroup gotosocial --home /var/lib/gotosocial gotosocial
+
+COPY container/config /etc/gotosocial
+COPY container/run-gotosocial /run-gotosocial
+
+EXPOSE 8080
+ENTRYPOINT ["/run-gotosocial"]

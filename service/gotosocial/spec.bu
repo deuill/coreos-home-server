@@ -1,0 +1,12 @@
+variant: fcos
+version: 1.3.0
+storage:
+  trees:
+    - path: /etc/coreos-home-server/gotosocial
+      local: service/gotosocial/
+    - path: /etc/systemd/system
+      local: service/gotosocial/systemd/
+systemd:
+  units:
+    - name: gotosocial.service
+      enabled: true

@@ -1,0 +1,124 @@
+###########################
+##### GENERAL CONFIG ######
+###########################
+
+# The user that will be shown instead of the landing page. if no user is set, the landing page will be shown.
+landing-page-user: "${GOTOSOCIAL_DEFAULT_USERNAME}"
+
+# Hostname that this server will be reachable at. Defaults to localhost for local testing,
+# but you should *definitely* change this when running for real, or your server won't work at all.
+# DO NOT change this after your server has already run once, or you will break things!
+host: "${GOTOSOCIAL_HOST}"
+
+# Domain to use when federating profiles. This is useful when you want your server to be at
+# eg., "gts.example.org", but you want the domain on accounts to be "example.org" because it looks better
+# or is just shorter/easier to remember.
+#
+# To make this setting work properly, you need to redirect requests at "example.org/.well-known/webfinger"
+# to "gts.example.org/.well-known/webfinger" so that GtS can handle them properly.
+#
+# You should also redirect requests at "example.org/.well-known/nodeinfo" in the same way.
+# An empty string (ie., not set) means that the same value as 'host' will be used.
+#
+# DO NOT change this after your server has already run once, or you will break things!
+#
+# Please read the appropriate section of the installation guide before you go messing around with this setting:
+# https://docs.gotosocial.org/installation_guide/advanced/#can-i-host-my-instance-at-fediexampleorg-but-have-just-exampleorg-in-my-username
+account-domain: "${GOTOSOCIAL_ACCOUNT_DOMAIN}"
+
+# CIDRs or IP addresses of proxies that should be trusted when determining real client IP from behind a reverse proxy.
+# If you're running inside a Docker container behind Traefik or Nginx, for example, add the subnet of your docker network,
+# or the gateway of the docker network, and/or the address of the reverse proxy (if it's not running on the host network).
+trusted-proxies:
+  - "127.0.0.1/32"
+  - "::1"
+  - "10.89.0.0/16"
+
+############################
+##### DATABASE CONFIG ######
+############################
+
+# Database type.
+db-type: "sqlite"
+
+# Database address or parameters.
+#
+# For Sqlite, this should be the path to your sqlite database file. Eg., /opt/gotosocial/sqlite.db.
+# If the file doesn't exist at the specified path, it will be created.
+db-address: "/var/lib/gotosocial/gotosocial.db"
+
+######################
+##### WEB CONFIG #####
+######################
+
+# Directory from which gotosocial will attempt to load html templates (.tmpl files).
+web-template-base-dir: "/opt/gotosocial/web/template/"
+
+# Directory from which gotosocial will attempt to serve static web assets (images, scripts).
+web-asset-base-dir: "/opt/gotosocial/web/assets/"
+
+###########################
+##### ACCOUNTS CONFIG #####
+###########################
+
+# Do we want people to be able to just submit sign up requests, or do we want invite only?
+accounts-registration-open: ${GOTOSOCIAL_ACCOUNT_REGISTRATION_OPEN}
+
+#  Allow accounts on this instance to set custom CSS for their profile pages and statuses.
+# Enabling this setting will allow accounts to upload custom CSS via the /user settings page,
+# which will then be rendered on the web view of the account's profile and statuses.
+#
+# For instances with public sign ups, it is **HIGHLY RECOMMENDED** to leave this setting on 'false',
+# since setting it to true allows malicious accounts to make their profile pages misleading, unusable
+# or even dangerous to visitors. In other words, you should only enable this setting if you trust
+# the users on your instance not to produce harmful CSS.
+#
+# Regardless of what this value is set to, any uploaded CSS will not be federated to other instances,
+# it will only be shown on profiles and statuses on *this* instance.
+accounts-allow-custom-css: true
+
+########################
+##### MEDIA CONFIG #####
+########################
+
+# Maximum allowed image upload size in bytes.
+media-image-max-size: 10485760 # 10MB
+
+# Maximum allowed video upload size in bytes.
+media-video-max-size: 31457280 # 30MB
+
+##########################
+##### STORAGE CONFIG #####
+##########################
+
+# Type of storage backend to use.
+storage-backend: "local"
+
+# Directory to use as a base path for storing files.
+# Make sure whatever user/group gotosocial is running as has permission to access
+# this directory, and create new subdirectories and files within it.
+# Only required when running with the local storage backend.
+storage-local-base-path: "/var/lib/gotosocial/storage"
+
+#######################
+##### SMTP CONFIG #####
+#######################
+
+# The hostname of the smtp server you want to use.
+# If this is not set, smtp will not be used to send emails, and you can ignore the other settings.
+smtp-host: "${GOTOSOCIAL_SMTP_HOST}"
+
+# Port to use to connect to the smtp server.
+smtp-port: ${GOTOSOCIAL_SMTP_PORT}
+
+# Username to use when authenticating with the smtp server.
+# This should have been provided to you by your smtp host.
+# This is often, but not always, an email address.
+smtp-username: "${GOTOSOCIAL_SMTP_USERNAME}"
+
+# Password to use when authenticating with the smtp server.
+# This should have been provided to you by your smtp host.
+smtp-password: "${GOTOSOCIAL_SMTP_PASSWORD}"
+
+# 'From' address for sent emails.
+smtp-from: "${GOTOSOCIAL_SMTP_FROM}"

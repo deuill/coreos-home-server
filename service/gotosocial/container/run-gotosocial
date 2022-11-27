@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -eu
+
+# Create configuration file from collected templates.
+envsubst < /etc/gotosocial/config.yaml.template > /etc/gotosocial/config.yaml
+
+# Create data directories and correct permissions for data files.
+install --owner gotosocial --group gotosocial --mode 700 --directory /var/lib/gotosocial
+chown -R gotosocial:gotosocial /etc/gotosocial /var/lib/gotosocial
+
+# Initialize default condiguration if needed.
+if ! test -f /var/lib/gotosocial/gotosocial.db; then
+    (
+        password="$(dd if=/dev/urandom | tr -dc '[:alnum:]' | head -c 50)"
+        gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml admin account create \
+                                        --username "$GOTOSOCIAL_DEFAULT_USERNAME" --password "$password" \
+                                        --email "${GOTOSOCIAL_DEFAULT_USERNAME}@${GOTOSOCIAL_ACCOUNT_DOMAIN}"
+        gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml admin account confirm \
+                                        --username "$GOTOSOCIAL_DEFAULT_USERNAME"
+        gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml admin account promote \
+                                        --username "$GOTOSOCIAL_DEFAULT_USERNAME"
+        echo "Created an administrator user with username '$GOTOSOCIAL_DEFAULT_USERNAME' and password '$password'."
+        echo "Make sure to change this immediately after logging in for the first time!"
+    )
+fi
+
+# Run entrypoint under specific user.
+gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml server start "$@"
