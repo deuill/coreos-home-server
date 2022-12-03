@@ -18,6 +18,7 @@ mail_location = maildir:/var/mail/virtual/%u
 mail_privileged_group = virtual
 mail_uid = 5000
 mail_gid = 5000
+maildir_stat_dirs = yes
 
 # Simplify log messages.
 login_log_format_elements = user=<%u> method=%m rip=%r lip=%l mpid=%e %c
