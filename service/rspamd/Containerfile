@@ -1,5 +1,5 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=3.3
+ARG VERSION=3.4
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates curl gnupg
