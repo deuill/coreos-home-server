@@ -16,8 +16,6 @@ if ! test -f /var/lib/gotosocial/gotosocial.db; then
         gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml admin account create \
                                         --username "$GOTOSOCIAL_DEFAULT_USERNAME" --password "$password" \
                                         --email "${GOTOSOCIAL_DEFAULT_USERNAME}@${GOTOSOCIAL_ACCOUNT_DOMAIN}"
-        gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml admin account confirm \
-                                        --username "$GOTOSOCIAL_DEFAULT_USERNAME"
         gosu gotosocial /bin/gotosocial --config-path /etc/gotosocial/config.yaml admin account promote \
                                         --username "$GOTOSOCIAL_DEFAULT_USERNAME"
         echo "Created an administrator user with username '$GOTOSOCIAL_DEFAULT_USERNAME' and password '$password'."
