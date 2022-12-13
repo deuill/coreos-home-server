@@ -53,6 +53,7 @@ modules_enabled = {
     "mam"; -- Store messages in an archive and allow users to access it
     "smacks"; -- Stream management for resuming dropped connections.
     "csi_simple"; -- Enables simple traffic optimisation for clients that have reported themselves as inactive.
+    "privilege"; -- Allows components to have privileged access to the XMPP server.
 
     -- Push notifications
     "cloud_notify"; -- Support for push notifications.

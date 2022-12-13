@@ -1,2 +1,3 @@
 Component "${PROSODY_COMPONENT_NAME}"
   component_secret = "${PROSODY_COMPONENT_PASSWORD}"
+  modules_enabled = {"privilege"}
