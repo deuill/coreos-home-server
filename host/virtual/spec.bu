@@ -15,7 +15,6 @@ ignition:
       - local: service/prosody/spec.ign
       - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
-      - local: service/spectrum/spec.ign
       - local: service/rss2email/spec.ign
       - local: service/navidrome/spec.ign
       - local: service/coturn/spec.ign
@@ -24,6 +23,7 @@ ignition:
       - local: service/prometheus/spec.ign
       - local: service/grafana/spec.ign
       - local: service/gitea/spec.ign
+      - local: service/slidge/spec.ign
       - local: service/lldap/spec.ign
       - local: service/gotosocial/spec.ign
 
