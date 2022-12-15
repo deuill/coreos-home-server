@@ -1,5 +1,5 @@
 FROM docker.io/debian:bullseye-slim AS builder
-ARG VERSION=1d2ca68a96d79a8354359926bd7091e9553ebbb0
+ARG VERSION=397ecf18893db972937e7bff3d66d18ce0d4e4be
 ARG PLUGINS="skype discord"
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
