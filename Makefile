@@ -1,10 +1,11 @@
 # CoreOS options.
 NAME      := coreos-home-server
 STREAM    := stable
-VERSION   := 36.20221030.3.0
+VERSION   := 37.20221127.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
-HOST      := $(if $(filter deploy-virtual,$(MAKECMDGOALS)),virtual,$(HOST))
+HOST      := $(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy))
+TYPE      := $(if $(filter virtual,$(HOST)),virtual,$(if $(TYPE),$(TYPE),$(error Please specify a valid deployment TYPE)))
 
 # Default Makefile options.
 VERBOSE :=
@@ -16,31 +17,15 @@ ADDRESS        = $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$
 CONTAINERFILES = $(wildcard service/*/Containerfile)
 
 # Build-time dependencies.
-BUTANE      ?= $(call find-cmd,butane)
-PODMAN      ?= $(call find-cmd,podman)
-CURL        ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar) --fail
-GPG         ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
-VIRSH       ?= $(call find-cmd,virsh) --connect=qemu:///system $(if $(VERBOSE),,-q)
-VIRTINSTALL ?= $(call find-cmd,virt-install) --connect=qemu:///system
-NC          ?= $(call find-cmd,nc) -vv -r -l
+BUTANE ?= $(call find-cmd,butane)
+PODMAN ?= $(call find-cmd,podman)
+CURL   ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar) --fail
+GPG    ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
+QEMU   ?= $(call find-cmd,qemu-system-x86_64) -enable-kvm
+NC     ?= $(call find-cmd,nc) -vv -r -l
 
-## Builds and deploys Fedora CoreOS for HOST on ADDRESS.
-deploy: $(TMPDIR)deploy/host/$(HOST)/spec.ign
-	@printf "Serving Ignition config '$<' over HTTP...\n"
-	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "$$(wc -c < $<)" "$$(cat $<)" | $(NC) -s $(ADDRESS) || exit 0
-
-## Prepares and deploys CoreOS release for local, virtual environment.
-deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
-	@printf "Preparing virtual environment...\n"
-	$Q $(VIRTINSTALL) --import --name=$(NAME) --os-variant=fedora36 \
-	                  --graphics=none --vcpus=2 --memory=2048 --cpu=host --virt-type=kvm \
-	                  --disk="size=20,backing_store=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2" \
-	                  --qemu-commandline="-fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign"
-
-## Stop and remove virtual environment for CoreOS.
-destroy-virtual:
-	$Q $(VIRSH) destroy $(NAME) || true
-	$Q $(VIRSH) undefine --remove-all-storage $(NAME) || true
+## Builds and deploys Fedora CoreOS for HOST of TYPE.
+deploy: deploy-$(TYPE)
 
 ## Remove deployment configuration files required for build.
 clean:
@@ -58,8 +43,21 @@ help:
 	@printf "This Makefile contains tasks for processing auxiliary actions, such as\n"
 	@printf "building binaries, packages, or running tests against the test suite.\n\n"
 	@printf "$(UNDERLINE)Available Tasks$(RESET)\n\n"
-	@awk -F ':|##' '/^##/ {c=$$2; getline; printf "$(BLUE)%16s$(RESET)%s\n", $$1, c}' $(MAKEFILE_LIST)
+	@awk -F ':|##' '/^##/ {c=$$2; getline; printf "$(BLUE)%6s$(RESET)%s\n", $$1, c}' $(MAKEFILE_LIST)
 	@printf "\n"
+
+# Builds and deploys Fedora CoreOS for HOST on ADDRESS.
+deploy-metal: $(TMPDIR)deploy/host/$(HOST)/spec.ign
+	@printf "Serving Ignition config '$<' over HTTP...\n"
+	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "$$(wc -c < $<)" "$$(cat $<)" | $(NC) -s $(ADDRESS) || exit 0
+
+# Prepares and deploys CoreOS release for local, virtual environment.
+deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
+	@printf "Preparing virtual environment (press C-a h for help)...\n"
+	$Q $(QEMU) -m 2048 -cpu host -nographic -snapshot \
+	           -fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign \
+	           -drive if=virtio,file=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2 \
+	           -nic user,model=virtio,hostfwd=tcp::8022-:22,hostfwd=tcp::8080-:80,hostfwd=tcp::8443-:443
 
 # Build container file locally using 'podman build'.
 $(CONTAINERFILES):
@@ -108,7 +106,7 @@ $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 	@printf "$(foreach i,$^,\n$(patsubst $(ROOTDIR)%.bu,$(TMPDIR)deploy/%.ign, \
 	         $(i)): $(addprefix $(TMPDIR)deploy/, $(shell awk -F '[ ]+local:[ ]*' '/^[ ]+(-[ ]+)?local:/ {print $$2}' $(i))))" >> $@
 
-.PHONY: deploy deploy-virtual destroy-virtual clean purge help $(CONTAINERFILES)
+.PHONY: deploy deploy-metal deploy-virtual clean purge help $(CONTAINERFILES)
 
 # Conditional command echo control.
 Q := $(if $(VERBOSE),,@)

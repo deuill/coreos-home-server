@@ -10,7 +10,7 @@ on your host:
 
   - `gpg` for secret management and image validation.
   - `butane` for rendering out host and service configuration.
-  - `virsh` and `virt-install` with `qemu` for virtual host testing.
+  - `qemu` for virtual host testing.
 
 All of the requirements are checked during the various Makefile invocations, and will return fatal
 errors unless fulfilled. In addition to the aforementioned build-time dependencies, the build host
@@ -48,11 +48,11 @@ network -- support for additional targets may be added in the future.
 
 ## Testing
 
-A virtual host is included for development and testing; using this requires that you have `virsh`
-and `virt-install` installed on your system. Using the virtual environment is simple:
+A virtual host is included for development and testing; using this requires that you have `qemu`
+installed on your system. Using the virtual environment is simple:
 
 ```
-make deploy-virtual
+make deploy HOST=virtual
 ```
 
 This will automatically download the Fedora CoreOS image for the `VERSION` specified in the
@@ -60,8 +60,8 @@ Makefile, compile included Butane files, and start a virtual machine on the term
 `make` command. If you want to see the various command run under the hood, add the `VERBOSE=1`
 parameter to the `make` invocation.
 
-By default, you can use the `<Ctrl>]` key-combination to escape the virtual machine, and can use the
-`make destroy-virtual` command to drop any resources initialized for the virtual host.
+By default, you can use the `<Ctrl>a x` key-combination to escape the virtual machine, and can use the
+`<Ctrl>a h` key-combination to get additional options related to the current virtual session.
 
 ## Included Services
 
