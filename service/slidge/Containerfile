@@ -1,10 +1,9 @@
 FROM docker.io/debian:bullseye-slim AS builder
-ARG VERSION=397ecf18893db972937e7bff3d66d18ce0d4e4be
-ARG PLUGINS="skype discord"
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
 
+ARG VERSION=5ccc3320f698231dbd90a48379c5ca18532d115b
 RUN git clone https://git.sr.ht/~nicoco/slidge /slidge && \
     cd /slidge && git reset --hard ${VERSION}
 
@@ -32,14 +31,17 @@ COPY --from=builder /slidge /
 RUN cd /slidge/plugins/whatsapp && gopy build -vm=python3 -output=generated -no-make=true .
 
 FROM docker.io/debian:bullseye-slim
+ENV PYTHONUNBUFFERED=1
+ENV PATH=/venv/bin:$PATH
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates python3 libpython3.9 python3-gdbm
 
-ENV PYTHONUNBUFFERED=1
-ENV PATH=/venv/bin:$PATH
+RUN addgroup --system --gid 10000 slidge
+RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
 
 COPY --from=builder /venv /venv
 COPY --from=builder-whatsapp /slidge/plugins/whatsapp/generated /venv/lib/python3.9/site-packages/slidge/plugins/whatsapp/generated
 
+USER slidge
 ENTRYPOINT ["python", "-m", "slidge"]
