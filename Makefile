@@ -4,8 +4,8 @@ STREAM    := stable
 VERSION   := 37.20221127.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
-HOST      := $(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy))
-TYPE      := $(if $(filter virtual,$(HOST)),virtual,$(if $(TYPE),$(TYPE),$(error Please specify a valid deployment TYPE)))
+HOST      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
+TYPE      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(filter virtual,$(HOST)),virtual,$(if $(TYPE),$(TYPE),$(error Please specify a valid deployment TYPE))),$(TYPE))
 
 # Default Makefile options.
 VERBOSE :=
@@ -15,13 +15,14 @@ TMPDIR  := $(shell ls -d /var/tmp/$(NAME).???? 2>/dev/null || mktemp -d /var/tmp
 # Target-specific variables.
 ADDRESS        = $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
 CONTAINERFILES = $(wildcard service/*/Containerfile)
+VIRTUAL_PORTS  = 8022:22 8080:80 8443:443
 
 # Build-time dependencies.
 BUTANE ?= $(call find-cmd,butane)
 PODMAN ?= $(call find-cmd,podman)
 CURL   ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar) --fail
 GPG    ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
-QEMU   ?= $(call find-cmd,qemu-system-x86_64) -enable-kvm
+QEMU   ?= $(call find-cmd,qemu-system-$(ARCH)) -enable-kvm
 NC     ?= $(call find-cmd,nc) -vv -r -l
 
 ## Builds and deploys Fedora CoreOS for HOST of TYPE.
@@ -57,7 +58,7 @@ deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $
 	$Q $(QEMU) -m 2048 -cpu host -nographic -snapshot \
 	           -fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign \
 	           -drive if=virtio,file=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2 \
-	           -nic user,model=virtio,hostfwd=tcp::8022-:22,hostfwd=tcp::8080-:80,hostfwd=tcp::8443-:443
+	           -nic user,model=virtio,$(subst $(SPACE),$(COMMA),$(foreach p,$(VIRTUAL_PORTS),hostfwd=tcp::$(subst :,-:,$(p))))
 
 # Build container file locally using 'podman build'.
 $(CONTAINERFILES):
@@ -116,10 +117,14 @@ Q := $(if $(VERBOSE),,@)
 find-cmd = $(or $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH))))),$(error "Command '$(1)' not found in PATH"))
 
 # Shell colors, used in messages.
-BOLD      := \033[1m
-UNDERLINE := \033[4m
-BLUE      := \033[36m
-RESET     := \033[0m
+BOLD      = \033[1m
+UNDERLINE = \033[4m
+BLUE      = \033[36m
+RESET     = \033[0m
+
+# Variables for reserved characters.
+SPACE = $(eval) $(eval)
+COMMA = ,
 
 # Dependency includes.
 include $(TMPDIR)make.depend

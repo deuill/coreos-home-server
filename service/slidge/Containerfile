@@ -11,6 +11,7 @@ ENV PATH=/venv/bin:/root/.local/bin:$PATH
 RUN python3 -m venv /venv && python3 -m pip install wheel
 RUN curl -fL https://install.python-poetry.org | python3 -
 
+ARG PLUGINS="skype discord"
 RUN cd /slidge && poetry export --extras="$PLUGINS" > requirements.txt && \
     python3 -m pip install --requirement requirements.txt
 
