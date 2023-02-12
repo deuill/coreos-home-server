@@ -15,3 +15,6 @@ TranscodingCacheSize = "100MB"
 
 # Folder where your music library is stored. Can be read-only.
 MusicFolder = "/music"
+
+# Enable library sharing with unauthenticated clients.
+EnableSharing = true
