@@ -4,7 +4,8 @@
 -- and evolves according to these requirements.
 
 local host_base = os.getenv("PROSODY_HOST") or "localhost"
-local host_external = os.getenv("PROSODY_HOST_EXTERNAL") or "external.localhost"
+local host_external = os.getenv("PROSODY_HOST_EXTERNAL") or "external." .. host_base
+local host_upload = os.getenv("PROSODY_HOST_UPLOAD") or "upload." .. host_base
 
 -- The primary virtual host, typically anchored to the root domain (e.g. "example.com"). User JIDs
 -- will need to match this domain name.
@@ -28,7 +29,7 @@ Component(host_external) "muc"
   }
 
 -- The component responsible for HTTP file uploads.
-Component(host_external) "http_file_share"
+Component(host_upload) "http_file_share"
   http_file_share_expire_after = 60 * 60 * 24 * 31
   http_file_share_size_limit   = 1024 * 1024 * 32
   http_file_share_daily_quota  = 1024 * 1024 * 128
