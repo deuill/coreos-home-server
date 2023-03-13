@@ -11,6 +11,7 @@ SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
 ExecStart=/bin/podman run --replace --name %N --net internal --sdnotify=conmon \
+                          --cap-add SYS_CHROOT \
                           --env-file %E/coreos-home-server/%N/%N.env \
                           --env-file %E/coreos-home-server/rspamd/rspamd.env \
                           --publish 143:143 --publish 993:993 --publish 4190:4190 \
