@@ -68,8 +68,15 @@ systemd:
             [Service]
             Environment=SSL_CERT_NAME=localhost
 
-    - name: nginx-serve-static@static.localhost.service
+    - name: nginx-serve-volume@static.localhost.service
       enabled: true
+      dropins:
+        - name: populate-volume.conf
+          contents: |
+            [Service]
+            ExecStartPre=/bin/podman volume create static.localhost
+            ExecStartPre=/bin/sh -c "V=$(podman volume mount static.localhost) && echo 'Hello World!' > $V/index.html"
+            ExecStartPost=/bin/podman volume unmount static.localhost
     - name: nginx-proxy-http@static.localhost.service
       enabled: true
 
@@ -166,14 +173,7 @@ storage:
         inline: |
           export SYSTEMD_PAGER=cat
 
-    # Example sites for static and PHP setups.
-    - path: /etc/coreos-home-server/static.localhost/Containerfile
-      mode: 0644
-      contents:
-        inline: |
-          FROM localhost/nginx:latest
-          RUN /bin/echo "Hello Static World!" > /srv/index.html
-
+    # Example sites for Nginx-PHP setup.
     - path: /etc/coreos-home-server/php.localhost/Containerfile
       mode: 0644
       contents:

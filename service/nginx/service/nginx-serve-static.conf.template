@@ -1,7 +1,0 @@
-server {
-    listen 8080;
-    server_name ${SERVER_NAME};
-
-    root /srv;
-    include server.conf;
-}
