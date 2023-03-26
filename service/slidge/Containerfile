@@ -3,21 +3,21 @@ FROM docker.io/debian:bullseye-slim AS builder
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
 
-ARG VERSION=e186292f10b6b42cceede92968ab0a6be0d0d607
-RUN git clone https://git.sr.ht/~nicoco/slidge /slidge && \
-    cd /slidge && git reset --hard ${VERSION}
-
 ENV PATH=/venv/bin:/root/.local/bin:$PATH
 RUN python3 -m venv /venv && python3 -m pip install wheel
 RUN curl -fL https://install.python-poetry.org | python3 -
 
-ARG PLUGINS="skype discord"
+ARG VERSION=029033951446b4223c3b1433f396218d00d94ee1
+RUN git clone https://git.sr.ht/~nicoco/slidge /slidge && \
+    cd /slidge && git reset --hard ${VERSION}
+
+ARG PLUGINS="skype discord whatsapp"
 RUN cd /slidge && poetry export --extras="$PLUGINS" --without-hashes > requirements.txt && \
     python3 -m pip install --requirement requirements.txt
 
 RUN cp -R /slidge/slidge /venv/lib/python3.9/site-packages/slidge
 
-FROM docker.io/golang:1.19-bullseye AS builder-whatsapp
+FROM docker.io/golang:1.20-bullseye AS builder-whatsapp
 
 ENV GOBIN=/usr/bin
 RUN go install github.com/go-python/gopy@latest && \
