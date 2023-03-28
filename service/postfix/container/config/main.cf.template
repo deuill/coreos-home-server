@@ -66,6 +66,9 @@ maximal_queue_lifetime = 7d
 minimal_backoff_time = 1000s
 maximal_backoff_time = 8000s
 
+# Set maximum message size (with attachments) in bytes.
+message_size_limit = 20480000
+
 # How long to wait when servers connect before receiving rest of data.
 smtp_helo_timeout = 60s
 
