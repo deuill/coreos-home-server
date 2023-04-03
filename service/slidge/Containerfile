@@ -7,7 +7,7 @@ ENV PATH=/venv/bin:/root/.local/bin:$PATH
 RUN python3 -m venv /venv && python3 -m pip install wheel
 RUN curl -fL https://install.python-poetry.org | python3 -
 
-ARG VERSION=029033951446b4223c3b1433f396218d00d94ee1
+ARG VERSION=409bcb859a823107c1f744e5058b1c14a98794b4
 RUN git clone https://git.sr.ht/~nicoco/slidge /slidge && \
     cd /slidge && git reset --hard ${VERSION}
 
@@ -36,7 +36,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH=/venv/bin:$PATH
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates python3 libpython3.9 python3-gdbm media-types
+    ca-certificates python3 libpython3.9 python3-gdbm libidn11 libmagic1 media-types shared-mime-info
 
 RUN addgroup --system --gid 10000 slidge
 RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
