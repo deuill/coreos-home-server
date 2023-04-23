@@ -7,7 +7,7 @@ ENV PATH=/venv/bin:/root/.local/bin:$PATH
 RUN python3 -m venv /venv && python3 -m pip install wheel
 RUN curl -fL https://install.python-poetry.org | python3 -
 
-ARG VERSION=409bcb859a823107c1f744e5058b1c14a98794b4
+ARG VERSION=d46bc86dccd3c8d956050a15f6e3e3dddf718caa
 RUN git clone https://git.sr.ht/~nicoco/slidge /slidge && \
     cd /slidge && git reset --hard ${VERSION}
 
