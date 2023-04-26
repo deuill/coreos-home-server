@@ -62,6 +62,9 @@ REQUIRE_SIGNIN_VIEW  = ${GITEA_REQUIRE_SIGNIN_VIEW}
 ALLOWED_HOST_LIST = 10.89.0.0/16
 DELIVER_TIMEOUT = 60
 
+[cron.update_checker]
+ENABLED = false
+
 [mailer]
 ENABLED   = true
 PROTOCOL  = smtp+startls
