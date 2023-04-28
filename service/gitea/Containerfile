@@ -1,5 +1,5 @@
 FROM docker.io/debian:bullseye-slim
-ARG VERSION=1.19.1
+ARG VERSION=1.19.2
 
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends curl ca-certificates gettext gosu \
