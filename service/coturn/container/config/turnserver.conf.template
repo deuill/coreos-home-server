@@ -600,7 +600,6 @@ no-multicast-peers
 # Additional IP ranges that are disallowed as peers.
 #
 denied-peer-ip=0.0.0.0-0.255.255.255
-denied-peer-ip=10.0.0.0-10.255.255.255
 denied-peer-ip=127.0.0.0-127.255.255.255
 denied-peer-ip=169.254.0.0-169.254.255.255
 denied-peer-ip=127.0.0.0-127.255.255.255
