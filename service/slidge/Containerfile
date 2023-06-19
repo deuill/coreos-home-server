@@ -1,4 +1,4 @@
-FROM docker.io/debian:bullseye-slim AS builder
+FROM docker.io/debian:bookworm-slim AS builder-base
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
@@ -7,42 +7,61 @@ ENV PATH=/venv/bin:/root/.local/bin:$PATH
 RUN python3 -m venv /venv && python3 -m pip install wheel
 RUN curl -fL https://install.python-poetry.org | python3 -
 
-ARG VERSION=d46bc86dccd3c8d956050a15f6e3e3dddf718caa
-RUN git clone https://git.sr.ht/~nicoco/slidge /slidge && \
-    cd /slidge && git reset --hard ${VERSION}
+FROM builder-base AS builder-discord
 
-ARG PLUGINS="skype discord whatsapp"
-RUN cd /slidge && poetry export --extras="$PLUGINS" --without-hashes > requirements.txt && \
+ARG VERSION=1de825cc5764215c89f5d9f6fcde109340c5331e
+RUN git clone https://git.sr.ht/~nicoco/slidcord /src && \
+    cd /src && git reset --hard ${VERSION}
+
+RUN cd /src && poetry export --without-hashes > requirements.txt && \
     python3 -m pip install --requirement requirements.txt
 
-RUN cp -R /slidge/slidge /venv/lib/python3.9/site-packages/slidge
+RUN cp -R /src/slidcord /venv/lib/python3.11/site-packages/legacy_module
 
-FROM docker.io/golang:1.20-bullseye AS builder-whatsapp
+FROM builder-base AS builder-skype
+
+ARG VERSION=a08320895c054b3cfdd4876d4ca7faccf4548eec
+RUN git clone https://git.sr.ht/~nicoco/skidge /src && \
+    cd /src && git reset --hard ${VERSION}
+
+RUN cd /src && poetry export --without-hashes > requirements.txt && \
+    python3 -m pip install --requirement requirements.txt
+
+RUN cp -R /src/skidge /venv/lib/python3.11/site-packages/legacy_module
+
+FROM builder-base AS builder-whatsapp
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    golang gcc python3-dev
 
 ENV GOBIN=/usr/bin
 RUN go install github.com/go-python/gopy@latest && \
     go install golang.org/x/tools/cmd/goimports@latest
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates python3 python3-dev python3-pip
-
 RUN python3 -m pip install pybindgen
 
-COPY --from=builder /slidge /
-RUN cd /slidge/plugins/whatsapp && gopy build -vm=python3 -output=generated -no-make=true .
+ARG VERSION=a83b6567796ecc7b059beb81b5e7e4e8aff567d2
+RUN git clone https://git.sr.ht/~nicoco/slidge-whatsapp /src && \
+    cd /src && git reset --hard ${VERSION}
 
-FROM docker.io/debian:bullseye-slim
+RUN cd /src && poetry export --without-hashes > requirements.txt && \
+    python3 -m pip install --requirement requirements.txt
+
+RUN cd /src/slidge_whatsapp && gopy build -vm=python3 -output=generated -no-make=true .
+RUN cp -R /src/slidge_whatsapp /venv/lib/python3.11/site-packages/legacy_module
+
+FROM docker.io/debian:bookworm-slim
 ENV PYTHONUNBUFFERED=1
-ENV PATH=/venv/bin:$PATH
+ENV SLIDGE_LEGACY_MODULE=legacy_module
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates python3 libpython3.9 python3-gdbm libidn11 libmagic1 media-types shared-mime-info
+    ca-certificates python3 libpython3.11 python3-gdbm libidn12 libmagic1 media-types shared-mime-info
 
 RUN addgroup --system --gid 10000 slidge
 RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
 
-COPY --from=builder /venv /venv
-COPY --from=builder-whatsapp /slidge/plugins/whatsapp/generated /venv/lib/python3.9/site-packages/slidge/plugins/whatsapp/generated
+COPY --from=builder-discord /venv /venv/discord
+COPY --from=builder-skype /venv /venv/skype
+COPY --from=builder-whatsapp /venv /venv/whatsapp
 
 USER slidge
-ENTRYPOINT ["python", "-m", "slidge"]

@@ -11,11 +11,11 @@ Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%E/coreos-home-server/prosody/prosody.env
 ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmon \
+                          --entrypoint '["/venv/%i/bin/python", "-m", "slidge"]' \
                           --env-file %E/coreos-home-server/%p/%p.env \
                           --volume %p-%i:/var/lib/slidge:z \
                           localhost/%p:latest \
-                          --jid=%i.${PROSODY_HOST} \
-                          --legacy-module=slidge.plugins.%i
+                          --jid=%i.${PROSODY_HOST}
 ExecStop=/bin/podman stop --ignore --time 10 %p-%i
 ExecStopPost=/bin/podman rm --ignore --force %p-%i
 
