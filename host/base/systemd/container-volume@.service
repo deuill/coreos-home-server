@@ -6,6 +6,7 @@ After=container-volume-restore@%i.service
 [Service]
 Type=oneshot
 SyslogIdentifier=%N
+RemainAfterExit=true
 ExecStart=/bin/sh -c 'podman volume exists %i || podman volume create %i'
 
 [Install]

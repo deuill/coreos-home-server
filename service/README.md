@@ -13,16 +13,22 @@ corresponding directory:
   - `Containerfile` -- This file is used in building a container image, handled by the
     `container-build@example` service and presumably used in the systemd file for the `example`
     service.
-    
+
   - `example.env.template` -- An optional file containing `KEY=value` definitions that can then be
     used in the systemd service. Host-wide environment is also available in this context, and can be
     used in expanding shared configuration, secrets, etc. This file is used by the
     `container-environment@example` service.
-    
+
   - `systemd/` -- This directory contains systemd configuration, to be copied into the host-wide
     `/etc/systemd/system` directory. You'll typically find things like `example.service` files
     which run the service under Podman, as well as potential one-off services which copy files
     around in pre-existing Podman containers.
+
+  - `quadlet` -- This directory contains configuration for
+    [Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html), aka
+    `podman-systemd.unit`, which allows for generating comprehensive Systemd configuration from more
+    idiomatic templates. Most services will be found as `example.container` files, installed under
+    `/etc/containers/systemd` in running systems.
 
   - `container/` -- This directory contains any static files included in the Podman image, including
     templated configuration, scripts, etc.

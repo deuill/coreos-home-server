@@ -1,0 +1,17 @@
+[Unit]
+Description=Redis Key-Value Store
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Container]
+ContainerName=%N
+Image=localhost/%N:latest
+Network=internal
+Notify=true
+Volume=%N:/var/lib/%N:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,14 @@
-FROM docker.io/redis:6.2
+FROM docker.io/debian:bookworm-slim
+ARG VERSION=7.0
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
+ADD --chown=_apt https://packages.redis.io/gpg /etc/apt/trusted.gpg.d/redis.asc
+
+RUN echo "deb https://packages.redis.io/deb bookworm main" > /etc/apt/sources.list.d/redis.list && \
+    apt-get update && apt-get install -y --no-install-recommends redis-server="6:${VERSION}*"
 
 COPY container/config /etc/redis
 USER redis
 
-CMD ["redis-server", "/etc/redis/redis.conf"]
+EXPOSE 6379
+ENTRYPOINT ["redis-server", "/etc/redis/redis.conf"]

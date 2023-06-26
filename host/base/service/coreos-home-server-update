@@ -13,6 +13,7 @@ shopt -s globstar
 TEMP_CONFIG_PATH="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 HOST_CONFIG_PATH="/etc/coreos-home-server"
 SYSTEMD_CONFIG_PATH="/etc/systemd/system"
+QUADLET_CONFIG_PATH="/etc/containers/systemd"
 
 # Synchronize CoreOS home-server configuration for specific path.
 function sync-coreos-config() {
@@ -64,6 +65,11 @@ function sync-systemd-services() {
     # Copy service files if newer than destination.
     for src in "$HOST_CONFIG_PATH"/*/systemd/*; do
         tmp="$(cp --verbose --recursive --update --target-directory "$SYSTEMD_CONFIG_PATH" "$src")"
+        if test -n "$tmp"; then buffer="${buffer}"$'\n'"${tmp}"; fi
+    done
+
+    for src in "$HOST_CONFIG_PATH"/*/quadlet/*; do
+        tmp="$(cp --verbose --recursive --update --target-directory "$QUADLET_CONFIG_PATH" "$src")"
         if test -n "$tmp"; then buffer="${buffer}"$'\n'"${tmp}"; fi
     done
 
