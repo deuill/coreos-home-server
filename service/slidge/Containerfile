@@ -9,7 +9,7 @@ RUN curl -fL https://install.python-poetry.org | python3 -
 
 FROM builder-base AS builder-discord
 
-ARG VERSION=1de825cc5764215c89f5d9f6fcde109340c5331e
+ARG VERSION=c2ade3f4ff452066efd7c3ce130ec04a1be3c7ed
 RUN git clone https://git.sr.ht/~nicoco/slidcord /src && \
     cd /src && git reset --hard ${VERSION}
 
@@ -40,7 +40,7 @@ RUN go install github.com/go-python/gopy@latest && \
 
 RUN python3 -m pip install pybindgen
 
-ARG VERSION=cb55ab1d7e4a8d8af0c26328dd87291bcc2b8e46
+ARG VERSION=7c48a17fd7cc10b123c7d2aa1703033dc6e3fe25
 RUN git clone https://git.sr.ht/~nicoco/slidge-whatsapp /src && \
     cd /src && git reset --hard ${VERSION}
 
@@ -55,7 +55,8 @@ ENV PYTHONUNBUFFERED=1
 ENV SLIDGE_LEGACY_MODULE=legacy_module
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates python3 libpython3.11 python3-gdbm libidn12 libmagic1 media-types shared-mime-info
+    ca-certificates python3 libpython3.11 python3-gdbm libidn12 libmagic1 media-types shared-mime-info \
+    ffmpeg
 
 RUN addgroup --system --gid 10000 slidge
 RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
