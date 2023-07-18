@@ -30,6 +30,8 @@ PATH    = /var/lib/gitea/gitea.db
 LOG_SQL = false
 
 [indexer]
+REPO_INDEXER_ENABLED = true
+REPO_INDEXER_PATH = /var/lib/gitea/indexers/repos.bleve
 ISSUE_INDEXER_PATH = /var/lib/gitea/indexers/issues.bleve
 
 [session]
