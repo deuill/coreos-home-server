@@ -55,6 +55,13 @@ web-template-base-dir: "/opt/gotosocial/web/template/"
 web-asset-base-dir: "/opt/gotosocial/web/assets/"
 
 ###########################
+##### INSTANCE CONFIG #####
+###########################
+
+# Inject a Mastodon version into the version field that is included in /api/v1/instance.
+instance-inject-mastodon-version: true
+
+###########################
 ##### ACCOUNTS CONFIG #####
 ###########################
 
