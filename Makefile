@@ -1,7 +1,7 @@
 # CoreOS options.
 NAME      := coreos-home-server
 STREAM    := stable
-VERSION   := 37.20221127.3.0
+VERSION   := 38.20230709.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
@@ -15,7 +15,7 @@ TMPDIR  := $(shell ls -d /var/tmp/$(NAME).???? 2>/dev/null || mktemp -d /var/tmp
 # Target-specific variables.
 ADDRESS        = $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
 CONTAINERFILES = $(wildcard service/*/Containerfile)
-VIRTUAL_PORTS  = 8022:22 8080:80 8443:443
+VIRTUAL_PORTS  = 8022:22 8025:25 8080:80 8143:143 8443:443 8465:465 8587:587 8993:993 5222:5222 5223:5223 5269:5269 5347:5347 7920:7920
 
 # Build-time dependencies.
 BUTANE ?= $(call find-cmd,butane)
