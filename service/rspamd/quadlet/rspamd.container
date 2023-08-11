@@ -8,7 +8,6 @@ ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 Image=localhost/%N:latest
 Network=internal
-Notify=true
 Volume=%N:/var/lib/%N:z
 
 [Service]
