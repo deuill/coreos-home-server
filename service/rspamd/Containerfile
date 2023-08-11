@@ -1,20 +1,17 @@
-FROM docker.io/debian:bullseye-slim
-ARG VERSION=3.5
+FROM docker.io/debian:bookworm-slim
+ARG VERSION=3.6
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates curl gnupg
+RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
+ADD --chown=_apt https://rspamd.com/apt-stable/gpg.key /etc/apt/trusted.gpg.d/rspamd.asc
 
-RUN echo "deb https://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list && \
-    echo "deb-src https://rspamd.com/apt-stable/ bullseye main" >> /etc/apt/sources.list.d/rspamd.list && \
-    curl -o - https://rspamd.com/apt-stable/gpg.key | apt-key add - && \
+RUN echo "deb https://rspamd.com/apt-stable/ bookworm main" > /etc/apt/sources.list.d/rspamd.list && \
     apt-get update && apt-get install -y --no-install-recommends rspamd="${VERSION}*"
 
 RUN addgroup --system --gid 11332 rspamd
 RUN adduser --system --uid 11332 --ingroup rspamd --home /var/lib/rspamd rspamd
 
-COPY container/config /etc/rspamd
+COPY --chown=rspamd:rspamd container/config /etc/rspamd
 COPY container/run-rspamd /run-rspamd
-RUN chown -R rspamd:rspamd /etc/rspamd
 
 EXPOSE 11332 11333 11334
 ENTRYPOINT ["/run-rspamd"]

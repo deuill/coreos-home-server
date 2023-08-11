@@ -1,0 +1,18 @@
+[Unit]
+Description=RSpamd Spam Filtering System
+Wants=container-build@%N.service container-volume@%N.service redis.service
+After=container-build@%N.service container-volume@%N.service redis.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+Image=localhost/%N:latest
+Network=internal
+Notify=true
+Volume=%N:/var/lib/%N:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

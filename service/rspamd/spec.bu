@@ -6,7 +6,5 @@ storage:
       local: service/rspamd/
     - path: /etc/systemd/system
       local: service/rspamd/systemd/
-systemd:
-  units:
-    - name: rspamd.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/rspamd/quadlet/
