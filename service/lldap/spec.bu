@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/lldap
       local: service/lldap/
-    - path: /etc/systemd/system
-      local: service/lldap/systemd/
-systemd:
-  units:
-    - name: lldap.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/lldap/quadlet/
