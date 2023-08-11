@@ -92,6 +92,8 @@ function main() {
     # Synchronize systemd services from local CoreOS home-server configuration.
     printf "Synchronizing systemd service files... "
     if sync-systemd-services; then
+        printf "Generating systemd services with Quadlet...\n"
+        /usr/lib/systemd/system-generators/podman-system-generator "$SYSTEMD_CONFIG_PATH"
         printf "Reloading systemd daemon after service updates...\n"
         systemctl daemon-reload
     fi
