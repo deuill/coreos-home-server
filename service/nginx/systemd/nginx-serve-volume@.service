@@ -14,8 +14,8 @@ Environment=NGINX_CONF=%E/coreos-home-server/nginx/service/%p.conf.template
 ExecStartPre=/bin/podman create --replace --name $SERVER_NAME --net internal --sdnotify=conmon \
                                 --volume %i:/srv:z,ro \
                                 localhost/nginx:latest
-ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME $SERVER_ROOT' < ${NGINX_CONF} > /tmp/%i.conf"
-ExecStartPre=/bin/sh -c 'podman cp /tmp/%i.conf ${SERVER_NAME}:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%i.conf'
+ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME $SERVER_ROOT' < ${NGINX_CONF} > /tmp/%N.conf"
+ExecStartPre=/bin/sh -c 'podman cp /tmp/%N.conf ${SERVER_NAME}:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%N.conf'
 ExecStart=/bin/podman start --attach $SERVER_NAME
 ExecStop=/bin/podman stop --ignore --time 10 $SERVER_NAME
 ExecStopPost=/bin/podman rm --ignore --force $SERVER_NAME

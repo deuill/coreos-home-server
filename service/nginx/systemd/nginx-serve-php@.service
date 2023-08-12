@@ -21,8 +21,8 @@ ExecStartPre=/bin/podman init %i-php
 ExecStartPre=/bin/podman create --replace --name %i-nginx --pod %i --sdnotify=conmon \
                                 --volumes-from=%i-php:z,ro \
                                 localhost/nginx:latest
-ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%i.conf"
-ExecStartPre=/bin/sh -c 'podman cp /tmp/%i.conf %i-nginx:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%i.conf'
+ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%N.conf"
+ExecStartPre=/bin/sh -c 'podman cp /tmp/%N.conf %i-nginx:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%N.conf'
 ExecStart=/bin/sh -c 'podman pod start %i && podman start --attach %i-php'
 ExecStop=/bin/podman pod stop --ignore --time 10 %i
 ExecStopPost=/bin/podman pod rm --ignore --force %i

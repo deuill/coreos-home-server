@@ -1,4 +1,12 @@
-FROM docker.io/nginx:1.23
+FROM docker.io/debian:bookworm-slim
+ARG VERSION=1.25
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
+ADD --chown=_apt https://nginx.org/keys/nginx_signing.key /etc/apt/trusted.gpg.d/nginx.asc
+
+RUN echo "deb https://nginx.org/packages/mainline/debian bookworm nginx" > /etc/apt/sources.list.d/nginx.list && \
+    apt-get update && apt-get install -y --no-install-recommends nginx="${VERSION}*" && \
+    rm -Rf /etc/nginx
 
 RUN addgroup --system --gid 10000 nginx-shared
 RUN gpasswd --add nginx nginx-shared
@@ -9,4 +17,6 @@ COPY container/run-nginx /run-nginx
 RUN nginx -t
 
 EXPOSE 80 443
+STOPSIGNAL SIGQUIT
+
 ENTRYPOINT ["/run-nginx"]

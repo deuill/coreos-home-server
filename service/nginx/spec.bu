@@ -6,7 +6,5 @@ storage:
       local: service/nginx/
     - path: /etc/systemd/system
       local: service/nginx/systemd/
-systemd:
-  units:
-    - name: nginx.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/nginx/quadlet/

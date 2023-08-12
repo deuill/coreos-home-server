@@ -1,0 +1,20 @@
+[Unit]
+Description=NGINX Web Server
+Wants=container-build@%N.service
+After=container-build@%N.service
+
+[Container]
+ContainerName=%N
+Image=localhost/%N:latest
+Network=internal
+PublishPort=80:80
+PublishPort=443:443
+Volume=nginx-conf:/etc/nginx/conf.d:z
+Volume=letsencrypt:/etc/ssl/private:z,rshared,ro
+
+[Service]
+Restart=on-failure
+ExecReload=/bin/podman exec %N nginx -s reload
+
+[Install]
+WantedBy=multi-user.target
