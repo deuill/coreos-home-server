@@ -73,6 +73,12 @@ function sync-systemd-services() {
         if test -n "$tmp"; then buffer="${buffer}"$'\n'"${tmp}"; fi
     done
 
+    # Remove concrete unit files where generated container files exist.
+    for unit in "$QUADLET_CONFIG_PATH"/*.container; do
+        tmp="$(rm --verbose --force "$SYSTEMD_CONFIG_PATH"/$(basename "${unit%.*}.service"))"
+        if test -n "$tmp"; then buffer="${buffer}"$'\n'"${tmp}"; fi
+    done
+
     printf "%s\ndone.\n" "$buffer"
     if test -n "$buffer"; then return 0; else return 1; fi
 }
@@ -92,8 +98,6 @@ function main() {
     # Synchronize systemd services from local CoreOS home-server configuration.
     printf "Synchronizing systemd service files... "
     if sync-systemd-services; then
-        printf "Generating systemd services with Quadlet...\n"
-        /usr/lib/systemd/system-generators/podman-system-generator "$SYSTEMD_CONFIG_PATH"
         printf "Reloading systemd daemon after service updates...\n"
         systemctl daemon-reload
     fi
