@@ -2,9 +2,6 @@
 
 set -eu
 
-# Export shared variables.
-export GITEA_WORK_DIR=/var/lib/gitea
-
 # Create configuration file from collected templates.
 envsubst < /etc/gitea/config.ini.template > /etc/gitea/config.ini
 

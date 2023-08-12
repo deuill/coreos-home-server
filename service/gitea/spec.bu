@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/gitea
       local: service/gitea/
-    - path: /etc/systemd/system
-      local: service/gitea/systemd/
-systemd:
-  units:
-    - name: gitea.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/gitea/quadlet/

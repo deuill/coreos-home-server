@@ -1,0 +1,18 @@
+[Unit]
+Description=Gitea Self-Hosted Git Service
+Wants=container-build@%N.service container-volume@%N.service lldap.service
+After=container-build@%N.service container-volume@%N.service lldap.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+Image=localhost/%N:latest
+Network=internal
+PublishPort=7920:7920
+Volume=%N:/var/lib/%N:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

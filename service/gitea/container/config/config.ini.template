@@ -1,4 +1,5 @@
 APP_NAME = ${GITEA_APP_NAME}
+WORK_PATH = /var/lib/gitea
 RUN_USER = git
 RUN_MODE = prod
 
