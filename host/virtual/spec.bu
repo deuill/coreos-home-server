@@ -152,7 +152,7 @@ systemd:
         - name: use-local-files.conf
           contents: |
             [Service]
-            ExecStartPre=/bin/podman volume create letsencrypt
+            ExecStartPre=/bin/podman volume create --ignore letsencrypt
             ExecStart=
             ExecStart=/bin/sh -c "V=$(podman volume mount letsencrypt) && cp -Rv /etc/ssl/private/certificates $V && chown -R 10000:10000 $V"
             ExecStartPost=/bin/podman volume unmount letsencrypt
