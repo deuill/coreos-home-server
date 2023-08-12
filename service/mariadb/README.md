@@ -55,7 +55,7 @@ service-specific `example/example.env.template` file (if any exists). Running th
 simple a matter as running the aforementioned service, e.g.:
 
 ```
-sudo systemctl start mariadb-migrate@example 
+sudo systemctl start mariadb-migrate@example
 ```
 
 The systemd journal should provide evidence of execution and reference to any issues that may have occured.

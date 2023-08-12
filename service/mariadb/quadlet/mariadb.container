@@ -1,0 +1,19 @@
+[Unit]
+Description=MariaDB SQL Database
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+HealthCmd=mariadb-admin -uroot -p$MYSQL_ROOT_PASSWORD ping
+Image=localhost/%N:latest
+Network=internal
+Notify=true
+Volume=%N:/var/lib/mysql:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
