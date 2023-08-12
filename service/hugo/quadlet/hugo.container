@@ -1,0 +1,19 @@
+[Unit]
+Description=Hugo static site builder
+Wants=container-build@%N.service container-volume@%N.service nginx-serve-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+Before=nginx-serve-volume@%N.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+Image=localhost/%N:latest
+Network=internal
+Volume=%N:/build:z
+Volume=%N-ssh:/etc/ssh/keys:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

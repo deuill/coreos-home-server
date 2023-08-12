@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/hugo
       local: service/hugo/
-    - path: /etc/systemd/system
-      local: service/hugo/systemd/
-systemd:
-  units:
-    - name: hugo.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/hugo/quadlet/
