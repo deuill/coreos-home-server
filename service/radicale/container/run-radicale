@@ -6,4 +6,4 @@ for file in /etc/radicale/*.template; do
 	envsubst "${ENV_NAMES}" < "$file" > "`echo $file | awk -F '.template$' '{print $1}'`"
 done
 
-/usr/local/bin/radicale --config /etc/radicale/radicale.conf "$@"
+/venv/bin/radicale --config /etc/radicale/radicale.conf "$@"

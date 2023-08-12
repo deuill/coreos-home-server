@@ -1,18 +1,17 @@
-FROM docker.io/debian:bullseye-slim
-ARG VERSION=3.1.5
+FROM docker.io/debian:bookworm-slim
+ARG VERSION=3.1.8
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-setuptools gettext
+    python3 python3-pip python3-venv gettext
 
-RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install radicale==$VERSION https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
+RUN python3 -m venv /venv && \
+    /venv/bin/pip install radicale==$VERSION https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
 
 RUN addgroup --system --gid 15232 radicale
 RUN adduser --system --uid 15232 --ingroup radicale --home /var/lib/radicale radicale
 
-COPY container/config /etc/radicale
+COPY --chown=radicale:radicale container/config /etc/radicale
 COPY container/run-radicale /run-radicale
-RUN chown -R radicale:radicale /etc/radicale
 
 USER radicale
 EXPOSE 5232

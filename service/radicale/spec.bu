@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/radicale
       local: service/radicale/
-    - path: /etc/systemd/system
-      local: service/radicale/systemd/
-systemd:
-  units:
-    - name: radicale.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/radicale/quadlet/

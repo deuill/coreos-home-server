@@ -1,0 +1,17 @@
+[Unit]
+Description=Radicale CalDAV and CardDAV Server
+Wants=container-build@%N.service container-volume@%N.service dovecot.service
+After=container-build@%N.service container-volume@%N.service dovecot.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+Image=localhost/%N:latest
+Network=internal
+Volume=%N:/var/lib/%N:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
