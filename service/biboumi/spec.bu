@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/biboumi
       local: service/biboumi/
-    - path: /etc/systemd/system
-      local: service/biboumi/systemd/
-systemd:
-  units:
-    - name: biboumi.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/biboumi/quadlet/
