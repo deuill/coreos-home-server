@@ -1,0 +1,25 @@
+[Unit]
+Description=Dovecot POP3/IMAP server
+Wants=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service grafana-dashboard@dovecot.service
+After=container-build@%N.service container-volume@%N.service mariadb.service rspamd.service
+Before=grafana-dashboard@dovecot.service
+
+[Container]
+AddCapability=SYS_CHROOT
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+EnvironmentFile=%E/coreos-home-server/rspamd/rspamd.env
+Image=localhost/%N:latest
+Network=internal
+PublishPort=143:143
+PublishPort=993:993
+PublishPort=4190:4190
+Volume=%N:/var/mail:z
+Volume=letsencrypt:/etc/ssl/private:z,ro
+
+[Service]
+ExecReload=/bin/podman exec %N doveadm -v reload
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,5 @@
-FROM docker.io/debian:bullseye-slim
-ARG VERSION=2.3.13
+FROM docker.io/debian:bookworm-slim
+ARG VERSION=2.3.19
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     dovecot-imapd=1:${VERSION}* dovecot-lmtpd=1:${VERSION}* dovecot-mysql=1:${VERSION}* \

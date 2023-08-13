@@ -6,11 +6,11 @@ storage:
       local: service/dovecot/
     - path: /etc/systemd/system
       local: service/dovecot/systemd/
+    - path: /etc/containers/systemd
+      local: service/dovecot/quadlet/
 systemd:
   units:
     - name: dovecot-firstboot.target
       enabled: true
     - name: dovecot-fts-optimize.timer
-      enabled: true
-    - name: dovecot.service
       enabled: true
