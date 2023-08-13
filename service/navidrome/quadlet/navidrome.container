@@ -1,0 +1,17 @@
+[Unit]
+Description=Navidrome music server
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Container]
+ContainerName=%N
+Image=localhost/%N:latest
+Network=internal
+Volume=%N:/var/lib/%N:z
+Volume=%N-music:/music:z,ro
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

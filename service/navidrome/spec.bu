@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/navidrome
       local: service/navidrome/
-    - path: /etc/systemd/system
-      local: service/navidrome/systemd/
-systemd:
-  units:
-    - name: navidrome.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/navidrome/quadlet/

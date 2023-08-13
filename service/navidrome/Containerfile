@@ -1,13 +1,11 @@
-FROM docker.io/debian:bullseye-slim
+FROM docker.io/debian:bookworm-slim
 ARG VERSION=0.49.2
 
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends curl ca-certificates gosu ffmpeg
-
 ENV PACKAGE_URL https://github.com/deluan/navidrome/releases/download/v${VERSION}/navidrome_${VERSION}_Linux_x86_64.tar.gz
-RUN curl -L ${PACKAGE_URL} | tar -C /bin --no-same-owner -xvzf - navidrome && chmod +x /bin/navidrome
-
-RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl ca-certificates gosu ffmpeg && \
+    curl -L ${PACKAGE_URL} | tar -C /bin --no-same-owner -xvzf - navidrome && chmod +x /bin/navidrome && \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
 
 RUN addgroup --system --gid 10000 navidrome
 RUN adduser --system --uid 10000 --ingroup navidrome --home /var/lib/navidrome navidrome
