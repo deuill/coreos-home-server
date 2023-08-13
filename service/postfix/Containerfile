@@ -1,5 +1,5 @@
-FROM docker.io/debian:bullseye-slim
-ARG VERSION=3.5.13
+FROM docker.io/debian:bookworm-slim
+ARG VERSION=3.7.6
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core gettext ca-certificates

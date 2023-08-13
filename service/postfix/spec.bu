@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/postfix
       local: service/postfix/
-    - path: /etc/systemd/system
-      local: service/postfix/systemd/
-systemd:
-  units:
-    - name: postfix.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/postfix/quadlet/

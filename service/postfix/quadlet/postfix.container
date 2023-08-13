@@ -1,0 +1,22 @@
+[Unit]
+Description=Postfix SMTP server
+Wants=container-build@%N.service dovecot.service
+After=container-build@%N.service dovecot.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+Image=localhost/%N:latest
+PublishPort=25:25
+PublishPort=465:465
+PublishPort=587:587
+Network=internal
+Volume=dovecot:/var/mail:z
+Volume=letsencrypt:/etc/ssl/private:z,ro
+
+[Service]
+ExecReload=/bin/podman exec %N postfix reload
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

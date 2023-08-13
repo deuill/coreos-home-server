@@ -2,8 +2,8 @@
 # Main configuration file for Postfix.
 #
 
-# Version 2 is current for Postfix > 3.2 configuration.
-compatibility_level = 2
+# Version 6 is current for Postfix > 3.6 configuration.
+compatibility_level = 3.6
 
 # Log to standard output.
 maillog_file = /dev/stdout
