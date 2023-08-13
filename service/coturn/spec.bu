@@ -4,9 +4,5 @@ storage:
   trees:
     - path: /etc/coreos-home-server/coturn
       local: service/coturn/
-    - path: /etc/systemd/system
-      local: service/coturn/systemd/
-systemd:
-  units:
-    - name: coturn.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/coturn/quadlet/
