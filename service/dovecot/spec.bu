@@ -14,3 +14,5 @@ systemd:
       enabled: true
     - name: dovecot-fts-optimize.timer
       enabled: true
+    - name: dovecot-autoarchive.timer
+      enabled: true

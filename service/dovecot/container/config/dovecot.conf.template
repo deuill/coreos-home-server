@@ -53,6 +53,16 @@ namespace inbox {
 		special_use = \Sent
 	}
 
+	mailbox Archive {
+		auto = create
+		special_use = \Archive
+	}
+
+	mailbox Archives {
+		auto = no
+		special_use = \Archive
+	}
+
 	mailbox Trash {
 		auto = subscribe
 		special_use = \Trash

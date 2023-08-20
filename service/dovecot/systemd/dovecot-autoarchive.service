@@ -1,0 +1,12 @@
+[Unit]
+Description=Auto-archive Dovecot inbox messages
+Wants=dovecot.service
+After=dovecot.service
+
+[Service]
+Type=oneshot
+SyslogIdentifier=%N
+ExecStart=/bin/podman exec dovecot doveadm -v move -A INBOX.Archive mailbox INBOX UNFLAGGED BEFORE 2w
+
+[Install]
+WantedBy=multi-user.target
