@@ -6,7 +6,5 @@ storage:
       local: service/prosody/
     - path: /etc/systemd/system
       local: service/prosody/systemd/
-systemd:
-  units:
-    - name: prosody.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/prosody/quadlet/

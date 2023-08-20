@@ -1,6 +1,6 @@
-FROM docker.io/debian:bullseye-slim
+FROM docker.io/debian:bookworm-slim
 ARG VERSION=0.12.3
-ARG MODULES_VERSION=43b67142b37c
+ARG MODULES_VERSION=f3b7e05c74a9
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl mercurial gnupg ca-certificates apt-transport-https
@@ -9,8 +9,8 @@ RUN addgroup --system --gid 10000 prosody
 RUN adduser --system --uid 10000 --ingroup prosody --home /var/lib/prosody prosody
 RUN install --owner prosody --group prosody --directory /run/prosody
 
-RUN echo "deb https://packages.prosody.im/debian bullseye main" > /etc/apt/sources.list.d/prosody.list && \
-    echo "deb-src https://packages.prosody.im/debian bullseye main" >> /etc/apt/sources.list.d/prosody.list && \
+RUN echo "deb https://packages.prosody.im/debian bookworm main" > /etc/apt/sources.list.d/prosody.list && \
+    echo "deb-src https://packages.prosody.im/debian bookworm main" >> /etc/apt/sources.list.d/prosody.list && \
     curl -o - https://prosody.im/files/prosody-debian-packages.key | apt-key add - && \
     apt-get update -y && apt-get install -y --no-install-recommends \
     lua5.2 lua-dbi-sqlite3 lua-zlib lua-sec lua-luaossl lua-bitop lua-unbound lua-ldap prosody=${VERSION}*

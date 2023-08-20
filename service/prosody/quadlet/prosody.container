@@ -1,0 +1,24 @@
+[Unit]
+Description=Prosody XMPP server
+Wants=container-build@%N.service container-volume@%N.service lldap.service grafana-dashboard@prosody.service
+After=container-build@%N.service container-volume@%N.service lldap.service grafana-dashboard@prosody.service
+
+[Container]
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/%N/%N.env
+Image=localhost/%N:latest
+Network=internal
+PublishPort=5222:5222
+PublishPort=5223:5223
+PublishPort=5269:5269
+PublishPort=5347:5347
+Volume=%N:/var/lib/%N:z
+Volume=prosody-conf:/etc/%N/conf.d:z
+Volume=letsencrypt:/etc/ssl/private:z
+
+[Service]
+ExecReload=/bin/podman exec %N prosodyctl shell config reload
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
