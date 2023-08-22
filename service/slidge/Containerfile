@@ -40,7 +40,7 @@ RUN go install github.com/go-python/gopy@latest && \
 
 RUN python3 -m pip install pybindgen
 
-ARG VERSION=299407ea6c8158eedb500094ff86452c70f5ba9e
+ARG VERSION=9726982fd45bb1acdfc05a1f88ee2bcf983e76e5
 RUN git clone https://git.sr.ht/~nicoco/slidge-whatsapp /src && \
     cd /src && git reset --hard ${VERSION}
 
