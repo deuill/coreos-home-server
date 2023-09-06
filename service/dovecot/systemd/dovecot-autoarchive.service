@@ -6,7 +6,7 @@ After=dovecot.service
 [Service]
 Type=oneshot
 SyslogIdentifier=%N
-ExecStart=/bin/podman exec dovecot doveadm -v move -A INBOX.Archive mailbox INBOX UNFLAGGED BEFORE 2w
+ExecStart=/bin/podman exec dovecot doveadm -v move -A INBOX.Archive mailbox INBOX UNFLAGGED BEFORE 1w
 
 [Install]
 WantedBy=multi-user.target
