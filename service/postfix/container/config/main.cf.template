@@ -185,8 +185,10 @@ smtp_tls_note_starttls_offer = yes
 
 # TLS configuration parameters for incoming connections.
 smtpd_tls_security_level = may
-smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+smtpd_tls_mandatory_protocols = >=TLSv1.2
 smtpd_tls_mandatory_ciphers = high
+smtpd_tls_mandatory_exclude_ciphers = aNULL
+smtpd_tls_protocols = >=TLSv1.2
 smtpd_tls_auth_only = yes
 smtpd_helo_required = yes
 smtpd_tls_received_header = yes
@@ -196,6 +198,7 @@ smtpd_tls_loglevel = 1
 # Other TLS configuration parameters.
 tls_random_source = dev:/dev/urandom
 tls_ssl_options = no_ticket, no_compression
+tls_preempt_cipherlist = yes
 
 # Certificate file location.
 smtpd_tls_cert_file = /etc/ssl/private/certificates/${POSTFIX_HOST}.crt
