@@ -75,6 +75,7 @@ modules_enabled = {
     "conversejs"; -- Web-based frontend for XMPP
     "bookmarks"; -- Next-generation group-chat bookmarks
     "turn_external"; -- Connect to TURN/STUN server
+    "reload_components"; -- Automatically reload components when they are added and removed.
 }
 
 -- These modules are auto-loaded, but should you want
