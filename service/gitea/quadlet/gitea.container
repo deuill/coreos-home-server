@@ -4,6 +4,7 @@ Wants=container-build@%N.service container-volume@%N.service lldap.service
 After=container-build@%N.service container-volume@%N.service lldap.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=timeout 5s curl --fail --silent --show-error localhost:8080/api/healthz > /dev/null

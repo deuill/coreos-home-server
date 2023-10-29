@@ -6,6 +6,7 @@ Before=grafana-dashboard@dovecot.service
 
 [Container]
 AddCapability=SYS_CHROOT
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 EnvironmentFile=%E/coreos-home-server/rspamd/rspamd.env
