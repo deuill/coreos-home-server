@@ -18,3 +18,5 @@ systemd:
   units:
     - name: coreos-home-server-update.timer
       enabled: true
+    - name: podman-auto-update.timer
+      enabled: true

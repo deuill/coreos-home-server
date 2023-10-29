@@ -628,6 +628,7 @@ denied-peer-ip=240.0.0.0-255.255.255.255
 # Examples:
 # denied-peer-ip=83.166.64.0-83.166.95.255
 # allowed-peer-ip=83.166.68.45
+allowed-peer-ip=${COTURN_EXTERNAL_IP}
 
 # File name to store the pid of the process.
 # Default is /var/run/turnserver.pid (if superuser account is used) or

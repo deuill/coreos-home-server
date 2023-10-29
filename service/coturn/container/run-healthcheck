@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+external_ip="$1"
+auth_secret="$2"
+auth_expiry=86400
+
+username="$(( $(date +%s) + $auth_expiry ))"
+password="$(echo -n $username | openssl dgst -binary -sha1 -hmac "$auth_secret" | openssl base64)"
+
+if ! turnutils_uclient -T "$external_ip" -u "$username" -w "$password" 2>&1 > /dev/null; then
+    exit 1
+fi

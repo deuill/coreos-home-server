@@ -1,4 +1,5 @@
 #!/bin/sh
+set -eu
 
 # Prepare configuration files for environment variable substitution.
 ENV_NAMES="$(env | awk -F= '{printf "$%s ", $1}')"

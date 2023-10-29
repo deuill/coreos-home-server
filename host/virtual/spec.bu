@@ -51,6 +51,8 @@ systemd:
       mask: true
     - name: coreos-home-server-update.timer
       mask: true
+    - name: podman-auto-update.timer
+      mask: true
 
     # Enable default web services.
     - name: container-build@static.localhost.service

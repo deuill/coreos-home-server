@@ -6,6 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
 
 COPY container/config /etc/coturn
 COPY container/run-coturn /run-coturn
+COPY container/run-healthcheck /run-healthcheck
 
 # STUN/TURN ports.
 EXPOSE 3478 3478/udp 5349 5349/udp
