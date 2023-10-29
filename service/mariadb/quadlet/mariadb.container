@@ -4,6 +4,7 @@ Wants=container-build@%N.service container-volume@%N.service
 After=container-build@%N.service container-volume@%N.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=mariadb-admin -uroot -p$MYSQL_ROOT_PASSWORD ping
