@@ -2,11 +2,10 @@ FROM docker.io/debian:bookworm-slim
 ARG VERSION=1.20.5
 
 ENV PACKAGE_URL https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends curl ca-certificates gettext gosu \
-                                               git openssh-client gnupg && \
-    curl -L -o /usr/bin/gitea ${PACKAGE_URL} && chmod +x /usr/bin/gitea && \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    curl ca-certificates gettext gosu git openssh-client gnupg
+
+RUN curl -L -o /usr/bin/gitea ${PACKAGE_URL} && chmod +x /usr/bin/gitea
 
 RUN addgroup --system --gid 10000 git
 RUN adduser --system --uid 10000 --ingroup git --home /var/lib/gitea git
