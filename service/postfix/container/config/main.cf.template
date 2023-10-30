@@ -199,7 +199,7 @@ smtpd_tls_loglevel = 1
 # Other TLS configuration parameters.
 tls_random_source = dev:/dev/urandom
 tls_ssl_options = no_ticket, no_compression
-tls_preempt_cipherlist = yes
+tls_preempt_cipherlist = no
 
 # Certificate file location.
 smtpd_tls_cert_file = /etc/ssl/private/certificates/${POSTFIX_HOST}.crt
