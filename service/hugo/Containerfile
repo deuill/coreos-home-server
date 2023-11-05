@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.20-bookworm AS builder
+FROM docker.io/golang:1.21-bookworm AS builder
 
 WORKDIR /build
 ENV GOBIN=/build/bin
@@ -6,14 +6,13 @@ ENV GOBIN=/build/bin
 RUN go install github.com/adnanh/webhook@latest
 
 FROM docker.io/debian:bookworm-slim
-ARG VERSION=0.115.4
+ARG VERSION=0.119.0
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates curl git gettext gosu openssh-client
 
 RUN curl -L https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz | \
             tar -C /bin --no-same-owner -xvzf - hugo && chmod +x /bin/hugo
-RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false curl
 
 RUN addgroup --system --gid 10000 hugo
 RUN adduser --system --uid 10000 --ingroup hugo --no-create-home hugo

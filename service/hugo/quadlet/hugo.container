@@ -5,10 +5,13 @@ After=container-build@%N.service container-volume@%N.service
 Before=nginx-serve-volume@%N.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:8080
 Image=localhost/%N:latest
 Network=internal
+PodmanArgs=--sdnotify=healthy
 Volume=%N:/build:z
 Volume=%N-ssh:/etc/ssh/keys:z
 
