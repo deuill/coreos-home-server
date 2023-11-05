@@ -13,14 +13,9 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Environment=SERVER_NAME=%i SERVICE_DATA_DIRECTORY=/data
 Environment=NGINX_CONF=%E/coreos-home-server/nginx/service/%p.conf.template
 ExecStartPre=/bin/podman pod create --replace --name %i --net internal
-ExecStartPre=/bin/podman create --replace --name %i-php --pod %i --sdnotify=conmon \
-                                --env-file %E/coreos-home-server/%i/%i.env \
-                                --volume %i:${SERVICE_DATA_DIRECTORY}:z,rshared \
-                                localhost/%i:latest
+ExecStartPre=/bin/podman create --replace --name %i-php --pod %i --sdnotify=conmon --env-file %E/coreos-home-server/%i/%i.env --volume %i:${SERVICE_DATA_DIRECTORY}:z,rshared localhost/%i:latest
 ExecStartPre=/bin/podman init %i-php
-ExecStartPre=/bin/podman create --replace --name %i-nginx --pod %i --sdnotify=conmon \
-                                --volumes-from=%i-php:z,ro \
-                                localhost/nginx:latest
+ExecStartPre=/bin/podman create --replace --name %i-nginx --pod %i --sdnotify=conmon --volumes-from=%i-php:z,ro localhost/nginx:latest
 ExecStartPre=/bin/sh -c "envsubst '$SERVER_NAME' < ${NGINX_CONF} > /tmp/%N.conf"
 ExecStartPre=/bin/sh -c 'podman cp /tmp/%N.conf %i-nginx:/etc/nginx/conf.d/%i.conf && rm -f /tmp/%N.conf'
 ExecStart=/bin/sh -c 'podman pod start %i && podman start --attach %i-php'

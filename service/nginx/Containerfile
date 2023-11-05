@@ -5,7 +5,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certifica
 ADD --chown=_apt https://nginx.org/keys/nginx_signing.key /etc/apt/trusted.gpg.d/nginx.asc
 
 RUN echo "deb https://nginx.org/packages/mainline/debian bookworm nginx" > /etc/apt/sources.list.d/nginx.list && \
-    apt-get update && apt-get install -y --no-install-recommends nginx="${VERSION}*" && \
+    apt-get update && apt-get install -y --no-install-recommends curl nginx="${VERSION}*" && \
     rm -Rf /etc/nginx
 
 RUN addgroup --system --gid 10000 nginx-shared
