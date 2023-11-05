@@ -4,9 +4,12 @@ Wants=container-build@%N.service container-volume@%N.service
 After=container-build@%N.service container-volume@%N.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:4533/ping
 Image=localhost/%N:latest
 Network=internal
+PodmanArgs=--sdnotify=healthy
 Volume=%N:/var/lib/%N:z
 Volume=%N-music:/music:z,ro
 
