@@ -4,10 +4,13 @@ Wants=container-build@%N.service container-volume@%N.service
 After=container-build@%N.service container-volume@%N.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
+HealthCmd=/opt/lldap/lldap healthcheck --config-file /etc/lldap/config.toml
 Image=localhost/%N:latest
 Network=internal
+PodmanArgs=--sdnotify=healthy
 Volume=%N:/var/lib/%N:z
 
 [Service]

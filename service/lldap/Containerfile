@@ -1,5 +1,5 @@
-FROM docker.io/rust:1.71 AS builder
-ARG VERSION=v0.4.3
+FROM docker.io/rust:1.73 AS builder
+ARG VERSION=v0.5.0
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     git gzip wget
@@ -8,7 +8,9 @@ RUN cargo install wasm-pack && rustup target add wasm32-unknown-unknown
 
 RUN git clone https://github.com/lldap/lldap.git /lldap && \
     cd /lldap && git reset --hard ${VERSION} && \
-    cargo build --release -p lldap -p migration-tool -p lldap_set_password
+    cargo build --release -p lldap \
+                          -p lldap_migration_tool \
+                          -p lldap_set_password
 
 RUN /lldap/app/build.sh && cd /lldap/app/static && \
     for file in $(cat libraries.txt); do wget "$file"; done && \
@@ -27,7 +29,7 @@ COPY --from=builder /lldap/app/index_local.html /opt/lldap/app/index.html
 COPY --from=builder /lldap/app/static /opt/lldap/app/static
 COPY --from=builder /lldap/app/pkg /opt/lldap/app/pkg
 COPY --from=builder /lldap/target/release/lldap \
-                    /lldap/target/release/migration-tool \
+                    /lldap/target/release/lldap_migration_tool \
                     /lldap/target/release/lldap_set_password \
                     /opt/lldap/
 
