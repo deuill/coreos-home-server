@@ -9,9 +9,7 @@ Type=oneshot
 SyslogIdentifier=%N
 Environment=SOURCE=crypt:%i
 ExecStartPre=/bin/install --mode 0700 -d /%I
-ExecStart=/bin/podman run --rm --env-file %E/coreos-home-server/rclone/rclone.env \
-                          --volume /%I:/data:z localhost/rclone:latest \
-                          sync ${SOURCE} /data
+ExecStart=/bin/podman run --rm --env-file %E/coreos-home-server/rclone/rclone.env --volume /%I:/data:z localhost/rclone:latest sync ${SOURCE} /data
 
 [Install]
 WantedBy=multi-user.target

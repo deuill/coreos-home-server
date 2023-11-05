@@ -2,7 +2,8 @@ FROM docker.io/debian:bookworm-slim
 ARG VERSION=3.7.6
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core gettext ca-certificates
+    postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core gettext ca-certificates \
+    netcat-traditional
 
 COPY container/config /etc/postfix
 COPY container/run-postfix /run-postfix

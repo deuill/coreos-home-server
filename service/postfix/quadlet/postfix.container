@@ -4,9 +4,12 @@ Wants=container-build@%N.service dovecot.service
 After=container-build@%N.service dovecot.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
+HealthCmd=sh -c 'printf "EHLO healthcheck\r\n" | nc -q 1 localhost 587 | grep -qE "^220.+ESMTP Postfix"'
 Image=localhost/%N:latest
+PodmanArgs=--sdnotify=healthy
 PublishPort=25:25
 PublishPort=465:465
 PublishPort=587:587
