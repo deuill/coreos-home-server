@@ -9,7 +9,7 @@ RUN curl -fL https://install.python-poetry.org | python3 -
 
 FROM builder-base AS builder-discord
 
-ARG VERSION=a698e7f092f8781800fee3842f59481fb034b58a
+ARG VERSION=18ff5e5617c120326363a9115ffce5e9a4c2e581
 RUN git clone https://git.sr.ht/~nicoco/slidcord /src && \
     cd /src && git reset --hard ${VERSION}
 
@@ -20,7 +20,7 @@ RUN cp -R /src/slidcord /venv/lib/python3.11/site-packages/legacy_module
 
 FROM builder-base AS builder-skype
 
-ARG VERSION=a08320895c054b3cfdd4876d4ca7faccf4548eec
+ARG VERSION=e200ad614d480e246c5d1ca25d50e938f2ba2aee
 RUN git clone https://git.sr.ht/~nicoco/skidge /src && \
     cd /src && git reset --hard ${VERSION}
 
@@ -40,7 +40,7 @@ RUN go install github.com/go-python/gopy@latest && \
 
 RUN python3 -m pip install pybindgen
 
-ARG VERSION=a2c008dc9a6cc694bc24563f3656396bd05cc2a2
+ARG VERSION=5401803e9557ff7bacb372479ed6c0b1fb2b7372
 RUN git clone https://git.sr.ht/~nicoco/slidge-whatsapp /src && \
     cd /src && git reset --hard ${VERSION}
 
