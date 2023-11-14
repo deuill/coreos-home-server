@@ -3,7 +3,6 @@ Description=Slidge Gateway for XMPP (%i)
 Wants=container-build@%p.service container-volume@%p-%i.service prosody.service prosody-component-register@%p-%i.service
 After=container-build@%p.service container-volume@%p-%i.service prosody.service
 Before=prosody-component-register@%p-%i.service
-PropagatesStopTo=prosody-component-register@%p-%i.service
 
 [Service]
 Type=notify
