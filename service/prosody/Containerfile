@@ -1,6 +1,6 @@
 FROM docker.io/debian:bookworm-slim
 ARG VERSION=0.12.4
-ARG MODULES_VERSION=e5ad3f1f48bd
+ARG MODULES_VERSION=ef3aa6901a93
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl mercurial gnupg ca-certificates apt-transport-https

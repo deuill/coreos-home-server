@@ -4,10 +4,13 @@ Wants=container-build@%N.service container-volume@%N.service lldap.service grafa
 After=container-build@%N.service container-volume@%N.service lldap.service grafana-dashboard@prosody.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:5280/health
 Image=localhost/%N:latest
 Network=internal
+PodmanArgs=--sdnotify=healthy
 PublishPort=5222:5222
 PublishPort=5223:5223
 PublishPort=5269:5269

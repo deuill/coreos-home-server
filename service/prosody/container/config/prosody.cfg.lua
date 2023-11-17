@@ -70,6 +70,7 @@ modules_enabled = {
     -- HTTP modules
     "websocket"; -- XMPP over WebSockets
     "http_openmetrics"; -- Enables metrics collection in OpenMetrics-compatible format.
+    "http_health"; -- Enabled health-checks over HTTP.
 
     -- Other specific functionality
     "conversejs"; -- Web-based frontend for XMPP
