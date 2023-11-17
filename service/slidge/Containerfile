@@ -9,7 +9,7 @@ RUN curl -fL https://install.python-poetry.org | python3 -
 
 FROM builder-base AS builder-discord
 
-ARG VERSION=18ff5e5617c120326363a9115ffce5e9a4c2e581
+ARG VERSION=8a28cfe4e3ba2f6a8609b047722d013989a5bd9a
 RUN git clone https://git.sr.ht/~nicoco/slidcord /src && \
     cd /src && git reset --hard ${VERSION}
 
