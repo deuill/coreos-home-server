@@ -4,10 +4,13 @@ Wants=container-build@%N.service container-volume@%N.service redis.service
 After=container-build@%N.service container-volume@%N.service redis.service
 
 [Container]
+AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
+HealthCmd=sh -c 'rspamadm control stat > /dev/null || exit 1'
 Image=localhost/%N:latest
 Network=internal
+PodmanArgs=--sdnotify=healthy
 Volume=%N:/var/lib/%N:z
 
 [Service]

@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim
-ARG VERSION=3.7.1
+ARG VERSION=3.7.4
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
 ADD --chown=_apt https://rspamd.com/apt-stable/gpg.key /etc/apt/trusted.gpg.d/rspamd.asc
