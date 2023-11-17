@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim
 ARG VERSION=3.1.8
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-venv gettext
+    python3 python3-pip python3-venv gettext curl
 
 RUN python3 -m venv /venv && \
     /venv/bin/pip install radicale==$VERSION https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
