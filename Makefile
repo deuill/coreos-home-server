@@ -1,7 +1,7 @@
 # CoreOS options.
 NAME      := coreos-home-server
 STREAM    := stable
-VERSION   := 38.20230709.3.0
+VERSION   := 38.20231027.3.2
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
@@ -55,7 +55,7 @@ deploy-metal: $(TMPDIR)deploy/host/$(HOST)/spec.ign
 # Prepares and deploys CoreOS release for local, virtual environment.
 deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment (press C-a h for help)...\n"
-	$Q $(QEMU) -m 2048 -cpu host -nographic -snapshot \
+	$Q $(QEMU) -m 4096 -cpu host -nographic -snapshot \
 	           -fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign \
 	           -drive if=virtio,file=$(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2 \
 	           -nic user,model=virtio,$(subst $(SPACE),$(COMMA),$(foreach p,$(VIRTUAL_PORTS),hostfwd=tcp::$(subst :,-:,$(p))))
