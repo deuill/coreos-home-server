@@ -6,7 +6,5 @@ storage:
       local: service/prometheus/
     - path: /etc/systemd/system
       local: service/prometheus/systemd/
-systemd:
-  units:
-    - name: prometheus.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/prometheus/quadlet/

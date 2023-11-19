@@ -1,0 +1,20 @@
+[Unit]
+Description=Prometheus Systems and Service Monitoring
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Container]
+AutoUpdate=local
+ContainerName=%N
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9090
+Image=localhost/%N:latest
+Network=internal
+PodmanArgs=--sdnotify=healthy
+Volume=%N:/var/lib/%N:z
+Volume=%N-service:/etc/%N/service.d:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
