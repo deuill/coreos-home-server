@@ -6,7 +6,5 @@ storage:
       local: service/grafana/
     - path: /etc/systemd/system
       local: service/grafana/systemd/
-systemd:
-  units:
-    - name: grafana.service
-      enabled: true
+    - path: /etc/containers/systemd
+      local: service/grafana/quadlet/
