@@ -24,7 +24,7 @@ corresponding directory:
     which run the service under Podman, as well as potential one-off services which copy files
     around in pre-existing Podman containers.
 
-  - `quadlet` -- This directory contains configuration for
+  - `quadlet/` -- This directory contains configuration for
     [Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html), aka
     `podman-systemd.unit`, which allows for generating comprehensive Systemd configuration from more
     idiomatic templates. Most services will be found as `example.container` files, installed under

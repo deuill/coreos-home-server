@@ -25,7 +25,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 7,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -103,9 +102,10 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "8.5.0",
+      "pluginVersion": "10.2.1",
       "targets": [
         {
           "datasource": {
@@ -127,7 +127,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "",
       "fieldConfig": {
@@ -167,16 +167,19 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "8.5.0",
+      "pluginVersion": "10.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "sum(rate(dovecot_client_connection_count{}[2m]))",
+          "editorMode": "code",
+          "expr": "sum(rate(dovecot_client_connection_total[2m]))",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -187,7 +190,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "",
       "fieldConfig": {
@@ -227,16 +230,19 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "8.5.0",
+      "pluginVersion": "10.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "sum(rate(dovecot_server_connection_count[2m]))",
+          "editorMode": "code",
+          "expr": "sum(rate(dovecot_server_connection_total[2m]))",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -247,7 +253,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "",
       "fieldConfig": {
@@ -284,12 +290,13 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^2\\.3\\.13$/",
+          "fields": "/^[0-9]+\\.[0-9]+/",
           "values": false
         },
-        "textMode": "name"
+        "textMode": "name",
+        "wideLayout": true
       },
-      "pluginVersion": "8.5.0",
+      "pluginVersion": "10.2.1",
       "targets": [
         {
           "datasource": {
@@ -297,7 +304,10 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
+          "exemplar": false,
           "expr": "dovecot_build_info",
+          "format": "time_series",
+          "instant": false,
           "legendFormat": "{{version}}",
           "range": true,
           "refId": "A"
@@ -332,6 +342,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -343,6 +356,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -383,7 +397,8 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -418,6 +433,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -429,6 +447,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -469,7 +488,8 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -495,7 +515,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "The current rate of incoming client connections established.",
       "fieldConfig": {
@@ -504,6 +524,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -515,6 +538,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -554,8 +578,9 @@
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
         "tooltip": {
           "mode": "single",
@@ -570,7 +595,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(dovecot_client_connection_count{}[2m]))",
+          "expr": "sum(rate(dovecot_client_connection_total[2m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -582,7 +607,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "The current rate of outgoing server connections established.",
       "fieldConfig": {
@@ -591,6 +616,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -602,6 +630,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -641,8 +670,9 @@
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
         "tooltip": {
           "mode": "single",
@@ -656,7 +686,9 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "sum(rate(dovecot_server_connection_count[2m]))",
+          "editorMode": "code",
+          "expr": "sum(rate(dovecot_server_connection_total[2m]))",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -679,7 +711,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "The rate of IMAP commands executed for a authenticated users.",
       "fieldConfig": {
@@ -688,6 +720,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -699,6 +734,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -739,7 +775,8 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
@@ -754,7 +791,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(dovecot_imap_command_count{cmd_name!=\"\",tagged_reply_state!=\"\"}[2m])) by (cmd_name, tagged_reply_state, user)",
+          "expr": "sum(rate(dovecot_imap_command_total{cmd_name!=\"\",tagged_reply_state!=\"\"}[2m])) by (cmd_name, tagged_reply_state, user)",
           "legendFormat": "{{user}} - {{cmd_name}}: {{tagged_reply_state}}",
           "range": true,
           "refId": "A"
@@ -766,7 +803,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "The rate of SQL queries executed for a authenticated users.",
       "fieldConfig": {
@@ -775,6 +812,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -786,6 +826,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -826,7 +867,8 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
@@ -841,7 +883,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(dovecot_sql_query_count[2m])) by (query_first_word, error_code)",
+          "expr": "sum(rate(dovecot_sql_query_total[2m])) by (query_first_word, error_code)",
           "legendFormat": "{{query_first_word}} {{error_code}}",
           "range": true,
           "refId": "A"
@@ -853,7 +895,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "The rate of Sieve scripts executing, by script name.",
       "fieldConfig": {
@@ -862,6 +904,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -873,6 +918,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -913,7 +959,8 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -928,7 +975,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(dovecot_sieve_script_count[2m])) by (script_name, error)",
+          "expr": "sum(rate(dovecot_sieve_script_total[2m])) by (script_name, error)",
           "legendFormat": "{{script_name}} {{error}}",
           "range": true,
           "refId": "A"
@@ -940,7 +987,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "The rate of Sieve script actions taken, by name.",
       "fieldConfig": {
@@ -949,6 +996,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -960,6 +1010,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1000,7 +1051,8 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -1015,7 +1067,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(dovecot_sieve_action_count[2m])) by (action_name)",
+          "expr": "sum(rate(dovecot_sieve_action_total[2m])) by (action_name)",
           "legendFormat": "{{action_name}}",
           "range": true,
           "refId": "A"
@@ -1025,8 +1077,8 @@
       "type": "timeseries"
     }
   ],
-  "schemaVersion": 36,
-  "style": "dark",
+  "refresh": "",
+  "schemaVersion": 38,
   "tags": [
     "mail",
     "service",
@@ -1043,6 +1095,6 @@
   "timezone": "",
   "title": "Dovecot",
   "uid": "LOE5wuQ7k",
-  "version": 4,
+  "version": 25,
   "weekStart": ""
 }
