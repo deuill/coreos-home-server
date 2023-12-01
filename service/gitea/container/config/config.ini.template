@@ -48,7 +48,6 @@ PATH = /var/lib/gitea/attachments
 [log]
 MODE      = console
 LEVEL     = info
-ROUTER    = console
 ROOT_PATH = /var/lib/gitea/log
 
 [security]
