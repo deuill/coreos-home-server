@@ -7,7 +7,8 @@ After=grafana-dashboard@prometheus.service
 AutoUpdate=local
 AddCapability=SYS_TIME
 ContainerName=%N
-Exec=--path.rootfs=/host
+Environment=DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/var/run/dbus/system_bus_socket
+Exec=--path.rootfs=/host --collector.systemd
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9100
 Image=localhost/prometheus:latest
 Network=host
