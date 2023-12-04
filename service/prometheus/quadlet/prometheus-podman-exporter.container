@@ -1,0 +1,23 @@
+[Unit]
+Description=Prometheus Podman Metrics Exporter
+Wants=podman.socket grafana-dashboard@prometheus-podman-exporter.service
+After=podman.socket grafana-dashboard@prometheus-podman-exporter.service
+
+[Container]
+AutoUpdate=local
+ContainerName=%N
+Environment=CONTAINER_HOST=unix:///run/podman/podman.sock
+Exec=--collector.enable-all
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9882
+Image=localhost/prometheus:latest
+Network=internal
+PodmanArgs=--sdnotify=healthy --entrypoint /bin/podman_exporter
+SecurityLabelDisable=true
+User=root
+Volume=/run/podman/podman.sock:/run/podman/podman.sock:ro
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

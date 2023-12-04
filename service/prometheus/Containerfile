@@ -1,8 +1,18 @@
+FROM docker.io/golang:1.21-bookworm AS podman-exporter-builder
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
+
+ARG PODMAN_EXPORTER_VERSION=1.6.0
+RUN git clone --branch v${PODMAN_EXPORTER_VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && \
+    cd /src && make binary
+
 FROM docker.io/debian:bookworm-slim
 ARG VERSION=2.48.0
 
 RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends curl ca-certificates
+    apt-get install -y --no-install-recommends curl ca-certificates libgpgme11 libbtrfs0 \
+    libdevmapper1.02.1 libassuan0
 
 RUN addgroup --system --gid 10000 prometheus
 RUN adduser --system --uid 10000 --ingroup prometheus --home /var/lib/prometheus prometheus
@@ -18,6 +28,8 @@ RUN curl --silent --show-error -L https://github.com/prometheus/node_exporter/re
     tar -C /tmp --no-same-owner -xvzf - node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter && \
     mv /tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter /bin/node_exporter && \
     rmdir /tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64
+
+COPY --from=podman-exporter-builder /src/bin/prometheus-podman-exporter /bin/podman_exporter
 
 COPY container/config /etc/prometheus
 USER prometheus
