@@ -14,6 +14,7 @@ Volume=%N:/var/lib/%N:z
 Volume=%N-service:/etc/%N/service.d:z
 
 [Service]
+TimeoutStartSec=180
 Restart=on-failure
 
 [Install]
