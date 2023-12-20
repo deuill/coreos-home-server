@@ -1,4 +1,4 @@
-FROM docker.io/goacme/lego:v4.13.3
+FROM docker.io/goacme/lego:v4.13.3@sha256:ca1ffb4f730535425e2333d668ebbb377acfb9ab665b5e3b15c957412545f9f6
 
 RUN addgroup --system --gid 10000 letsencrypt
 RUN adduser --system --uid 10000 --ingroup letsencrypt --home /var/lib/letsencrypt letsencrypt
