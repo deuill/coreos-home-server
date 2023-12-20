@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 # renovate: datasource=repology depName=debian_12/dovecot versioning=loose
 ARG VERSION=2.3.19
 

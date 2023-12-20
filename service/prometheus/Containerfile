@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.21-bookworm AS podman-exporter-builder
+FROM docker.io/golang:1.21-bookworm@sha256:09ee26d3c9d6dd46913ba36e68b9041976010c2225f29759e6234909b17fe8bc AS podman-exporter-builder
 
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
@@ -8,7 +8,7 @@ ARG PODMAN_EXPORTER_VERSION=v1.6.0
 RUN git clone --branch ${PODMAN_EXPORTER_VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && \
     cd /src && make binary
 
-FROM docker.io/debian:bookworm-slim
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 # renovate: datasource=github-releases depName=prometheus/prometheus
 ARG VERSION=2.48.0
 

@@ -1,4 +1,4 @@
-FROM docker.io/rust:1.73 AS builder
+FROM docker.io/rust:1.73@sha256:25fa7a9aa4dadf6a466373822009b5361685604dbe151b030182301f1a3c2f58 AS builder
 # renovate: datasource=github-releases depName=lldap/lldap
 ARG VERSION=v0.5.0
 
@@ -17,7 +17,7 @@ RUN /lldap/app/build.sh && cd /lldap/app/static && \
     for file in $(cat libraries.txt); do wget "$file"; done && \
     for file in $(cat fonts/fonts.txt); do wget -P fonts "$file"; done
 
-FROM docker.io/debian:bookworm-slim
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     gettext gosu
