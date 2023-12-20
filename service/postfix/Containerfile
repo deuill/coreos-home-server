@@ -1,6 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-# renovate: datasource=repology depName=debian_12/postfix versioning=loose
-ARG VERSION=3.7.6
+ARG VERSION=3.7.6 # renovate: datasource=repology depName=debian_12/postfix versioning=loose
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core gettext ca-certificates \

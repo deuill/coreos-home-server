@@ -1,6 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-# renovate: datasource=github-releases depName=redis/redis
-ARG VERSION=7.2
+ARG VERSION=7.2 # renovate: datasource=github-releases depName=redis/redis
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
 ADD --chown=_apt https://packages.redis.io/gpg /etc/apt/trusted.gpg.d/redis.asc

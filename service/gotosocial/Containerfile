@@ -1,6 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-# renovate: datasource=github-releases depName=superseriousbusiness/gotosocial
-ARG VERSION=0.13.0
+ARG VERSION=0.13.0 # renovate: datasource=github-releases depName=superseriousbusiness/gotosocial
 
 ENV PACKAGE_URL https://github.com/superseriousbusiness/gotosocial/releases/download/v${VERSION}/gotosocial_${VERSION}_linux_amd64.tar.gz
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \

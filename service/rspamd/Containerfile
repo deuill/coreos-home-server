@@ -1,6 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-# renovate: datasource=github-releases depName=rspamd/rspamd
-ARG VERSION=3.7.5
+ARG VERSION=3.7.5 # renovate: datasource=github-releases depName=rspamd/rspamd
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
 ADD --chown=_apt https://rspamd.com/apt-stable/gpg.key /etc/apt/trusted.gpg.d/rspamd.asc
