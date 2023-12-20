@@ -1,4 +1,5 @@
 FROM docker.io/debian:bullseye-slim
+# renovate: datasource=github-tags depName=rss2email/rss2email
 ARG VERSION=v3.14
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \

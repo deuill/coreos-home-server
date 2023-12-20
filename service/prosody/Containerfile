@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-tags depName=bjc/prosody
 ARG VERSION=0.12.4
 ARG MODULES_VERSION=ef3aa6901a93
 

@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=go-gitea/gitea
 ARG VERSION=1.21.2
 
 ENV PACKAGE_URL https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64

@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=navidrome/navidrome
 ARG VERSION=0.50.2
 
 ENV PACKAGE_URL https://github.com/navidrome/navidrome/releases/download/v${VERSION}/navidrome_${VERSION}_linux_amd64.tar.gz

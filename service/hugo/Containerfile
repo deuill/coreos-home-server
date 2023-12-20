@@ -6,6 +6,7 @@ ENV GOBIN=/build/bin
 RUN go install github.com/adnanh/webhook@latest
 
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=gohugoio/hugo
 ARG VERSION=0.119.0
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \

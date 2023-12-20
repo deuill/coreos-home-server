@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=grafana/grafana
 ARG VERSION=10.2.1
 
 RUN apt-get update -y && apt-get upgrade -y && \

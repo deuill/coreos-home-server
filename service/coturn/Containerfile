@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=repology depName=debian_12/dovecot versioning=loose
 ARG VERSION=4.6.1
 
 RUN apt-get update -y && apt-get upgrade -y && \

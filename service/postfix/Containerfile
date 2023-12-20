@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=repology depName=debian_12/postfix versioning=loose
 ARG VERSION=3.7.6
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \

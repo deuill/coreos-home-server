@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=redis/redis
 ARG VERSION=7.2
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates

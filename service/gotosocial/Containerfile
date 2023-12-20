@@ -1,4 +1,5 @@
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=superseriousbusiness/gotosocial
 ARG VERSION=0.13.0
 
 ENV PACKAGE_URL https://github.com/superseriousbusiness/gotosocial/releases/download/v${VERSION}/gotosocial_${VERSION}_linux_amd64.tar.gz

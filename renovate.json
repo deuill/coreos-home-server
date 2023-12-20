@@ -1,0 +1,4 @@
+{
+    "extends": ["config:best-practices", "regexManagers:dockerfileVersions"],
+    "includePaths": ["**/service/*/Containerfile"]
+}

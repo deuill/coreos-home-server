@@ -3,11 +3,13 @@ FROM docker.io/golang:1.21-bookworm AS podman-exporter-builder
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
 
-ARG PODMAN_EXPORTER_VERSION=1.6.0
-RUN git clone --branch v${PODMAN_EXPORTER_VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && \
+# renovate: datasource=github-releases depName=containers/prometheus-podman-exporter
+ARG PODMAN_EXPORTER_VERSION=v1.6.0
+RUN git clone --branch ${PODMAN_EXPORTER_VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && \
     cd /src && make binary
 
 FROM docker.io/debian:bookworm-slim
+# renovate: datasource=github-releases depName=prometheus/prometheus
 ARG VERSION=2.48.0
 
 RUN apt-get update -y && apt-get upgrade -y && \
@@ -23,6 +25,7 @@ RUN curl --silent --show-error -L https://github.com/prometheus/prometheus/relea
     mv /opt/prometheus/promtool /bin/promtool && \
     mv /opt/prometheus/prometheus /bin/prometheus
 
+# renovate: datasource=github-releases depName=prometheus/node_exporter
 ARG NODE_EXPORTER_VERSION=1.7.0
 RUN curl --silent --show-error -L https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz | \
     tar -C /tmp --no-same-owner -xvzf - node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter && \
