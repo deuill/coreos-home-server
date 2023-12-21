@@ -7,7 +7,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
 RUN addgroup --system --gid 10000 grafana
 RUN adduser --system --uid 10000 --ingroup grafana --home /var/lib/grafana grafana
 
-RUN curl --silent --show-error -L https://dl.grafana.com/oss/release/grafana-${VERSION}.linux-amd64.tar.gz | \
+RUN curl -fsSL https://dl.grafana.com/oss/release/grafana-${VERSION}.linux-amd64.tar.gz | \
     tar -C /opt --no-same-owner -xvzf - && mv /opt/grafana-v${VERSION} /opt/grafana
 
 COPY container/config /etc/grafana

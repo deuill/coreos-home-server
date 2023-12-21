@@ -11,8 +11,8 @@ ARG VERSION=0.121.1 # renovate: datasource=github-releases depName=gohugoio/hugo
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates curl git gettext gosu openssh-client
 
-RUN curl -L https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz | \
-            tar -C /bin --no-same-owner -xvzf - hugo && chmod +x /bin/hugo
+RUN curl -fsSL https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz | \
+    tar -C /bin --no-same-owner -xvzf - hugo && chmod +x /bin/hugo
 
 RUN addgroup --system --gid 10000 hugo
 RUN adduser --system --uid 10000 --ingroup hugo --no-create-home hugo

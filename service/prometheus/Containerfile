@@ -17,14 +17,14 @@ RUN apt-get update -y && apt-get upgrade -y && \
 RUN addgroup --system --gid 10000 prometheus
 RUN adduser --system --uid 10000 --ingroup prometheus --home /var/lib/prometheus prometheus
 
-RUN curl --silent --show-error -L https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz | \
+RUN curl -fsSL https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz | \
     tar -C /opt --no-same-owner -xvzf - && \
     mv /opt/prometheus-${VERSION}.linux-amd64 /opt/prometheus && \
     mv /opt/prometheus/promtool /bin/promtool && \
     mv /opt/prometheus/prometheus /bin/prometheus
 
 ARG NODE_EXPORTER_VERSION=1.7.0 # renovate: datasource=github-releases depName=prometheus/node_exporter
-RUN curl --silent --show-error -L https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz | \
+RUN curl -fsSL https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz | \
     tar -C /tmp --no-same-owner -xvzf - node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter && \
     mv /tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter /bin/node_exporter && \
     rmdir /tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64

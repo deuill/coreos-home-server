@@ -5,7 +5,7 @@ ENV PACKAGE_URL https://github.com/superseriousbusiness/gotosocial/releases/down
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     curl ca-certificates gettext gosu
 
-RUN mkdir -p /opt/gotosocial && curl -L ${PACKAGE_URL} | tar -C /opt/gotosocial --no-same-owner -xvzf - && \
+RUN mkdir -p /opt/gotosocial && curl -fsSL ${PACKAGE_URL} | tar -C /opt/gotosocial --no-same-owner -xvzf - && \
     mv /opt/gotosocial/gotosocial /bin/gotosocial && chmod +x /bin/gotosocial
 
 RUN addgroup --system --gid 10000 gotosocial
