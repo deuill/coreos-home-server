@@ -1,4 +1,4 @@
-FROM docker.io/rust:1.73@sha256:25fa7a9aa4dadf6a466373822009b5361685604dbe151b030182301f1a3c2f58 AS builder
+FROM docker.io/rust:1.74@sha256:fd45a543ed41160eae2ce9e749e5b3c972625b0778104e8962e9bfb113535301 AS builder
 ARG VERSION=0.5.0 # renovate: datasource=github-releases depName=lldap/lldap extractVersion=^v(?<version>.*)$
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
