@@ -6,7 +6,7 @@ ENV GOBIN=/build/bin
 RUN go install github.com/adnanh/webhook@latest
 
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=0.119.0 # renovate: datasource=github-releases depName=gohugoio/hugo extractVersion=^v(?<version>.*)$
+ARG VERSION=0.121.1 # renovate: datasource=github-releases depName=gohugoio/hugo extractVersion=^v(?<version>.*)$
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates curl git gettext gosu openssh-client
