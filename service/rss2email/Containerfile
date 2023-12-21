@@ -1,11 +1,11 @@
 FROM docker.io/debian:bullseye-slim@sha256:d3d0d14f49b49a4dd98a436711f5646dc39e1c99203ef223d1b6620061e2c0e5
-ARG VERSION=v3.14 # renovate: datasource=github-tags depName=rss2email/rss2email
+ARG VERSION=3.14 # renovate: datasource=github-tags depName=rss2email/rss2email extractVersion=^v(?<version>.*)$
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git gettext gosu \
     python3 python3-setuptools python3-feedparser python3-html2text python3-bs4
 
-RUN git clone --branch ${VERSION} --depth 1 https://github.com/rss2email/rss2email /tmp/rss2email && \
+RUN git clone --branch v${VERSION} --depth 1 https://github.com/rss2email/rss2email /tmp/rss2email && \
     cd /tmp/rss2email && python3 setup.py install && \
     rm -Rf /tmp/rss2email
 

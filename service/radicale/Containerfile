@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=3.1.8 # renovate: datasource=pypi depName=radicale
+ARG VERSION=3.1.8 # renovate: datasource=github-releases depName=Kozea/Radicale
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-venv gettext curl
