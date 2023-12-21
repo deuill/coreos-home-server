@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=v1.21.3 # renovate: datasource=github-releases depName=go-gitea/gitea
+ARG VERSION=1.21.3 # renovate: datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
 
 ENV PACKAGE_URL https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
