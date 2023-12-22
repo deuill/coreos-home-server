@@ -9,6 +9,7 @@ Type=oneshot
 SyslogIdentifier=%N
 Environment=PODMAN_BUILD_OPTIONS=
 ExecCondition=/bin/sh -c 'test -z "$(podman image list --quiet --filter until!="$(find %E/coreos-home-server/%i/{Containerfile,container} -type f -printf "%%T@\n" | sort -n | tail -1)" --filter reference=localhost/%i)"; exit $?'
+ExecStartPre=-/bin/podman image tag localhost/%i:latest localhost/%i:previous
 ExecStart=/bin/podman build $PODMAN_BUILD_OPTIONS --file %E/coreos-home-server/%i/Containerfile --tag localhost/%i:latest %E/coreos-home-server/%i
 
 [Install]
