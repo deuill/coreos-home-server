@@ -1,6 +1,9 @@
 {
   "extends": [
-    "config:best-practices"
+    "config:best-practices",
+    "schedule:automergeDaily",
+    ":automergeDigest",
+    ":automergeMinor"
   ],
   "includePaths": [
     "**/service/*/Containerfile"
