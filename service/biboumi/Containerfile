@@ -1,6 +1,7 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    libexpat1-dev libidn11-dev uuid-dev libsqlite3-dev libudns-dev libbotan-2-dev build-essential cmake git
+    ca-certificates build-essential cmake git libexpat1-dev libidn11-dev uuid-dev \
+    libsqlite3-dev libudns-dev libbotan-2-dev
 
 ARG VERSION=9.0 # renovate: datasource=git-tags depName=louiz/biboumi packageName=https://git.louiz.org/biboumi.git
 RUN git clone --branch ${VERSION} https://git.louiz.org/biboumi.git /src && \
