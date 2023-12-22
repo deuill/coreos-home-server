@@ -657,12 +657,12 @@ allowed-peer-ip=${COTURN_EXTERNAL_IP}
 # User name to run the process. After the initialization, the turnserver process
 # will make an attempt to change the current user ID to that user.
 #
-proc-user=turnserver
+proc-user=coturn
 
 # Group name to run the process. After the initialization, the turnserver process
 # will make an attempt to change the current group ID to that group.
 #
-proc-group=turnserver
+proc-group=coturn
 
 # Turn OFF the CLI support.
 # By default it is always ON.
