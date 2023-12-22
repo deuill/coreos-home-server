@@ -12,7 +12,8 @@ RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends ca-certificates gettext gosu
 
 RUN apt-get install -y --no-install-recommends \
-    libevent-2.1 libssl3
+    libevent-2.1 libevent-core-2.1 libevent-extra-2.1 libevent-openssl-2.1 libevent-pthreads-2.1 \
+    libssl3
 
 COPY --from=builder /build /
 
