@@ -1,2 +1,2 @@
-FROM docker.io/mariadb:10.7@sha256:9a48ac9f196f3d4fd6fea2cab59a49df9e7ca459bf14b2f7b85a0e38a5454571
+FROM docker.io/mariadb:10.11@sha256:c19965acfdad93c2b2303d5f8fe6d8647875ad6ade51b24dba6de990acc415e7
 USER mysql
