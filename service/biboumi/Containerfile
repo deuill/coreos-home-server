@@ -1,12 +1,25 @@
-FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=9.0 # renovate: datasource=repology depName=debian_12/dovecot versioning=loose
-
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates gettext gosu biboumi=${VERSION}*
+    libexpat1-dev libidn11-dev uuid-dev libsqlite3-dev libudns-dev libbotan-2-dev build-essential cmake git
 
-RUN addgroup --system --gid 10000 biboumi
-RUN adduser --system --uid 10000 --ingroup biboumi --home /var/lib/biboumi biboumi
+ARG VERSION=9.0 # renovate: datasource=git-tags depName=louiz/biboumi packageName=https://git.louiz.org/biboumi.git
+RUN git clone --branch ${VERSION} https://git.louiz.org/biboumi.git /src && \
+    mkdir /src/build /build && cd /src/build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DWITH_BOTAN=1 -DWITH_SQLITE3=1 \
+             -DWITH_LIBIDN=1 -DWITHOUT_SYSTEMD=1 -Wno-dev && \
+    make && make install DESTDIR=/build
 
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends ca-certificates gettext gosu
+
+RUN apt-get install -y --no-install-recommends \
+    libexpat1 libidn12 libuuid1 libsqlite3-0 libudns0 libbotan-2-19
+
+RUN addgroup --system --gid 10000 biboumi && \
+    adduser --system --uid 10000 --ingroup biboumi --home /var/lib/biboumi biboumi
+
+COPY --from=builder /build /
 COPY container/config /etc/biboumi
 COPY container/run-biboumi /run-biboumi
 
