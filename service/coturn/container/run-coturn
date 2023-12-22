@@ -2,9 +2,9 @@
 set -eu
 
 # Prepare configuration files for environment variable substitution.
-ENV_NAMES="$(env | awk -F= '{printf "$%s ", $1}')"
+ENV_NAMES="$(env | awk -F '=' '{printf "$%s ", $1}')"
 for file in /etc/coturn/*.template; do
-	envsubst "$ENV_NAMES" < "$file" > "$(echo "$file" | awk -F '.template$' '{print $1}')"
+	envsubst "$ENV_NAMES" < "$file" > "${file%.template}"
 done
 
 /usr/bin/turnserver -c /etc/coturn/turnserver.conf

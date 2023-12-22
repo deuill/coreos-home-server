@@ -1,8 +1,20 @@
-FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=4.6.1 # renovate: datasource=repology depName=debian_12/dovecot versioning=loose
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates build-essential pkg-config git libevent-dev libssl-dev
 
+ARG VERSION=4.6.2 # renovate: datasource=github-releases depName=coturn/coturn
+RUN git clone --branch ${VERSION} --depth=1 https://github.com/coturn/coturn.git /src && \
+    mkdir /build && cd /src && ./configure --prefix=/usr --turndbdir=/var/lib/coturn && \
+    make && make install DESTDIR=/build
+
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends coturn=${VERSION}* gettext ca-certificates
+    apt-get install -y --no-install-recommends ca-certificates gettext gosu
+
+RUN apt-get install -y --no-install-recommends \
+    libevent-2.1 libssl3
+
+COPY --from=builder /build /
 
 COPY container/config /etc/coturn
 COPY container/run-coturn /run-coturn
