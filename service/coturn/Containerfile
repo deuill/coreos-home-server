@@ -11,15 +11,13 @@ FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b864
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends ca-certificates gettext gosu
 
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
     libevent-2.1 libevent-core-2.1 libevent-extra-2.1 libevent-openssl-2.1 libevent-pthreads-2.1 \
     libssl3
 
-RUN addgroup --system --gid 10000 coturn && \
-    adduser --system --uid 10000 --ingroup coturn --home /var/lib/coturn coturn
+RUN adduser --system --group --uid 10000 --home /var/lib/coturn coturn
 
 COPY --from=builder /build /
-
 COPY container/config /etc/coturn
 COPY container/run-coturn /run-coturn
 COPY container/run-healthcheck /run-healthcheck

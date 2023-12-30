@@ -10,4 +10,4 @@ for file in /etc/coturn/*.template; do
 	envsubst "$ENV_NAMES" < "$file" > "${file%.template}"
 done
 
-/usr/bin/turnserver -c /etc/coturn/turnserver.conf
+exec /usr/bin/turnserver -c /etc/coturn/turnserver.conf
