@@ -49,10 +49,10 @@ db-address: "/var/lib/gotosocial/gotosocial.db"
 ######################
 
 # Directory from which gotosocial will attempt to load html templates (.tmpl files).
-web-template-base-dir: "/opt/gotosocial/web/template/"
+web-template-base-dir: "/usr/share/gotosocial/web/template/"
 
 # Directory from which gotosocial will attempt to serve static web assets (images, scripts).
-web-asset-base-dir: "/opt/gotosocial/web/assets/"
+web-asset-base-dir: "/usr/share/gotosocial/web/assets/"
 
 ###########################
 ##### ACCOUNTS CONFIG #####

@@ -1,16 +1,23 @@
-FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=0.13.0 # renovate: datasource=github-releases depName=superseriousbusiness/gotosocial
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates curl
 
+ARG VERSION=0.13.0 # renovate: datasource=github-releases depName=superseriousbusiness/gotosocial extractVersion=^v(?<version>.*)$
 ENV PACKAGE_URL https://github.com/superseriousbusiness/gotosocial/releases/download/v${VERSION}/gotosocial_${VERSION}_linux_amd64.tar.gz
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    curl ca-certificates gettext gosu
 
-RUN mkdir -p /opt/gotosocial && curl -fsSL ${PACKAGE_URL} | tar -C /opt/gotosocial --no-same-owner -xvzf - && \
-    mv /opt/gotosocial/gotosocial /bin/gotosocial && chmod +x /bin/gotosocial
+WORKDIR /src
+RUN curl --fail --silent --show-error --location ${PACKAGE_URL} | tar --no-same-owner -xvzf - && \
+    install -D --mode 0755 /src/gotosocial /build/usr/bin/gotosocial && \
+    mkdir -p /build/usr/share/gotosocial && cp -R /src/web /build/usr/share/gotosocial/web
 
-RUN addgroup --system --gid 10000 gotosocial
-RUN adduser --system --uid 10000 --ingroup gotosocial --home /var/lib/gotosocial gotosocial
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends ca-certificates gettext gosu
 
+RUN apt-get update -y && apt-get install -y --no-install-recommends curl
+RUN adduser --system --group --uid 10000 --home /var/lib/gotosocial gotosocial
+
+COPY --from=builder /build /
 COPY container/config /etc/gotosocial
 COPY container/run-gotosocial /run-gotosocial
 
