@@ -13,8 +13,9 @@ ExecStart=/bin/podman run --replace --rm --name letsencrypt-renew-%i \
                           --volume letsencrypt-certificates:/var/lib/letsencrypt-certificates:z \
                           --volume "letsencrypt-certificate-%i:/var/lib/letsencrypt-certificate-%i:z" \
                           localhost/letsencrypt:latest \
-                          --pem --path --renew-hook /run-hook /var/lib/letsencrypt --domains "%i" \
-                          --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} renew
+                          --pem --path /var/lib/letsencrypt --domains "%i" \
+                          --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} renew \
+                          --renew-hook /run-hook
 
 [Install]
 WantedBy=multi-user.target

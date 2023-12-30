@@ -14,8 +14,9 @@ ExecStart=/bin/podman run --replace --rm --name letsencrypt-register-%i \
                           --volume letsencrypt-certificates:/var/lib/letsencrypt-certificates:z \
                           --volume "letsencrypt-certificate-%i:/var/lib/letsencrypt-certificate-%i:z" \
                           localhost/letsencrypt:latest \
-                          --accept-tos --pem --run-hook /run-hook --path /var/lib/letsencrypt --domains "%i" \
-                          --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} run
+                          --accept-tos --pem --path /var/lib/letsencrypt --domains "%i" \
+                          --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} run \
+                          --run-hook /run-hook
 
 [Install]
 WantedBy=multi-user.target
