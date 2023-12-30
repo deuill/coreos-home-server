@@ -3,8 +3,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential cmake git libexpat1-dev libidn11-dev uuid-dev \
     libsqlite3-dev libudns-dev libbotan-2-dev
 
-ARG VERSION=9.0 # renovate: datasource=git-tags depName=louiz/biboumi packageName=https://git.louiz.org/biboumi.git
-RUN git clone --branch ${VERSION} https://git.louiz.org/biboumi.git /src && \
+ARG VERSION=9.0 # renovate: datasource=github-tags depName=louiz/biboumi
+RUN git clone --branch ${VERSION} https://github.com/louiz/biboumi.git /src && \
     mkdir /src/build /build && cd /src/build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DWITH_BOTAN=1 -DWITH_SQLITE3=1 \
              -DWITH_LIBIDN=1 -DWITHOUT_SYSTEMD=1 -Wno-dev && \
@@ -14,11 +14,10 @@ FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b864
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends ca-certificates gettext gosu
 
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
     libexpat1 libidn12 libuuid1 libsqlite3-0 libudns0 libbotan-2-19
 
-RUN addgroup --system --gid 10000 biboumi && \
-    adduser --system --uid 10000 --ingroup biboumi --home /var/lib/biboumi biboumi
+RUN adduser --system --group --uid 10000 --home /var/lib/biboumi biboumi
 
 COPY --from=builder /build /
 COPY container/config /etc/biboumi

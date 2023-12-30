@@ -10,4 +10,4 @@ for file in /etc/biboumi/*.template; do
 	envsubst "$ENV_NAMES" < "$file" > "${file%.template}"
 done
 
-gosu biboumi /usr/bin/biboumi /etc/biboumi/biboumi.cfg "$@"
+exec gosu biboumi /usr/bin/biboumi /etc/biboumi/biboumi.cfg "$@"
