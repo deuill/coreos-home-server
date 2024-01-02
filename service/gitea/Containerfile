@@ -1,15 +1,19 @@
-FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
 ARG VERSION=1.21.3 # renovate: datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
 
-ENV PACKAGE_URL https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64
+ADD https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64 /src/gitea
+RUN install -D --mode 0755 /src/gitea /build/usr/bin/gitea
+
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    curl ca-certificates gettext gosu git openssh-client gnupg
+    ca-certificates gettext gosu
 
-RUN curl --fail --silent --show-error --location -o /usr/bin/gitea ${PACKAGE_URL} && chmod +x /usr/bin/gitea
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl git openssh-client gnupg
 
-RUN addgroup --system --gid 10000 git
-RUN adduser --system --uid 10000 --ingroup git --home /var/lib/gitea git
+RUN adduser --system --group --uid 10000 --home /var/lib/gitea git
 
+COPY --from=builder /build /
 COPY container/config /etc/gitea
 COPY container/run-gitea /run-gitea
 

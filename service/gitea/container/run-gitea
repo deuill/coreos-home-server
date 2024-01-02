@@ -6,7 +6,6 @@ set -eu
 envsubst < /etc/gitea/config.ini.template > /etc/gitea/config.ini
 
 # Create data directories and correct permissions for data files.
-install --owner git --group git --mode 700 --directory /var/lib/gitea
 chown -R git:git /etc/gitea
 
 # Initialize default condiguration if needed.
@@ -26,4 +25,4 @@ if ! test -f /var/lib/gitea/gitea.db; then
 fi
 
 # Run entrypoint under specific user.
-gosu git /usr/bin/gitea -c /etc/gitea/config.ini web "$@"
+exec gosu git /usr/bin/gitea -c /etc/gitea/config.ini web "$@"
