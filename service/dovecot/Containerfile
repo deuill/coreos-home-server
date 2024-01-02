@@ -1,17 +1,20 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-ARG VERSION=2.3.19 # renovate: datasource=repology depName=debian_12/dovecot versioning=loose
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends ca-certificates gettext gosu
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    dovecot-imapd=1:${VERSION}* dovecot-lmtpd=1:${VERSION}* dovecot-mysql=1:${VERSION}* \
-    dovecot-sieve=1:${VERSION}* dovecot-managesieved=1:${VERSION}* dovecot-fts-xapian \
-    gettext ca-certificates curl netcat-traditional
+    curl netcat-traditional
 
-RUN rm -Rf /etc/dovecot
+ARG VERSION=2.3.19 # renovate: datasource=repology depName=debian_12/dovecot versioning=loose
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    dovecot-imapd=1:${VERSION}* dovecot-lmtpd=1:${VERSION}* dovecot-mysql=1:${VERSION}* \
+    dovecot-sieve=1:${VERSION}* dovecot-managesieved=1:${VERSION}* dovecot-fts-xapian && \
+    rm -Rf /etc/dovecot
+
+RUN adduser --system --group --uid 10000 --home /var/mail/virtual virtual
+
 COPY container/config /etc/dovecot
 COPY container/run-dovecot /run-dovecot
-
-RUN addgroup --system --gid 5000 virtual
-RUN adduser --system --uid 5000 --ingroup virtual --home /var/mail/virtual virtual
 
 EXPOSE 24 143 993 3659 4190
 ENTRYPOINT ["/run-dovecot"]
