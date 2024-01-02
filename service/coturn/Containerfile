@@ -8,8 +8,8 @@ RUN git clone --branch ${VERSION} --depth=1 https://github.com/coturn/coturn.git
     make && make install DESTDIR=/build
 
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends ca-certificates gettext gosu
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     libevent-2.1 libevent-core-2.1 libevent-extra-2.1 libevent-openssl-2.1 libevent-pthreads-2.1 \

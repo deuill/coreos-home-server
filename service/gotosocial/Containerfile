@@ -8,8 +8,8 @@ RUN tar --no-same-owner -xvzf /src.tar.gz && \
     mkdir -p /build/usr/share/gotosocial && cp -R /src/web /build/usr/share/gotosocial/web
 
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends ca-certificates gettext gosu
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends curl
 RUN adduser --system --group --uid 10000 --home /var/lib/gotosocial gotosocial
