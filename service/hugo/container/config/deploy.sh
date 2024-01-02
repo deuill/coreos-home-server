@@ -28,4 +28,4 @@ else
     cd "$GIT_DIR_NAME"
 fi
 
-hugo --logLevel info --minify --destination "/build/${GIT_DIR_NAME}"
+exec /usr/bin/hugo --logLevel info --minify --destination "/build/${GIT_DIR_NAME}"

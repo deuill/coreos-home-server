@@ -1,23 +1,23 @@
-FROM docker.io/golang:1.21-bookworm@sha256:1415bb0b25d3bffc0a44dcf9851c20a9f8bbe558095221d931f2e4a4cc3596eb AS builder
-
-WORKDIR /build
-ENV GOBIN=/build/bin
-
-RUN go install github.com/adnanh/webhook@latest
-
-FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder-hugo
 ARG VERSION=0.121.1 # renovate: datasource=github-releases depName=gohugoio/hugo extractVersion=^v(?<version>.*)$
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates curl git gettext gosu openssh-client
+ADD https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz /src/hugo
+RUN install -D --mode 0755 /src/hugo /build/usr/bin/hugo
 
-RUN curl -fsSL https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz | \
-    tar -C /bin --no-same-owner -xvzf - hugo && chmod +x /bin/hugo
+FROM docker.io/golang:1.21-bookworm@sha256:1415bb0b25d3bffc0a44dcf9851c20a9f8bbe558095221d931f2e4a4cc3596eb AS builder-webhook
+ARG VERSION=2.8.1 # renovate: datasource=github-releases depName=adnanh/webhook
 
-RUN addgroup --system --gid 10000 hugo
-RUN adduser --system --uid 10000 --ingroup hugo --no-create-home hugo
+RUN GOBIN=/build/usr/bin go install github.com/adnanh/webhook@${VERSION}
 
-COPY --from=builder /build/bin/webhook /bin/webhook
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends curl
+RUN adduser --system --group --uid 10000 --no-create-home hugo
+
+COPY --from=builder-hugo /build /
+COPY --from=builder-webhook /build /
 COPY container/config /etc/hugo
 COPY container/run-hugo /run-hugo
 
