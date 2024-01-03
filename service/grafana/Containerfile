@@ -5,8 +5,8 @@ WORKDIR /src
 
 ADD https://dl.grafana.com/oss/release/grafana-${VERSION}.linux-amd64.tar.gz /src.tar.gz
 RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
-    install -D --mode 0755 /src/bin/grafana /build/usr/bin/grafana && \
-    mkdir -p /build/usr/share/grafana && cp -R /src/public /build/usr/share/grafana/public
+    install -D --mode 0755 /src/bin/grafana /build/usr/bin/grafana && rm -Rf /src/bin && \
+    mkdir -p /build/usr/share && cp -R /src /build/usr/share/grafana
 
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
