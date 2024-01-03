@@ -7,7 +7,7 @@ After=container-build@%N.service container-volume@%N.service
 AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
-HealthCmd=/opt/lldap/lldap healthcheck --config-file /etc/lldap/config.toml
+HealthCmd=/usr/bin/lldap healthcheck --config-file /etc/lldap/config.toml
 Image=localhost/%N:latest
 Network=internal
 PodmanArgs=--sdnotify=healthy

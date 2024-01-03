@@ -1,38 +1,20 @@
-FROM docker.io/rust:1.74@sha256:fd45a543ed41160eae2ce9e749e5b3c972625b0778104e8962e9bfb113535301 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
 ARG VERSION=0.5.0 # renovate: datasource=github-releases depName=lldap/lldap extractVersion=^v(?<version>.*)$
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    git gzip wget
+WORKDIR /src
 
-RUN cargo install wasm-pack && rustup target add wasm32-unknown-unknown
-
-RUN git clone https://github.com/lldap/lldap.git /lldap && \
-    cd /lldap && git reset --hard v${VERSION} && \
-    cargo build --release -p lldap \
-                          -p lldap_migration_tool \
-                          -p lldap_set_password
-
-RUN /lldap/app/build.sh && cd /lldap/app/static && \
-    for file in $(cat libraries.txt); do wget "$file"; done && \
-    for file in $(cat fonts/fonts.txt); do wget -P fonts "$file"; done
+ADD https://github.com/lldap/lldap/releases/download/v${VERSION}/amd64-lldap.tar.gz /src.tar.gz
+RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
+    install -D --mode 0755 -t /build/usr/bin /src/lldap /src/lldap_migration_tool /src/lldap_set_password && \
+    mkdir -p /build/usr/share && cp -R /src/app /build/usr/share/lldap
 
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    gettext gosu
+RUN adduser --system --group --uid 10000 --home /var/lib/lldap lldap
 
-RUN addgroup --system --gid 10000 lldap
-RUN adduser --system --uid 10000 --ingroup lldap --home /var/lib/lldap lldap
-RUN mkdir -p /opt/lldap/app
-
-COPY --from=builder /lldap/app/index_local.html /opt/lldap/app/index.html
-COPY --from=builder /lldap/app/static /opt/lldap/app/static
-COPY --from=builder /lldap/app/pkg /opt/lldap/app/pkg
-COPY --from=builder /lldap/target/release/lldap \
-                    /lldap/target/release/lldap_migration_tool \
-                    /lldap/target/release/lldap_set_password \
-                    /opt/lldap/
-
+COPY --from=builder /build /
 COPY container/config /etc/lldap
 COPY container/run-lldap /run-lldap
 
