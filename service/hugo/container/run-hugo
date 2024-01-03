@@ -20,4 +20,4 @@ chown hugo:hugo /etc/ssh/keys/ssh_host_*
 chown -R hugo:hugo /build
 
 # Run webhook listener for configured hooks.
-exec gosu /usr/bin/hugo /usr/bin/webhook -verbose -port 8080 -hooks /etc/hugo/hooks.yaml
+exec gosu hugo /usr/bin/webhook -verbose -port 8080 -hooks /etc/hugo/hooks.yaml
