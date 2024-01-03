@@ -4,8 +4,8 @@ set -eu
 # Create configuration file from collected templates.
 envsubst < /etc/lldap/config.toml.template > /etc/lldap/config.toml
 
-# Crrect permissions for data files.
-chown -R /var/lib/lldap
+# Correct permissions for data files.
+chown -R lldap:lldap /var/lib/lldap
 
 # Run entrypoint under specific user.
 cd /usr/share/lldap
