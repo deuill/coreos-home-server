@@ -1,18 +1,26 @@
-FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder
 ARG VERSION=0.50.2 # renovate: datasource=github-releases depName=navidrome/navidrome
 
-ENV PACKAGE_URL https://github.com/navidrome/navidrome/releases/download/v${VERSION}/navidrome_${VERSION}_linux_amd64.tar.gz
+WORKDIR /src
+
+ADD https://github.com/navidrome/navidrome/releases/download/v${VERSION}/navidrome_${VERSION}_linux_amd64.tar.gz /src.tar.gz
+RUN tar --no-same-owner -xvzf /src.tar.gz && \
+    install -D --mode 0755 /src/navidrome /build/usr/bin/navidrome
+
+FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    curl ca-certificates gosu ffmpeg && \
-    curl -L ${PACKAGE_URL} | tar -C /bin --no-same-owner -xvzf - navidrome && chmod +x /bin/navidrome
+    ca-certificates gettext gosu
 
-RUN addgroup --system --gid 10000 navidrome
-RUN adduser --system --uid 10000 --ingroup navidrome --home /var/lib/navidrome navidrome
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl ffmpeg
 
+RUN adduser --system --group --uid 10000 --home /var/lib/navidrome navidrome
+
+COPY --from=builder /build /
 COPY container/config /etc/navidrome
-VOLUME /music
 
-USER navidrome
+VOLUME /music
 EXPOSE 4533
 
-ENTRYPOINT ["/bin/navidrome", "--configfile", "/etc/navidrome/navidrome.toml"]
+USER navidrome
+ENTRYPOINT ["/usr/bin/navidrome", "--configfile", "/etc/navidrome/navidrome.toml"]
