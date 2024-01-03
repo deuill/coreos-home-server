@@ -2,7 +2,8 @@
 
 set -eu
 
-# Correct permissions where needed.
+# Create directories and correct permissions where needed.
+install --owner letsencrypt --group letsencrypt --mode 0755 -d /var/lib/letsencrypt-certificates
 chown -R letsencrypt:letsencrypt /var/lib/letsencrypt
 
 # Run ACME verification with parameters given.

@@ -11,7 +11,6 @@ ExecStart=/bin/podman run --replace --rm --name letsencrypt-renew-%i \
                           --env-file %E/coreos-home-server/letsencrypt/letsencrypt.env \
                           --volume letsencrypt:/var/lib/letsencrypt:z \
                           --volume letsencrypt-certificates:/var/lib/letsencrypt-certificates:z \
-                          --volume "letsencrypt-certificate-%i:/var/lib/letsencrypt-certificate-%i:z" \
                           localhost/letsencrypt:latest \
                           --pem --path /var/lib/letsencrypt --domains "%i" \
                           --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} renew \

@@ -2,8 +2,7 @@
 
 set -eu
 
-# Copy certificates to dedicated directories.
-for dir in "/var/lib/letsencrypt-certificates" "/var/lib/letsencrypt-certificate-$CERT_DOMAIN"; do
-    install --owner letsencrypt --group letsencrypt --mode 0644 "$LEGO_CERT_PATH" "$dir"
-    install --owner letsencrypt --group letsencrypt --mode 0640 "$LEGO_CERT_KEY_PATH" "$dir"
-done
+# Copy certificates to dedicated directory.
+install --owner letsencrypt --group letsencrypt --mode 0755 -d "/var/lib/letsencrypt-certificates/$LEGO_CERT_DOMAIN"
+install --owner letsencrypt --group letsencrypt --mode 0644 "$LEGO_CERT_PATH" "/var/lib/letsencrypt-certificates/$LEGO_CERT_DOMAIN/cert.pem"
+install --owner letsencrypt --group letsencrypt --mode 0640 "$LEGO_CERT_KEY_PATH" "/var/lib/letsencrypt-certificates/$LEGO_CERT_DOMAIN/cert.key"
