@@ -1,7 +1,6 @@
 FROM docker.io/golang:1.21-bookworm@sha256:1415bb0b25d3bffc0a44dcf9851c20a9f8bbe558095221d931f2e4a4cc3596eb AS builder
 ARG VERSION=v4.14.2 # renovate: datasource=github-releases depName=go-acme/lego
 
-WORKDIR /build
 RUN GOBIN=/build/usr/bin go install -v github.com/go-acme/lego/v4/cmd/lego@${VERSION}
 
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340
