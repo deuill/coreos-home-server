@@ -11,7 +11,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     dovecot-sieve=1:${VERSION}* dovecot-managesieved=1:${VERSION}* dovecot-fts-xapian && \
     rm -Rf /etc/dovecot
 
-RUN adduser --system --group --uid 10000 --home /var/mail/virtual virtual
+RUN adduser --system --group --uid 5000 --home /var/mail/virtual virtual
 
 COPY container/config /etc/dovecot
 COPY container/run-dovecot /run-dovecot
