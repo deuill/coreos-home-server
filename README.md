@@ -22,7 +22,7 @@ This is required for validating the signatures for installation media when deplo
 virtual hosts:
 
 ```sh
-curl https://getfedora.org/static/fedora.gpg | gpg --import
+curl -fL https://getfedora.org/static/fedora.gpg | gpg --import
 ```
 
 ## Setup and Deployment

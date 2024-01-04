@@ -1,7 +1,7 @@
 # CoreOS options.
 NAME      := coreos-home-server
 STREAM    := stable
-VERSION   := 38.20231027.3.2
+VERSION   := 39.20231119.3.0
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
@@ -24,6 +24,7 @@ CURL   ?= $(call find-cmd,curl) $(if $(VERBOSE),,--progress-bar) --fail
 GPG    ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
 QEMU   ?= $(call find-cmd,qemu-system-$(ARCH)) -enable-kvm
 NC     ?= $(call find-cmd,nc) -vv -r -l
+XZ     ?= $(call find-cmd,xz) $(if $(VERBOSE),--verbose)
 
 ## Builds and deploys Fedora CoreOS for HOST of TYPE.
 deploy: deploy-$(TYPE)
@@ -53,7 +54,7 @@ deploy-metal: $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf 'HTTP/1.0 200 OK\r\nContent-Length: %d\r\n\r\n%s\n' "$$(wc -c < $<)" "$$(cat $<)" | $(NC) -s $(ADDRESS) || exit 0
 
 # Prepares and deploys CoreOS release for local, virtual environment.
-deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2.xz $(TMPDIR)deploy/host/$(HOST)/spec.ign
+deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2 $(TMPDIR)deploy/host/$(HOST)/spec.ign
 	@printf "Preparing virtual environment (press C-a h for help)...\n"
 	$Q $(QEMU) -m 4096 -cpu host -nographic -snapshot \
 	           -fw_cfg name=opt/com.coreos/config,file=$(TMPDIR)deploy/host/$(HOST)/spec.ign \
@@ -95,11 +96,10 @@ $(TMPDIR)deploy/%.ign: $(ROOTDIR)%.bu
 $(TMPDIR)images/fedora-coreos-$(VERSION)-%:
 	@printf "Downloading image file '$(@F)'...\n"
 	$Q install -d $(TMPDIR)images
-	$Q $(CURL) -o $@ $(IMAGE_URI)$(STREAM)/builds/$(VERSION)/$(ARCH)/$(@F)
-	$Q $(CURL) -o $@.sig $(IMAGE_URI)$(STREAM)/builds/$(VERSION)/$(ARCH)/$(@F).sig
-	$Q $(GPG) --verify $@.sig
-	$Q test $(suffix $(@F)) = .xz && xz --decompress $@ || true
-	$Q touch $@
+	$Q $(CURL) -o $@.xz.sig $(IMAGE_URI)$(STREAM)/builds/$(VERSION)/$(ARCH)/$(@F).xz.sig
+	$Q $(CURL) -o $@.xz $(IMAGE_URI)$(STREAM)/builds/$(VERSION)/$(ARCH)/$(@F).xz
+	$Q $(GPG) --verify $@.xz.sig
+	$Q $(XZ) --decompress $@.xz
 
 # Generate Makefile dependencies from `local:` definitions in BUTANE files.
 $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
