@@ -17,7 +17,7 @@ PublishPort=5269:5269
 PublishPort=5347:5347
 Volume=%N:/var/lib/%N:z
 Volume=prosody-conf:/etc/%N/conf.d:z
-Volume=letsencrypt:/etc/ssl/private:z
+Volume=letsencrypt-certificates:/etc/ssl/private:z,ro
 
 [Service]
 ExecReload=/bin/podman exec %N prosodyctl shell config reload
