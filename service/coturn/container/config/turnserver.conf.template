@@ -444,14 +444,14 @@ realm=${COTURN_REALM}
 # Use an absolute path or path relative to the
 # configuration file.
 #
-cert=/etc/ssl/private/certificates/${COTURN_REALM}.crt
+cert=/etc/ssl/private/certificates/${COTURN_REALM}/fullchain.pem
 
 # Private key file.
 # Use an absolute path or path relative to the
 # configuration file.
 # Use PEM file format.
 #
-pkey=/etc/ssl/private/certificates/${COTURN_REALM}.key
+pkey=/etc/ssl/private/certificates/${COTURN_REALM}/privkey.pem
 
 # Private key file password, if it is in encoded format.
 # This option has no default value.

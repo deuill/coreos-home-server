@@ -202,6 +202,6 @@ tls_ssl_options = no_ticket, no_compression
 tls_preempt_cipherlist = no
 
 # Certificate file location.
-smtpd_tls_cert_file = /etc/ssl/private/certificates/${POSTFIX_HOST}.crt
-smtpd_tls_key_file = /etc/ssl/private/certificates/${POSTFIX_HOST}.key
+smtpd_tls_cert_file = /etc/ssl/private/certificates/${POSTFIX_HOST}/fullchain.pem
+smtpd_tls_key_file = /etc/ssl/private/certificates/${POSTFIX_HOST}/privkey.pem
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt

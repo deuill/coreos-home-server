@@ -13,7 +13,7 @@ PodmanArgs=--sdnotify=healthy
 PublishPort=80:80
 PublishPort=443:443
 Volume=nginx-conf:/etc/nginx/conf.d:z
-Volume=letsencrypt:/etc/ssl/private:z,rshared,ro
+Volume=letsencrypt-certificates:/etc/ssl/private:z,rshared,ro
 
 [Service]
 Restart=on-failure

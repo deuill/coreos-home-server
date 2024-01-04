@@ -15,7 +15,7 @@ PublishPort=465:465
 PublishPort=587:587
 Network=internal
 Volume=dovecot:/var/mail:z
-Volume=letsencrypt:/etc/ssl/private:z,ro
+Volume=letsencrypt-certificates:/etc/ssl/private:z,ro
 
 [Service]
 ExecReload=/bin/podman exec %N postfix reload

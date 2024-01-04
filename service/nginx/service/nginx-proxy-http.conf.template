@@ -8,8 +8,8 @@ server {
     listen 443 ssl;
     server_name ${SERVER_NAME} ${SERVER_NAME_ALT};
 
-    ssl_certificate     /etc/ssl/private/certificates/${SSL_CERT_NAME}.crt;
-    ssl_certificate_key /etc/ssl/private/certificates/${SSL_CERT_NAME}.key;
+    ssl_certificate     /etc/ssl/private/certificates/${SSL_CERT_NAME}/fullchain.pem;
+    ssl_certificate_key /etc/ssl/private/certificates/${SSL_CERT_NAME}/privkey.pem;
 
     include resolver.conf;
     set $upstream_endpoint http://${UPSTREAM_HOST}:${UPSTREAM_PORT}${UPSTREAM_PATH};

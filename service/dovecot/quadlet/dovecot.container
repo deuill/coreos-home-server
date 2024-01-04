@@ -18,7 +18,7 @@ PublishPort=143:143
 PublishPort=993:993
 PublishPort=4190:4190
 Volume=%N:/var/mail:z
-Volume=letsencrypt:/etc/ssl/private:z,ro
+Volume=letsencrypt-certificates:/etc/ssl/private:z,ro
 
 [Service]
 ExecReload=/bin/podman exec %N doveadm -v reload

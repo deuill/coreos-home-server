@@ -19,7 +19,7 @@ PublishPort=5350:5350
 PublishPort=5350:5350/udp
 PodmanArgs=--publish ${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}:${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}/udp --sdnotify=healthy
 Volume=%N:/var/lib/%N:z
-Volume=letsencrypt:/etc/ssl/private:z,ro
+Volume=letsencrypt-certificates:/etc/ssl/private:z,ro
 
 [Service]
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
