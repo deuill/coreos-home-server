@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f80c45482c8d147da87613cb6878a7238b8642bcc24fc11bad78c7bec726f340 AS builder-hugo
-ARG VERSION=0.121.1 # renovate: datasource=github-releases depName=gohugoio/hugo extractVersion=^v(?<version>.*)$
+ARG VERSION=0.121.2 # renovate: datasource=github-releases depName=gohugoio/hugo extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
 
