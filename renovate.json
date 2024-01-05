@@ -3,7 +3,8 @@
     "config:best-practices",
     "schedule:automergeDaily",
     ":automergeDigest",
-    ":automergeMinor"
+    ":automergeMinor",
+    ":skipStatusChecks"
   ],
   "includePaths": [
     "**/service/*/Containerfile"
