@@ -1,1 +1,1 @@
-FROM docker.io/rclone/rclone:1.65.0@sha256:877b039d221d9733b2981eec4904540018a937452e387edcea62640cde7c5af0
+FROM docker.io/rclone/rclone:1.65.1@sha256:d16818b0526f269bf0d6fb7977658d44b7355d6b1fe3be44fcade8b05ae0ea47
