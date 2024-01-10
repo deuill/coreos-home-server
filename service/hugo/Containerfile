@@ -7,7 +7,7 @@ ADD https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSIO
 RUN tar --no-same-owner -xvzf /src.tar.gz && \
     install -D --mode 0755 /src/hugo /build/usr/bin/hugo
 
-FROM docker.io/golang:1.21-bookworm@sha256:1415bb0b25d3bffc0a44dcf9851c20a9f8bbe558095221d931f2e4a4cc3596eb AS builder-webhook
+FROM docker.io/golang:1.21-bookworm@sha256:688ad7f282ce711cc28676531f45d5b840790e28a689fbd4e8e4ac181e23e9c4 AS builder-webhook
 ARG VERSION=2.8.1 # renovate: datasource=github-releases depName=adnanh/webhook
 
 RUN GOBIN=/build/usr/bin go install github.com/adnanh/webhook@${VERSION}
