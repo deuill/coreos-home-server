@@ -16,7 +16,7 @@ FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends curl
+RUN apt-get update -y && apt-get install -y --no-install-recommends curl openssh-client
 RUN adduser --system --group --uid 10000 --no-create-home hugo
 
 COPY --from=builder-hugo /build /
