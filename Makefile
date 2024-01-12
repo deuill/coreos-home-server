@@ -1,7 +1,7 @@
 # CoreOS options.
 NAME      := coreos-home-server
 STREAM    := stable
-VERSION   := 39.20231119.3.0
+VERSION   := 39.20231204.3.3
 ARCH      := x86_64
 IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
 HOST      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
