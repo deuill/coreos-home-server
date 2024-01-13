@@ -156,7 +156,7 @@ systemd:
             [Service]
             ExecStartPre=/bin/podman volume create --ignore letsencrypt-certificates
             ExecStart=
-            ExecStart=/bin/sh -c "V=$(podman volume mount letsencrypt-certificates) && cp -Rv /etc/ssl/private/certificates $V && chown -R 10000:10000 $V"
+            ExecStart=/bin/sh -c "V=$(podman volume mount letsencrypt-certificates) && cp -Rv /etc/ssl/private $V && chown -R 10000:10000 $V"
             ExecStartPost=/bin/podman volume unmount letsencrypt-certificates
 
 storage:
@@ -197,7 +197,7 @@ storage:
 
     # Include pre-generated certificates for localhost domain, as we're not using Let's Encrypt in
     # generating certificates for the virtual host.
-    - path: /etc/ssl/private/certificates/localhost/fullchain.pem
+    - path: /etc/ssl/private/localhost/fullchain.pem
       mode: 0644
       contents:
         inline: |
@@ -220,7 +220,7 @@ storage:
           D2VKHadJ4I7seMAgANBFG4NQEUIUlUxGwUc6tZ3pr93dFWkfE+IxE6YBg5Xkuux4
           eAu/TcqROsjnQwQ9Qw4d2FA1C27JIvS6ysOJxJQmVtpZUdfK2hVoeKJvMPnkENOp
           -----END CERTIFICATE-----
-    - path: /etc/ssl/private/certificates/localhost/privkey.pem
+    - path: /etc/ssl/private/localhost/privkey.pem
       mode: 0644
       contents:
         inline: |

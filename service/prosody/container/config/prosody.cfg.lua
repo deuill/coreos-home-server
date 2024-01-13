@@ -185,7 +185,7 @@ openmetrics_allow_cidr = "10.89.0.0/16"
 -- (from e.g. Let's Encrypt) see https://prosody.im/doc/certificates
 
 -- Location of directory to find certificates in (relative to main config file):
-certificates = "/etc/ssl/private/certificates"
+certificates = "/etc/ssl/private"
 
 -- Allow TLS connections with additional, less secure ciphers, for compatibility with older clients.
 ssl = {
