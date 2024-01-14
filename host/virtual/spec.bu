@@ -26,6 +26,7 @@ ignition:
       - local: service/slidge/spec.ign
       - local: service/lldap/spec.ign
       - local: service/gotosocial/spec.ign
+      - local: service/shiori/spec.ign
 
 passwd:
   users:
@@ -147,6 +148,14 @@ systemd:
           contents: |
             [Service]
             Environment=UPSTREAM_HOST=gotosocial UPSTREAM_PORT=8080
+
+    - name: nginx-proxy-http@bookmarks.localhost.service
+      enabled: true
+      dropins:
+        - name: shiori-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=shiori UPSTREAM_PORT=8080
 
     - name: letsencrypt-dns-register@localhost.service
       enabled: true

@@ -1,0 +1,22 @@
+FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37 AS builder
+ARG VERSION=1.5.5 # renovate: datasource=github-releases depName=go-shiori/shiori extractVersion=^v(?<version>.*)$
+
+WORKDIR /src
+
+ADD https://github.com/go-shiori/shiori/releases/download/v${VERSION}/shiori_Linux_x86_64.tar.gz /src.tar.gz
+RUN tar --no-same-owner -xvzf /src.tar.gz && \
+    install -D --mode 0755 /src/shiori /build/usr/bin/shiori
+
+FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl
+
+RUN adduser --system --group --uid 10000 --home /var/lib/shiori shiori
+
+COPY --from=builder /build /
+
+USER shiori
+ENTRYPOINT ["/usr/bin/shiori", "serve"]
