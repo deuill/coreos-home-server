@@ -1,11 +1,12 @@
 FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
-ARG VERSION=3.1.8 # renovate: datasource=github-releases depName=Kozea/Radicale
+ARG VERSION=d7ce2f0b98589400b0e1718cfd7bb29b7ebeaebe
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-venv gettext curl
 
 RUN python3 -m venv /venv && \
-    /venv/bin/pip install radicale==$VERSION https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
+    /venv/bin/pip install https://github.com/Kozea/Radicale/archive/${VERSION}.tar.gz && \
+    /venv/bin/pip install --no-deps https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
 
 RUN addgroup --system --gid 15232 radicale
 RUN adduser --system --uid 15232 --ingroup radicale --home /var/lib/radicale radicale
