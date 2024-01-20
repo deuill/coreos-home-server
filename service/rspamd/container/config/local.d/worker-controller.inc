@@ -3,5 +3,5 @@ bind_socket = "*v4:11334";
 
 {% if env.CONTROLLER_PASSWORD %}
 # Set password for priviledged actions.
-password = "{= env.CONTROLLER_PASSWORD|pbkdf =}";
+enable_password = "{= env.CONTROLLER_PASSWORD|pbkdf =}";
 {% endif %}
