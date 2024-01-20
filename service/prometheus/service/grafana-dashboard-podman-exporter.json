@@ -26,7 +26,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 17639,
   "graphTooltip": 0,
-  "id": 12,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -941,13 +940,13 @@
           },
           "custom": {
             "axisBorderShow": false,
-            "axisCenteredZero": false,
+            "axisCenteredZero": true,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 12,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1016,7 +1015,7 @@
           },
           "editorMode": "code",
           "expr": "sum by(name) (podman_container_info{name!~\".+infra\"} * on(id) group_right(name) rate(podman_container_block_input_total[$__rate_interval]))",
-          "legendFormat": "{{name}} - in",
+          "legendFormat": "{{name}} in",
           "range": true,
           "refId": "input"
         },
@@ -1026,9 +1025,9 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(name) (podman_container_info{name!~\".+infra\"} * on(id) group_right(name) rate(podman_container_block_output_total[$__rate_interval]))",
+          "expr": "sum by(name) (podman_container_info{name!~\".+infra\"} * on(id) group_right(name) rate(podman_container_block_output_total[$__rate_interval])) * -1",
           "hide": false,
-          "legendFormat": "{{name}} - out",
+          "legendFormat": "{{name}} out",
           "range": true,
           "refId": "output"
         }
@@ -1048,13 +1047,13 @@
           },
           "custom": {
             "axisBorderShow": false,
-            "axisCenteredZero": false,
+            "axisCenteredZero": true,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 12,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1119,7 +1118,7 @@
           },
           "editorMode": "code",
           "expr": "sum by(name) (podman_container_info{name!~\".+infra\"} * on(id) group_right(name) rate(podman_container_net_input_total[$__rate_interval]) * 8)",
-          "legendFormat": "{{name}} - in",
+          "legendFormat": "{{name}} in",
           "range": true,
           "refId": "input"
         },
@@ -1129,9 +1128,9 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(name) (podman_container_info{name!~\".+infra\"} * on(id) group_right(name) rate(podman_container_net_output_total[$__rate_interval]) * 8)",
+          "expr": "sum by(name) (podman_container_info{name!~\".+infra\"} * on(id) group_right(name) rate(podman_container_net_output_total[$__rate_interval]) * 8) * -1",
           "hide": false,
-          "legendFormat": "{{name}} - out",
+          "legendFormat": "{{name}} out",
           "range": true,
           "refId": "output"
         }
@@ -1518,6 +1517,6 @@
   "timezone": "",
   "title": "Podman Metrics",
   "uid": "V1DXpAcVz",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }
