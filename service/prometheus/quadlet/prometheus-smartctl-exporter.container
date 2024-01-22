@@ -1,0 +1,22 @@
+[Unit]
+Description=Prometheus S.M.A.R.T. Metrics Exporter
+
+[Container]
+AddDevice=-/dev/sda
+AddDevice=-/dev/sdb
+AddDevice=-/dev/sdc
+AddDevice=-/dev/sdd
+AddDevice=-/dev/nvme0
+AddDevice=-/dev/nvme1
+AutoUpdate=local
+ContainerName=%N
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9633
+Image=localhost/prometheus:latest
+Network=internal
+PodmanArgs=--sdnotify=healthy --group-add disk --entrypoint /usr/bin/prometheus-smartctl-exporter
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

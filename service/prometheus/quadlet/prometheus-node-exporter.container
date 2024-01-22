@@ -12,7 +12,7 @@ Exec=--path.rootfs=/host --collector.systemd
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9100
 Image=localhost/prometheus:latest
 Network=host
-PodmanArgs=--pid host --sdnotify=healthy --entrypoint /bin/node_exporter
+PodmanArgs=--pid host --sdnotify=healthy --entrypoint /usr/bin/prometheus-node-exporter
 Volume=/:/host:ro,rslave
 
 [Service]

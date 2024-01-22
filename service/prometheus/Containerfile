@@ -1,40 +1,53 @@
-FROM docker.io/golang:1.21-bookworm@sha256:c4b696f1b2bf7d42e02b62b160c3f81c39386e1c567603df8c514ad6ce93361d AS podman-exporter-builder
+FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37 AS builder
+ARG VERSION=2.49.1 # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.*)$
+WORKDIR /src
 
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
+ADD https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz /src.tar.gz
+RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
+    install -D --mode 0755 -t /build/usr/bin /src/prometheus /src/promtool
 
-ARG PODMAN_EXPORTER_VERSION=1.7.0 # renovate: datasource=github-releases depName=containers/prometheus-podman-exporter extractVersion=^v(?<version>.*)$
-RUN git clone --branch v${PODMAN_EXPORTER_VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && \
-    cd /src && make binary
+FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37 AS builder-node-exporter
+ARG VERSION=1.7.0 # renovate: datasource=github-releases depName=prometheus/node_exporter
+WORKDIR /src
+
+ADD https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/node_exporter-${VERSION}.linux-amd64.tar.gz /src.tar.gz
+RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
+    install -D --mode 0755 /src/node_exporter /build/usr/bin/prometheus-node-exporter
+
+FROM docker.io/golang:1.21-bookworm@sha256:c4b696f1b2bf7d42e02b62b160c3f81c39386e1c567603df8c514ad6ce93361d AS builder-podman-exporter
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
+
+ARG VERSION=1.7.0 # renovate: datasource=github-releases depName=containers/prometheus-podman-exporter extractVersion=^v(?<version>.*)$
+WORKDIR /src
+
+RUN git clone --branch v${VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && make binary && \
+    install -D --mode 0755 /src/bin/prometheus-podman-exporter /build/usr/bin/prometheus-podman-exporter
+
+FROM docker.io/golang:1.21-bookworm@sha256:c4b696f1b2bf7d42e02b62b160c3f81c39386e1c567603df8c514ad6ce93361d AS builder-smartctl-exporter
+ARG VERSION=0.11.0 # renovate: datasource=github-releases depName=prometheus-community/smartctl_exporter extractVersion=^v(?<version>.*)$
+
+RUN GOBIN=/src/bin go install github.com/prometheus-community/smartctl_exporter@v${VERSION} && \
+    install -D --mode 0755 /src/bin/smartctl_exporter /build/usr/bin/prometheus-smartctl-exporter
 
 FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
-ARG VERSION=2.49.1 # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.*)$
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends curl ca-certificates libgpgme11 libbtrfs0 \
-    libdevmapper1.02.1 libassuan0
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl libgpgme11 libbtrfs0 libdevmapper1.02.1 libassuan0 smartmontools
 
-RUN addgroup --system --gid 10000 prometheus
-RUN adduser --system --uid 10000 --ingroup prometheus --home /var/lib/prometheus prometheus
+RUN adduser --system --group --uid 10000 --home /var/lib/prometheus prometheus
 
-RUN curl -fsSL https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz | \
-    tar -C /opt --no-same-owner -xvzf - && \
-    mv /opt/prometheus-${VERSION}.linux-amd64 /opt/prometheus && \
-    mv /opt/prometheus/promtool /bin/promtool && \
-    mv /opt/prometheus/prometheus /bin/prometheus
-
-ARG NODE_EXPORTER_VERSION=1.7.0 # renovate: datasource=github-releases depName=prometheus/node_exporter
-RUN curl -fsSL https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz | \
-    tar -C /tmp --no-same-owner -xvzf - node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter && \
-    mv /tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter /bin/node_exporter && \
-    rmdir /tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64
-
-COPY --from=podman-exporter-builder /src/bin/prometheus-podman-exporter /bin/podman_exporter
+COPY --from=builder /build /
+COPY --from=builder-node-exporter /build /
+COPY --from=builder-podman-exporter /build /
+COPY --from=builder-smartctl-exporter /build /
 
 COPY container/config /etc/prometheus
 USER prometheus
 
-ENTRYPOINT ["/bin/prometheus", "--config.file=/etc/prometheus/prometheus.yml", \
-                               "--storage.tsdb.path=/var/lib/prometheus", \
-                               "--web.console.templates=/opt/prometheus/consoles", \
-                               "--web.console.libraries=/opt/prometheus/console_libraries"]
+ENTRYPOINT ["/usr/bin/prometheus", "--config.file=/etc/prometheus/prometheus.yml", \
+                                   "--storage.tsdb.path=/var/lib/prometheus", \
+                                   "--web.console.templates=/opt/prometheus/consoles", \
+                                   "--web.console.libraries=/opt/prometheus/console_libraries"]

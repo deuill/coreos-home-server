@@ -11,7 +11,7 @@ Exec=--collector.enable-all
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9882
 Image=localhost/prometheus:latest
 Network=internal
-PodmanArgs=--sdnotify=healthy --entrypoint /bin/podman_exporter
+PodmanArgs=--sdnotify=healthy --entrypoint /usr/bin/prometheus-podman-exporter
 SecurityLabelDisable=true
 User=root
 Volume=/run/podman/podman.sock:/run/podman/podman.sock:ro
