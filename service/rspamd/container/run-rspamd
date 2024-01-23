@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Create base directories.
-mkdir -m 755 -p /run/rspamd
+install -D --mode 0755 /run/rspamd
 chown -R rspamd:rspamd /run/rspamd /var/lib/rspamd
 
 # Run rspamd in the foreground.
-/usr/bin/rspamd -f -u rspamd -g rspamd
+exec /usr/bin/rspamd --no-fork --user rspamd --group rspamd

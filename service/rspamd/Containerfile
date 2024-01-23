@@ -1,16 +1,16 @@
 FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
+
 ARG VERSION=3.8.0 # renovate: datasource=github-releases depName=rspamd/rspamd
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
 ADD --chown=_apt https://rspamd.com/apt-stable/gpg.key /etc/apt/trusted.gpg.d/rspamd.asc
-
 RUN echo "deb https://rspamd.com/apt-stable/ bookworm main" > /etc/apt/sources.list.d/rspamd.list && \
     apt-get update && apt-get install -y --no-install-recommends rspamd="${VERSION}*"
 
-RUN addgroup --system --gid 11332 rspamd
-RUN adduser --system --uid 11332 --ingroup rspamd --home /var/lib/rspamd rspamd
+RUN adduser --system --group --uid 11332 --home /var/lib/rspamd rspamd
 
-COPY --chown=rspamd:rspamd container/config /etc/rspamd
+COPY container/config /etc/rspamd
 COPY container/run-rspamd /run-rspamd
 
 EXPOSE 11332 11333 11334
