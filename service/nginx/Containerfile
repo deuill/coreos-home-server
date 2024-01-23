@@ -1,9 +1,10 @@
 FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
+
 ARG VERSION=1.25.3 # renovate: datasource=github-tags depName=nginx/nginx extractVersion=^release-(?<version>.*)$
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certificates
 ADD --chown=_apt https://nginx.org/keys/nginx_signing.key /etc/apt/trusted.gpg.d/nginx.asc
-
 RUN echo "deb https://nginx.org/packages/mainline/debian bookworm nginx" > /etc/apt/sources.list.d/nginx.list && \
     apt-get update && apt-get install -y --no-install-recommends curl nginx="${VERSION}*" && \
     rm -Rf /etc/nginx

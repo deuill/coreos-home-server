@@ -4,4 +4,4 @@
 awk '/^nameserver/ {printf "resolver %s valid=60s ipv6=off;\n", $2; exit}' /etc/resolv.conf > /etc/nginx/resolver.conf
 
 # Start NGINX as foreground process.
-nginx -g 'daemon off;'
+exec nginx -g 'daemon off;'
