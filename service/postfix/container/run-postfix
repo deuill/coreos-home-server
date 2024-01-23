@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Prepare configuration files for environment variable substitution.
-ENV_NAMES="`env | awk -F '=' '{printf "$%s ", $1}'`"
+ENV_NAMES="$(env | awk -F '=' '{printf "$%s ", $1}')"
 for file in /etc/postfix/*.template; do
-	envsubst "${ENV_NAMES}" < "$file" > "`echo $file | awk -F '.template$' '{print $1}'`"
+	envsubst "$ENV_NAMES" < "$file" > "${file%.template}"
 done
 
 # Generate local aliases and virtual maps.
@@ -13,4 +13,4 @@ postalias /etc/postfix/aliases
 postfix set-permissions
 
 # Run master daemon for Postfix.
-/usr/sbin/postfix -c /etc/postfix start-fg
+exec /usr/sbin/postfix -c /etc/postfix start-fg

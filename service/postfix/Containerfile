@@ -1,15 +1,15 @@
 FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
-ARG VERSION=3.7.9-0+deb12u1 # renovate: datasource=repology depName=debian_12/postfix versioning=loose
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
+ARG VERSION=3.7.9-0+deb12u1 # renovate: datasource=repology depName=debian_12/postfix versioning=loose
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core gettext ca-certificates \
-    netcat-traditional
+    postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core netcat-traditional
 
 COPY container/config /etc/postfix
 COPY container/run-postfix /run-postfix
 
-RUN addgroup --system --gid 5000 virtual
-RUN adduser --system --uid 5000 --ingroup virtual --home /var/mail/virtual virtual
+RUN adduser --system --group --uid 5000 --home /var/mail/virtual virtual
 
 EXPOSE 25 465 587
 ENTRYPOINT ["/run-postfix"]
