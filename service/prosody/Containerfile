@@ -1,21 +1,21 @@
 FROM docker.io/debian:bookworm-slim@sha256:f4a83aa865a2b4a064ff142aa91c713180df9fcb86ce676b5de2981029379c37
-ARG VERSION=0.12.4 # renovate: datasource=github-tags depName=bjc/prosody
-ARG MODULES_VERSION=ef3aa6901a93
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    curl mercurial gnupg ca-certificates apt-transport-https
+    curl mercurial apt-transport-https
 
-RUN addgroup --system --gid 10000 prosody
-RUN adduser --system --uid 10000 --ingroup prosody --home /var/lib/prosody prosody
-RUN install --owner prosody --group prosody --directory /run/prosody
+RUN adduser --system --group --uid 10000 --home /var/lib/prosody prosody && \
+    install --owner prosody --group prosody --directory /run/prosody
 
+ARG VERSION=0.12.4 # renovate: datasource=github-tags depName=bjc/prosody
+ADD --chown=_apt https://prosody.im/files/prosody-debian-packages.key /etc/apt/trusted.gpg.d/prosody.gpg
 RUN echo "deb https://packages.prosody.im/debian bookworm main" > /etc/apt/sources.list.d/prosody.list && \
-    echo "deb-src https://packages.prosody.im/debian bookworm main" >> /etc/apt/sources.list.d/prosody.list && \
-    curl -o - https://prosody.im/files/prosody-debian-packages.key | apt-key add - && \
     apt-get update -y && apt-get install -y --no-install-recommends \
-    lua5.2 lua-dbi-sqlite3 lua-zlib lua-sec lua-luaossl lua-bitop lua-unbound lua-ldap prosody=${VERSION}*
+    prosody=${VERSION}* lua5.2 lua-dbi-sqlite3 lua-zlib lua-sec lua-luaossl lua-bitop lua-unbound lua-ldap
 
-RUN mkdir -p /usr/lib/prosody/community-modules && \
+ARG MODULES_VERSION=0ee77be396b9
+RUN install -d /usr/lib/prosody/community-modules && \
     hg clone --rev ${MODULES_VERSION} https://hg.prosody.im/prosody-modules /usr/lib/prosody/community-modules
 
 COPY container/config /etc/prosody
