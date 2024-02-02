@@ -1,0 +1,20 @@
+[Unit]
+Description=Rclone WebDAV Server
+Wants=container-build@rclone.service lldap.service
+After=container-build@rclone.service lldap.service
+
+[Container]
+AutoUpdate=local
+ContainerName=%N
+Environment=SERVE_APPEND_USER_DIR=true
+EnvironmentFile=%E/coreos-home-server/rclone/rclone.env
+Exec=serve webdav --addr :8080 --auth-proxy /usr/bin/ldap-auth-proxy
+Image=localhost/rclone:latest
+Network=internal
+Volume=%N:/var/lib/rclone-storage:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

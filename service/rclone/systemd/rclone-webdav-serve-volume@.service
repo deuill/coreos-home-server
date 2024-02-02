@@ -1,0 +1,22 @@
+[Unit]
+Description=Rclone WebDAV Server for Volume %I
+Wants=container-build@rclone.service
+After=container-build@rclone.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+SyslogIdentifier=%N
+Restart=on-failure
+Environment=PODMAN_SYSTEMD_UNIT=%n
+ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmon \
+                          --env-file %E/coreos-home-server/rclone/rclone.env \
+                          --volume %i:/var/lib/rclone-storage:z \
+                          localhost/rclone:latest serve webdav \
+                          --addr :8080 \
+                          --auth-proxy /usr/bin/ldap-auth-proxy
+ExecStop=/bin/podman stop --ignore --time 10 %p-%i
+ExecStopPost=/bin/podman rm --ignore --force %p-%i
+
+[Install]
+WantedBy=multi-user.target

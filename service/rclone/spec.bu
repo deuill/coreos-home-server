@@ -6,3 +6,5 @@ storage:
       local: service/rclone/
     - path: /etc/systemd/system
       local: service/rclone/systemd/
+    - path: /etc/containers/systemd
+      local: service/rclone/quadlet/

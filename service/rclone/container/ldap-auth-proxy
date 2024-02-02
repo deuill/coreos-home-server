@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+
+"""
+An auth proxy for Rclone, backed by a generic LDAP server.
+"""
+
+import os
+import sys
+import json
+
+from ldap3 import Server, Connection, AUTO_BIND_NO_TLS, SUBTREE
+from ldap3.utils.conv import escape_filter_chars
+
+ldap_host = os.getenv("AUTH_LDAP_HOST", "localhost")
+ldap_port = os.getenv("AUTH_LDAP_PORT", 389)
+
+ldap_bind_dn = os.getenv("AUTH_LDAP_BIND_DN", "")
+ldap_password = os.getenv("AUTH_LDAP_PASSWORD", "")
+
+ldap_base_dn = os.getenv("AUTH_LDAP_BASE_DN", "ou=people,dc=ldap,dc=local")
+ldap_search_filter = os.getenv("AUTH_LDAP_SEARCH_FILTER", "(uid={username})")
+
+serve_base_dir = os.getenv("SERVE_BASE_DIR", "/var/lib/rclone-storage")
+serve_append_user_dir = os.getenv("SERVE_APPEND_USER_DIR", "false")
+
+
+def main():
+    i = json.load(sys.stdin)
+    username = i["user"]
+    password = i["pass"]
+
+    if not username or not password:
+        print("Error: No username or password given", file=sys.stderr)
+        return
+
+    server = Server(ldap_host, port=int(ldap_port))
+    connection = Connection(
+        server, user=ldap_bind_dn, password=ldap_password, auto_bind=AUTO_BIND_NO_TLS
+    )
+    connection.search(
+        search_base=ldap_base_dn,
+        search_filter=ldap_search_filter.format(username=escape_filter_chars(username)),
+        search_scope=SUBTREE,
+        attributes=["uid"],
+        time_limit=15,
+    )
+
+    total_entries = len(connection.response)
+    if total_entries == 0:
+        print(f"Error: No results found for '{username}'", file=sys.stderr)
+        return
+    if total_entries > 1:
+        print(f"Error: More than one result found for '{username}'", file=sys.stderr)
+        return
+
+    response = connection.response[0]
+    if "uid" not in response["attributes"] or len(response["attributes"]["uid"]) == 0:
+        print(f"Error: Empty UID attribute returned for '{username}'", file=sys.stderr)
+        return
+
+    uid = response["attributes"]["uid"][0]
+    serve_root = (
+        serve_base_dir + "/" + uid
+        if serve_append_user_dir == "true"
+        else serve_base_dir
+    )
+    output = {
+        "type": "local",
+        "_root": serve_root,
+        "_obscure": "pass",
+        "user": uid,
+        "pass": password,
+        "host": "",
+    }
+
+    json.dump(output, sys.stdout)
+
+
+if __name__ == "__main__":
+    main()

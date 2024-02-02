@@ -12,9 +12,14 @@ FROM docker.io/debian:bookworm-slim@sha256:7802002798b0e351323ed2357ae6dc5a8c4d0
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
-RUN adduser --system --group --uid 10000 --no-create-home rclone
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl python3 python3-ldap3
+
+RUN adduser --system --group --uid 10000 --no-create-home rclone && \
+    install -D --owner rclone --group rclone -d /var/lib/rclone-storage
 
 COPY --from=builder /build /
+COPY container/ldap-auth-proxy /usr/bin
 
 USER rclone
 ENTRYPOINT ["/usr/bin/rclone"]
