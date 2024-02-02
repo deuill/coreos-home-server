@@ -1,5 +1,5 @@
 [Unit]
-Description=Rclone Sync for /%I
+Description=Rclone Push for /%I
 Wants=container-build@rclone.service
 After=container-build@rclone.service
 ConditionDirectoryNotEmpty=/%I
