@@ -25,13 +25,13 @@ serve_append_user_dir = os.getenv("SERVE_APPEND_USER_DIR", "false")
 
 
 def main():
-    i = json.load(sys.stdin)
-    username = i["user"]
-    password = i["pass"]
-
-    if not username or not password:
+    data = json.load(sys.stdin)
+    if "user" not in data or "pass" not in data:
         print("Error: No username or password given", file=sys.stderr)
         return
+
+    username = data["user"]
+    password = data["pass"]
 
     server = Server(ldap_host, port=int(ldap_port))
     connection = Connection(
@@ -59,6 +59,12 @@ def main():
         return
 
     uid = response["attributes"]["uid"][0]
+    user_dn = f"uid={uid},{ldap_base_dn}"
+
+    if not Connection(server, user=user_dn, password=password).bind():
+        print(f"Error: Invalid password for '{username}'", file=sys.stderr)
+        return
+
     serve_root = (
         serve_base_dir + "/" + uid
         if serve_append_user_dir == "true"
