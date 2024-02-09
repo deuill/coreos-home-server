@@ -1,8 +1,8 @@
 # MariaDB
 
-This directory contains a simple systemd service for running an instance of MariaDB 10.6.
+This directory contains a simple systemd service for running an instance of MariaDB.
 
-## Deployment and Use
+## Deployment
 
 Including the `spec.bu` file here in your host configuration is enough to have MariaDB enabled on the
 system -- no other configuration is needed. The following commands will manage the service
