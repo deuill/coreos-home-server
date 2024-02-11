@@ -17,6 +17,7 @@ ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmo
                           --auth-proxy /usr/bin/ldap-auth-proxy
 ExecStop=/bin/podman stop --ignore --time 10 %p-%i
 ExecStopPost=/bin/podman rm --ignore --force %p-%i
+ExecReload=/bin/podman exec %p-%i sh -c 'kill -HUP $(pidof rclone)'
 
 [Install]
 WantedBy=multi-user.target

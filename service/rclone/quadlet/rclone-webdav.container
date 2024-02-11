@@ -15,6 +15,7 @@ Volume=%N:/var/lib/rclone-storage:z
 
 [Service]
 Restart=on-failure
+ExecReload=/bin/podman exec %N sh -c 'kill -HUP $(pidof rclone)'
 
 [Install]
 WantedBy=multi-user.target
