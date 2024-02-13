@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:cfa4fa03c2133b9e3f5dbd6ae601036c5a966ce0b4a5e3b264607ffc1e320fb3 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:0f5f2ad0f82ed101b4ea0e841bb19375fcd0892c2971c0902d790f97f2763502 AS builder
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential pkg-config git libevent-dev libssl-dev
 
@@ -7,7 +7,7 @@ RUN git clone --branch ${VERSION} --depth=1 https://github.com/coturn/coturn.git
     mkdir /build && cd /src && ./configure --prefix=/usr --turndbdir=/var/lib/coturn && \
     make && make install DESTDIR=/build
 
-FROM docker.io/debian:bookworm-slim@sha256:cfa4fa03c2133b9e3f5dbd6ae601036c5a966ce0b4a5e3b264607ffc1e320fb3
+FROM docker.io/debian:bookworm-slim@sha256:0f5f2ad0f82ed101b4ea0e841bb19375fcd0892c2971c0902d790f97f2763502
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 

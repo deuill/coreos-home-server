@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:cfa4fa03c2133b9e3f5dbd6ae601036c5a966ce0b4a5e3b264607ffc1e320fb3 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:0f5f2ad0f82ed101b4ea0e841bb19375fcd0892c2971c0902d790f97f2763502 AS builder
 ARG VERSION=4.15.0 # renovate: datasource=github-releases depName=go-acme/lego extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
@@ -7,7 +7,7 @@ ADD https://github.com/go-acme/lego/releases/download/v${VERSION}/lego_v${VERSIO
 RUN tar --no-same-owner -xvzf /src.tar.gz && \
     install -D --mode 0755 /src/lego /build/usr/bin/lego
 
-FROM docker.io/debian:bookworm-slim@sha256:cfa4fa03c2133b9e3f5dbd6ae601036c5a966ce0b4a5e3b264607ffc1e320fb3
+FROM docker.io/debian:bookworm-slim@sha256:0f5f2ad0f82ed101b4ea0e841bb19375fcd0892c2971c0902d790f97f2763502
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends ca-certificates gettext gosu
 
