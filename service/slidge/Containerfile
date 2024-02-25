@@ -32,7 +32,10 @@ RUN cp -R /src/skidge /venv/lib/python3.11/site-packages/legacy_module
 FROM builder-base AS builder-whatsapp
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    golang gcc python3-dev
+    gcc python3-dev
+
+RUN echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
+    apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports golang
 
 ENV GOBIN=/usr/bin
 RUN go install github.com/go-python/gopy@latest && \
