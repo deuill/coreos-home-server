@@ -14,10 +14,10 @@ accordingly:
 
 Coturn will, by default, bind to and listen on the following host ports, both TCP and UDP:
 
-  - 3478
-  - 3479
-  - 5349
-  - 5350
+  - `3478`
+  - `3479`
+  - `5349`
+  - `5350`
 
   These ports correspond to ports required for STUN and TURN listeners. In addition, clients are
   expected to be able to bind to a range of UDP ports, as defined in the host configuration for
