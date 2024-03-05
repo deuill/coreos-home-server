@@ -138,6 +138,11 @@ show_user_unknown_table_name = no
 smtpd_delay_reject = yes
 disable_vrfy_command = yes
 
+# Disconnect remote SMTP clients that send bare newlines, as these can be used to
+# spoof email senders through successive services.
+smtpd_forbid_bare_newline = normalize
+smtpd_forbid_bare_newline_exclusions = $mynetworks
+
 # Local aliasing.
 alias_maps = hash:/etc/postfix/aliases
 alias_database = hash:/etc/postfix/aliases
