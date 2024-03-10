@@ -1,16 +1,19 @@
 #!/bin/sh
 
-# Create configuration file from collected templates.
-mkdir -p /etc/rss2email
-envsubst < /etc/rss2email/rss2email.conf.template > /etc/rss2email/rss2email.conf
+set -eu
 
-if test -n "$(ls -A /etc/rss2email/conf.d)"; then
-    cat /etc/rss2email/conf.d/*.conf >> /etc/rss2email/rss2email.conf
-fi
+# Common-use variables.
+DATA_DIR=/var/lib/rss2email
+CONF_DIR=/etc/rss2email/feeds.d
 
-# Correct permissions for data files.
-mkdir -p /var/lib/rss2email
-chown -R rss2email:rss2email /var/lib/rss2email
+# Parse invividual feed configuration directories.
+process() {
+    printf "Processing feeds for %s...\n" "$2"
+    install -D --owner rss2email --group rss2email --target-directory "$DATA_DIR/feeds/$2/.rss2email" "$1"/*
+    chown rss2email:rss2email "$DATA_DIR/feeds/$2/.rss2email"
+    gosu rss2email sh -c "HOME=$DATA_DIR/feeds/$2 rss2email cron -verbose $2"
+}
 
-# Run entrypoint under specific user.
-gosu rss2email /usr/local/bin/r2e --config /etc/rss2email/rss2email.conf --data /var/lib/rss2email/data.json "$@"
+for feed in "$CONF_DIR"/*/feeds.txt; do
+    process "$(dirname "$feed")" "$(basename "$(dirname "$feed")")"
+done

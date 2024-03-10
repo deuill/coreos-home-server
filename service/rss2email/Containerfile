@@ -1,18 +1,15 @@
-FROM docker.io/debian:bullseye-slim@sha256:c6d9e246479d56687c1a579a7a0336956a5ce6f2bc26bd7925b0c7405e81dbff
-ARG VERSION=3.14 # renovate: datasource=github-tags depName=rss2email/rss2email extractVersion=^v(?<version>.*)$
+FROM docker.io/golang:1.22-bookworm@sha256:925fe3fa28ba428cf67a7947ae838f8a1523117b40e3e6b5106c378e3f97fa29 AS builder
+ARG VERSION=3.2 # renovate: datasource=github-releases depName=skx/rss2email extractVersion=^release-(?<version>.*)$
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates git gettext gosu \
-    python3 python3-setuptools python3-feedparser python3-html2text python3-bs4
+RUN GOBIN=/build/usr/bin go install github.com/skx/rss2email@release-${VERSION}
 
-RUN git clone --branch v${VERSION} --depth 1 https://github.com/rss2email/rss2email /tmp/rss2email && \
-    cd /tmp/rss2email && python3 setup.py install && \
-    rm -Rf /tmp/rss2email
+FROM docker.io/debian:bookworm-slim@sha256:d02c76d82364cedca16ba3ed6f9102406fa9fa8833076a609cabf14270f43dfc
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
-RUN addgroup --system --gid 10000 rss2email
-RUN adduser --system --uid 10000 --ingroup rss2email --home /var/lib/rss2email rss2email
+RUN adduser --system --group --uid 10000 --no-create-home rss2email
 
-COPY container/config /etc/rss2email
+COPY --from=builder /build /
 COPY container/run-rss2email /run-rss2email
 
 ENTRYPOINT ["/run-rss2email"]

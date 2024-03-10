@@ -8,9 +8,9 @@ Type=oneshot
 SyslogIdentifier=%N
 ExecStart=/bin/podman run --replace --rm --name %N --net internal \
                           --env-file %E/coreos-home-server/%N/%N.env \
-                          --volume %N-feeds:/etc/%N/conf.d:z,ro \
+                          --volume %E/coreos-home-server/%N/service/feeds:/etc/%N/feeds.d:z,ro \
                           --volume %N:/var/lib/%N:z \
-                          localhost/%N:latest run
+                          localhost/%N:latest
 
 [Install]
 WantedBy=multi-user.target
