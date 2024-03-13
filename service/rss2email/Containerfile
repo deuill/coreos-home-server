@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.22-bookworm@sha256:925fe3fa28ba428cf67a7947ae838f8a1523117b40e3e6b5106c378e3f97fa29 AS builder
+FROM docker.io/golang:1.22-bookworm@sha256:d996c645c9934e770e64f05fc2bc103755197b43fd999b3aa5419142e1ee6d78 AS builder
 ARG VERSION=3.2 # renovate: datasource=github-releases depName=skx/rss2email extractVersion=^release-(?<version>.*)$
 
 RUN GOBIN=/build/usr/bin go install github.com/skx/rss2email@release-${VERSION}
