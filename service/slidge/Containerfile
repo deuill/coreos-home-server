@@ -9,7 +9,7 @@ RUN curl -fL https://install.python-poetry.org | python3 -
 
 FROM builder-base AS builder-discord
 
-ARG VERSION=eb55785d2a26e586abd2b60cc84f0004311be8d0 # renovate: datasource=git-refs depName=slidcord packageName=https://git.sr.ht/~nicoco/slidcord versioning=git
+ARG VERSION=05c935e8116deed127cd530051ef984320198b16 # renovate: datasource=git-refs depName=slidcord packageName=https://git.sr.ht/~nicoco/slidcord versioning=git
 RUN git clone https://git.sr.ht/~nicoco/slidcord /src && \
     cd /src && git reset --hard ${VERSION}
 
@@ -43,7 +43,7 @@ RUN go install github.com/go-python/gopy@latest && \
 
 RUN python3 -m pip install pybindgen
 
-ARG VERSION=9caf826b0b49944777e5febe355cc291a8936a85 # renovate: datasource=git-refs depName=slidge-whatsapp packageName=https://git.sr.ht/~nicoco/slidge-whatsapp versioning=git
+ARG VERSION=1f6c7ac4abbdce22504ad0ebb1ef4ba2733d8b60 # renovate: datasource=git-refs depName=slidge-whatsapp packageName=https://git.sr.ht/~nicoco/slidge-whatsapp versioning=git
 RUN git clone https://git.sr.ht/~nicoco/slidge-whatsapp /src && \
     cd /src && git reset --hard ${VERSION}
 
