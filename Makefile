@@ -35,7 +35,7 @@ JQ     ?= $(call find-cmd,jq) --raw-output
 find-cmd = $(or $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH))))),$(error "Command '$(1)' not found in PATH"))
 
 # Get latest release for given architecture.
-# Example use $(call coreos-version,x86_64)
+# Example use: $(call coreos-version,x86_64)
 coreos-version = $(shell $(CURL) --silent $(STREAM_URI) | $(JQ) '.architectures.$(1).artifacts.metal.release')
 
 ## Builds and deploys Fedora CoreOS for HOST of TYPE.

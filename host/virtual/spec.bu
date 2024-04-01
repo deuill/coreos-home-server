@@ -68,6 +68,10 @@ systemd:
       dropins:
         - name: use-localhost-cert.conf
           contents: |
+            [Unit]
+            Wants=letsencrypt-dns-register@localhost.service
+            After=letsencrypt-dns-register@localhost.service
+
             [Service]
             Environment=SSL_CERT_NAME=localhost
 
