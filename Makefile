@@ -1,11 +1,12 @@
 # CoreOS options.
-NAME      := coreos-home-server
-STREAM    := stable
-VERSION   := 39.20240112.3.0
-ARCH      := x86_64
-IMAGE_URI := https://builds.coreos.fedoraproject.org/prod/streams/
-HOST      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
-TYPE      := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(filter virtual,$(HOST)),virtual,$(if $(TYPE),$(TYPE),$(error Please specify a valid deployment TYPE))),$(TYPE))
+NAME       := coreos-home-server
+STREAM     ?= stable
+ARCH       ?= x86_64
+VERSION    ?= $(call coreos-version,$(ARCH))
+HOST       := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(HOST),$(HOST),$(error Please specify a valid HOST to deploy)),$(HOST))
+TYPE       := $(if $(filter deploy,$(MAKECMDGOALS)),$(if $(filter virtual,$(HOST)),virtual,$(if $(TYPE),$(TYPE),$(error Please specify a valid deployment TYPE))),$(TYPE))
+STREAM_URI := https://builds.coreos.fedoraproject.org/streams/$(STREAM).json
+IMAGE_URI  := https://builds.coreos.fedoraproject.org/prod/streams/
 
 # Default Makefile options.
 VERBOSE :=
@@ -13,9 +14,9 @@ ROOTDIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 TMPDIR  := $(shell ls -d /var/tmp/$(NAME).???? 2>/dev/null || mktemp -d /var/tmp/$(NAME).XXXX && chmod 0755 /var/tmp/$(NAME).????)/
 
 # Target-specific variables.
-ADDRESS        = $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
-CONTAINERFILES = $(wildcard service/*/Containerfile)
-VIRTUAL_PORTS  = 8022:22 8025:25 8080:80 8143:143 8443:443 8465:465 8587:587 8993:993 5222:5222 5223:5223 5269:5269 5347:5347 7920:7920
+ADDRESS        ?= $(shell ip -o route get 1 | awk '{for (i=1; i<=NF; i++) {if ($$i == "src") {print $$(i+1); exit}}}')
+CONTAINERFILES ?= $(wildcard service/*/Containerfile)
+VIRTUAL_PORTS  ?= 8022:22 8025:25 8080:80 8143:143 8443:443 8465:465 8587:587 8993:993 5222:5222 5223:5223 5269:5269 5347:5347 7920:7920
 
 # Build-time dependencies.
 BUTANE ?= $(call find-cmd,butane)
@@ -25,6 +26,17 @@ GPG    ?= $(call find-cmd,gpg) $(if $(VERBOSE),,-q)
 QEMU   ?= $(call find-cmd,qemu-system-$(ARCH)) -enable-kvm
 NC     ?= $(call find-cmd,nc) -vv -r -l
 XZ     ?= $(call find-cmd,xz) $(if $(VERBOSE),--verbose)
+JQ     ?= $(call find-cmd,jq) --raw-output
+
+# Common-use functions.
+#
+# Find and return full path to command by name, or throw error if none can be found in PATH.
+# Example use: $(call find-cmd,ls)
+find-cmd = $(or $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH))))),$(error "Command '$(1)' not found in PATH"))
+
+# Get latest release for given architecture.
+# Example use $(call coreos-version,x86_64)
+coreos-version = $(shell $(CURL) --silent $(STREAM_URI) | $(JQ) '.architectures.$(1).artifacts.metal.release')
 
 ## Builds and deploys Fedora CoreOS for HOST of TYPE.
 deploy: deploy-$(TYPE)
@@ -111,10 +123,6 @@ $(TMPDIR)make.depend: $(shell find $(ROOTDIR) -name '*.bu' -type f 2>/dev/null)
 
 # Conditional command echo control.
 Q := $(if $(VERBOSE),,@)
-
-# Find and return full path to command by name, or throw error if none can be found in PATH.
-# Example use: $(call find-cmd,ls)
-find-cmd = $(or $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH))))),$(error "Command '$(1)' not found in PATH"))
 
 # Shell colors, used in messages.
 BOLD      = \033[1m
