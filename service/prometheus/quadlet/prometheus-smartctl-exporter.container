@@ -1,5 +1,7 @@
 [Unit]
 Description=Prometheus S.M.A.R.T. Metrics Exporter
+Wants=grafana-dashboard@prometheus-node-exporter.service
+After=grafana-dashboard@prometheus-node-exporter.service
 
 [Container]
 AutoUpdate=local
