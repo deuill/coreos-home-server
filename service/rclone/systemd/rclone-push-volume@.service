@@ -1,0 +1,14 @@
+[Unit]
+Description=Rclone Push for Volume %I
+Wants=container-build@rclone.service
+After=container-build@rclone.service
+
+[Service]
+Type=oneshot
+SyslogIdentifier=%N
+Environment=DESTINATION=crypt:%i
+ExecStartPre=/bin/install --mode 0700 -d %S/backups/coreos-home-server/%i
+ExecStart=/bin/podman run --rm --env-file %E/coreos-home-server/rclone/rclone.env --user root --volume %i:/mnt:z,ro --volume %S/backups/coreos-home-server/%i:/local:z localhost/rclone:latest sync /mnt ${DESTINATION}
+
+[Install]
+WantedBy=multi-user.target

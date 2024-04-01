@@ -1,7 +1,5 @@
 [Unit]
 Description=Container Volume for %I
-Wants=container-volume-restore@%i.service container-volume-backup@%i.timer
-After=container-volume-restore@%i.service
 
 [Service]
 Type=oneshot
