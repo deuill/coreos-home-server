@@ -1,7 +1,7 @@
 [Unit]
 Description=Rclone WebDAV Server
-Wants=container-build@rclone.service lldap.service
-After=container-build@rclone.service lldap.service
+Wants=container-build@rclone.service container-volume@%N.service lldap.service
+After=container-build@rclone.service container-volume@%N.service lldap.service
 
 [Container]
 AutoUpdate=local
