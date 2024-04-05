@@ -5,9 +5,13 @@ set -eu
 # Initialize configuration for Gitea Actions.
 envsubst < /etc/gitea/actions.yaml.template > /etc/gitea/actions.yaml
 
+# Create data directories and correct permissions for data files.
+chown -R git:git /var/lib/gitea-actions
+chown root:git /run/podman-gitea-actions.sock
+
 # Initialize token for Gitea Actions in shared volume.
 if ! test -f /var/lib/gitea-actions/runner-global; then
-    /usr/bin/act_runner --config /etc/gitea/actions.yaml register \
+    gosu git /usr/bin/act_runner --config /etc/gitea/actions.yaml register \
         --no-interactive \
         --name "actions-global" \
         --instance "https://${GITEA_DOMAIN}" \
@@ -15,4 +19,4 @@ if ! test -f /var/lib/gitea-actions/runner-global; then
 fi
 
 # Run entrypoint under specific user.
-exec /usr/bin/act_runner --config /etc/gitea/actions.yaml daemon "$@"
+exec gosu git /usr/bin/act_runner --config /etc/gitea/actions.yaml daemon "$@"
