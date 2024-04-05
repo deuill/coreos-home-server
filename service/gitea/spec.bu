@@ -4,5 +4,21 @@ storage:
   trees:
     - path: /etc/coreos-home-server/gitea
       local: service/gitea/
+    - path: /etc/systemd/system
+      local: service/gitea/systemd/
     - path: /etc/containers/systemd
       local: service/gitea/quadlet/
+  files:
+    - path: /etc/subuid
+      append:
+        - inline: |
+            gitea-actions:1000000:65536
+    - path: /etc/subgid
+      append:
+        - inline: |
+            gitea-actions:1000000:65536
+passwd:
+  users:
+    - name: gitea-actions
+      shell: /usr/sbin/nologin
+      system: true

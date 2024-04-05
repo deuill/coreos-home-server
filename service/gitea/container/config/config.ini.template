@@ -1,7 +1,7 @@
-APP_NAME = ${GITEA_APP_NAME}
+APP_NAME  = ${GITEA_APP_NAME}
 WORK_PATH = /var/lib/gitea
-RUN_USER = git
-RUN_MODE = prod
+RUN_USER  = git
+RUN_MODE  = prod
 
 [repository]
 ROOT                    = /var/lib/gitea/repositories
@@ -75,3 +75,6 @@ SMTP_ADDR = ${GITEA_MAILER_SMTP_ADDR}
 SMTP_PORT = ${GITEA_MAILER_SMTP_PORT}
 USER      = ${GITEA_MAILER_USER}
 PASSWD    = `${GITEA_MAILER_PASSWD}`
+
+[actions]
+ENABLED = true

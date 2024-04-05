@@ -1,0 +1,10 @@
+[Unit]
+Description=Podman API Socket for Gitea Actions
+Documentation=man:podman-system-service(1)
+
+[Socket]
+ListenStream=%t/podman-gitea-actions.sock
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target

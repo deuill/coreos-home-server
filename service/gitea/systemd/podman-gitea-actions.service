@@ -1,0 +1,17 @@
+[Unit]
+Description=Podman API Service for Gitea Actions
+Requires=podman-gitea-actions.socket
+After=podman-gitea-actions.socket
+Documentation=man:podman-system-service(1)
+StartLimitIntervalSec=0
+
+[Service]
+Delegate=true
+Type=exec
+KillMode=process
+Environment=LOGGING="--log-level=info"
+User=gitea-actions
+ExecStart=/usr/bin/podman $LOGGING system service
+
+[Install]
+WantedBy=multi-user.target

@@ -1,8 +1,14 @@
-FROM docker.io/debian:bookworm-slim@sha256:ccb33c3ac5b02588fc1d9e4fc09b952e433d0c54d8618d0ee1afadf1f3cf2455 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:ccb33c3ac5b02588fc1d9e4fc09b952e433d0c54d8618d0ee1afadf1f3cf2455 AS builder-gitea
 ARG VERSION=1.21.10 # renovate: datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
 
 ADD https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64 /src/gitea
 RUN install -D --mode 0755 /src/gitea /build/usr/bin/gitea
+
+FROM docker.io/golang:1.22-bookworm@sha256:d996c645c9934e770e64f05fc2bc103755197b43fd999b3aa5419142e1ee6d78 AS builder-act-runner
+ARG VERSION=0.2.9 # renovate: datasource=gitea-releases depName=gitea/act_runner extractVersion=^v(?<version>.*)$
+
+ADD https://dl.gitea.com/act_runner/${VERSION}/act_runner-${VERSION}-linux-amd64 /src/act_runner
+RUN install -D --mode 0755 /src/act_runner /build/usr/bin/act_runner
 
 FROM docker.io/debian:bookworm-slim@sha256:ccb33c3ac5b02588fc1d9e4fc09b952e433d0c54d8618d0ee1afadf1f3cf2455
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
@@ -13,9 +19,11 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 RUN adduser --system --group --uid 10000 --home /var/lib/gitea git
 
-COPY --from=builder /build /
+COPY --from=builder-gitea /build /
+COPY --from=builder-act-runner /build /
 COPY container/config /etc/gitea
 COPY container/run-gitea /run-gitea
+COPY container/run-gitea-actions /run-gitea-actions
 
 EXPOSE 8080 7920
 ENTRYPOINT ["/run-gitea"]

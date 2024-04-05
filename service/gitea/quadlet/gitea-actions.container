@@ -1,0 +1,22 @@
+[Unit]
+Description=Gitea Actions CI/CD
+Wants=container-build@gitea.service gitea.service podman-gitea-actions.socket
+After=container-build@gitea.service gitea.service podman-gitea-actions.socket
+
+[Container]
+AutoUpdate=local
+ContainerName=%N
+EnvironmentFile=%E/coreos-home-server/gitea/gitea.env
+Image=localhost/gitea:latest
+PodmanArgs=--security-opt label=disable --entrypoint /run-gitea-actions
+Volume=%N:/var/lib/%N:z
+Volume=/tmp/runner-token:/etc/gitea/runner-token
+Volume=%t/podman-gitea-actions.sock:/run/podman-gitea-actions.sock
+
+[Service]
+ExecStartPre=/bin/bash -c 'podman exec gitea gosu git /usr/bin/gitea -c /etc/gitea/config.ini actions generate-runner-token > /tmp/runner-token'
+PrivateTmp=true
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,37 @@
+log:
+  # The level of logging, can be trace, debug, info, warn, error, fatal.
+  level: info
+runner:
+  # Where to store the registration result.
+  file: /var/lib/gitea-actions/runner-global
+  # Execute how many tasks concurrently at the same time.
+  capacity: 3
+  # The timeout for a job to be finished.
+  timeout: 3h
+  # The timeout for fetching the job from the Gitea instance.
+  fetch_timeout: 5s
+  # The interval for fetching the job from the Gitea instance.
+  fetch_interval: 2s
+  # The labels of a runner are used to determine which jobs the runner can run, and how to run them.
+  labels:
+    - "debian-latest:docker://node:latest"
+    - "debian-bookworm:docker://node:bookworm"
+    - "ubuntu-latest:docker://node:latest"
+    - "ubuntu-22.04:docker://node:bullseye"
+    - "alpine-latest:docker://node:alpine"
+    - "alpine-3.19:docker://node:alpine3.19"
+cache:
+  # Enable cache server to use actions/cache.
+  enabled: true
+  # The directory to store the cache data.
+  dir: /var/lib/gitea-actions/cache
+container:
+  # Whether to use privileged mode or not when launching task containers (privileged mode is required for Docker-in-Docker).
+  privileged: false
+  # Use default network in containers.
+  network: bridge
+  # Overrides the Docker client host with the specified one.
+  docker_host: unix:///run/podman-gitea-actions.sock
+host:
+  # The parent directory of a job's working directory.
+  workdir_parent: /var/lib/gitea-actions/jobs
