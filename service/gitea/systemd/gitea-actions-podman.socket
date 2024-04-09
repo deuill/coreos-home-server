@@ -3,8 +3,8 @@ Description=Podman API Socket for Gitea Actions
 Documentation=man:podman-system-service(1)
 
 [Socket]
-ListenStream=%t/podman-gitea-actions.sock
-SocketMode=0660
+ListenStream=/run/gitea-actions/podman.sock
+DirectoryMode=0770
 
 [Install]
 WantedBy=sockets.target

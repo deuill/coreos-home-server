@@ -14,12 +14,8 @@ runner:
   fetch_interval: 2s
   # The labels of a runner are used to determine which jobs the runner can run, and how to run them.
   labels:
-    - "debian-latest:docker://node:latest"
-    - "debian-bookworm:docker://node:bookworm"
-    - "ubuntu-latest:docker://node:latest"
-    - "ubuntu-22.04:docker://node:bullseye"
-    - "alpine-latest:docker://node:alpine"
-    - "alpine-3.19:docker://node:alpine3.19"
+    - "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
+    - "ubuntu-22.04:docker://gitea/runner-images:ubuntu-22.04"
 cache:
   # Enable cache server to use actions/cache.
   enabled: true
@@ -27,11 +23,11 @@ cache:
   dir: /var/lib/gitea-actions/cache
 container:
   # Whether to use privileged mode or not when launching task containers (privileged mode is required for Docker-in-Docker).
-  privileged: false
+  privileged: true
   # Use default network in containers.
   network: bridge
   # Overrides the Docker client host with the specified one.
-  docker_host: unix:///run/podman-gitea-actions.sock
+  docker_host: unix:///run/gitea-actions/podman.sock
 host:
   # The parent directory of a job's working directory.
   workdir_parent: /var/lib/gitea-actions/jobs

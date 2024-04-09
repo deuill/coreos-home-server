@@ -7,7 +7,6 @@ envsubst < /etc/gitea/actions.yaml.template > /etc/gitea/actions.yaml
 
 # Create data directories and correct permissions for data files.
 chown -R git:git /var/lib/gitea-actions
-chown root:git /run/podman-gitea-actions.sock
 
 # Initialize token for Gitea Actions in shared volume.
 if ! test -f /var/lib/gitea-actions/runner-global; then
