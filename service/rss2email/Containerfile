@@ -3,7 +3,7 @@ ARG VERSION=aa3296fcc2883c345d3581ac670f652b2badedb5
 
 RUN GOBIN=/build/usr/bin go install github.com/skx/rss2email@${VERSION}
 
-FROM docker.io/debian:bookworm-slim@sha256:ccb33c3ac5b02588fc1d9e4fc09b952e433d0c54d8618d0ee1afadf1f3cf2455
+FROM docker.io/debian:bookworm-slim@sha256:3d5df92588469a4c503adbead0e4129ef3f88e223954011c2169073897547cac
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
