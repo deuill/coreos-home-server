@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:ccb33c3ac5b02588fc1d9e4fc09b952e433d0c54d8618d0ee1afadf1f3cf2455 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:3d5df92588469a4c503adbead0e4129ef3f88e223954011c2169073897547cac AS builder
 ARG VERSION=0.51.1 # renovate: datasource=github-releases depName=navidrome/navidrome extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
@@ -6,7 +6,7 @@ ADD https://github.com/navidrome/navidrome/releases/download/v${VERSION}/navidro
 RUN tar --no-same-owner -xvzf /src.tar.gz && \
     install -D --mode 0755 /src/navidrome /build/usr/bin/navidrome
 
-FROM docker.io/debian:bookworm-slim@sha256:ccb33c3ac5b02588fc1d9e4fc09b952e433d0c54d8618d0ee1afadf1f3cf2455
+FROM docker.io/debian:bookworm-slim@sha256:3d5df92588469a4c503adbead0e4129ef3f88e223954011c2169073897547cac
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
