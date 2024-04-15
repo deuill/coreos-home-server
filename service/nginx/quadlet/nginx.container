@@ -16,6 +16,7 @@ Volume=nginx-conf:/etc/nginx/conf.d:z
 Volume=letsencrypt-certificates:/etc/ssl/private:z,rshared,ro
 
 [Service]
+TimeoutStartSec=180
 Restart=on-failure
 ExecReload=/bin/podman exec %N nginx -s reload
 
