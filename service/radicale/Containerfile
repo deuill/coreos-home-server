@@ -1,20 +1,19 @@
 FROM docker.io/debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb
-ARG VERSION=d7ce2f0b98589400b0e1718cfd7bb29b7ebeaebe
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-venv gettext curl
+    python3 python3-pip python3-venv python3-pytz-deprecation-shim curl
 
+ARG VERSION=3.2.0 # renovate: datasource=github-releases depName=Kozea/Radicale extractVersion=^v(?<version>.*)$
 RUN python3 -m venv /venv && \
-    /venv/bin/pip install https://github.com/Kozea/Radicale/archive/${VERSION}.tar.gz && \
+    /venv/bin/pip install https://github.com/Kozea/Radicale/archive/v${VERSION}.tar.gz && \
     /venv/bin/pip install --no-deps https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
 
-RUN addgroup --system --gid 15232 radicale
-RUN adduser --system --uid 15232 --ingroup radicale --home /var/lib/radicale radicale
+RUN adduser --system --group --uid 10000 --home /var/lib/radicale radicale
 
-COPY --chown=radicale:radicale container/config /etc/radicale
+COPY container/config /etc/radicale
 COPY container/run-radicale /run-radicale
 
-USER radicale
 EXPOSE 5232
-
 ENTRYPOINT ["/run-radicale"]
