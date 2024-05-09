@@ -10,12 +10,12 @@ EnvironmentFile=%E/coreos-home-server/gitea/gitea.env
 Image=localhost/gitea:latest
 PodmanArgs=--security-opt label=disable --entrypoint /run-gitea-actions
 Volume=%N:/var/lib/%N:z
-Volume=/tmp/runner-token:/etc/gitea/runner-token
+Volume=/tmp/gitea/actions/runner-token:/etc/gitea/runner-token
 Volume=/run/gitea-actions/podman.sock:/run/gitea-actions/podman.sock
 
 [Service]
-ExecStartPre=/bin/bash -c 'podman exec gitea gosu git /usr/bin/gitea -c /etc/gitea/config.ini actions generate-runner-token > /tmp/runner-token'
-PrivateTmp=true
+ExecStartPre=/bin/install --mode 0700 -d /tmp/gitea-actions
+ExecStartPre=/bin/bash -c 'podman exec gitea gosu git /usr/bin/gitea -c /etc/gitea/config.ini actions generate-runner-token > /tmp/gitea-actions/runner-token'
 Restart=on-failure
 
 [Install]
