@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb AS builder
-ARG VERSION=0.52.0 # renovate: datasource=github-releases depName=navidrome/navidrome extractVersion=^v(?<version>.*)$
+ARG VERSION=0.52.5 # renovate: datasource=github-releases depName=navidrome/navidrome extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
 ADD https://github.com/navidrome/navidrome/releases/download/v${VERSION}/navidrome_${VERSION}_linux_amd64.tar.gz /src.tar.gz
