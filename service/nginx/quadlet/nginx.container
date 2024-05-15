@@ -9,7 +9,7 @@ ContainerName=%N
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost/cdn-cgi/health
 Image=localhost/%N:latest
 Network=internal
-PodmanArgs=--sdnotify=healthy
+Notify=healthy
 PublishPort=80:80
 PublishPort=443:443
 Volume=nginx-conf:/etc/nginx/conf.d:z

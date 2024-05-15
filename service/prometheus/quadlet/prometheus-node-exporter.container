@@ -7,12 +7,14 @@ After=grafana-dashboard@prometheus-node-exporter.service
 AutoUpdate=local
 AddCapability=SYS_TIME
 ContainerName=%N
+Entrypoint=/usr/bin/prometheus-node-exporter
 Environment=DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/var/run/dbus/system_bus_socket
 Exec=--path.rootfs=/host --collector.systemd
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9100
 Image=localhost/prometheus:latest
 Network=host
-PodmanArgs=--pid host --sdnotify=healthy --entrypoint /usr/bin/prometheus-node-exporter
+Notify=healthy
+PodmanArgs=--pid host
 Volume=/:/host:ro,rslave
 
 [Service]

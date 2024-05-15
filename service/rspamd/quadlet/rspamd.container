@@ -10,7 +10,7 @@ EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=sh -c 'rspamadm control stat > /dev/null || exit 1'
 Image=localhost/%N:latest
 Network=internal
-PodmanArgs=--sdnotify=healthy
+Notify=healthy
 Volume=%N:/var/lib/%N:z
 
 [Service]

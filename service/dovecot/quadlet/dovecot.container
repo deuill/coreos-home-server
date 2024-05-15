@@ -13,7 +13,7 @@ EnvironmentFile=%E/coreos-home-server/rspamd/rspamd.env
 HealthCmd=sh -c 'echo PING | nc -q 1 localhost 5001 | grep -q PONG'
 Image=localhost/%N:latest
 Network=internal
-PodmanArgs=--sdnotify=healthy
+Notify=healthy
 PublishPort=143:143
 PublishPort=993:993
 PublishPort=4190:4190

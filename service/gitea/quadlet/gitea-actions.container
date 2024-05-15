@@ -6,9 +6,10 @@ After=container-build@gitea.service gitea.service gitea-actions-podman.socket
 [Container]
 AutoUpdate=local
 ContainerName=%N
+Entrypoint=/run-gitea-actions
 EnvironmentFile=%E/coreos-home-server/gitea/gitea.env
 Image=localhost/gitea:latest
-PodmanArgs=--security-opt label=disable --entrypoint /run-gitea-actions
+SecurityLabelDisable=true
 Volume=%N:/var/lib/%N:z
 Volume=/tmp/gitea-actions/runner-token:/etc/gitea/runner-token
 Volume=/run/gitea-actions/podman.sock:/run/gitea-actions/podman.sock

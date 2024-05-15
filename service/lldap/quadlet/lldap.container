@@ -10,7 +10,7 @@ EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=/usr/bin/lldap healthcheck --config-file /etc/lldap/config.toml
 Image=localhost/%N:latest
 Network=internal
-PodmanArgs=--sdnotify=healthy
+Notify=healthy
 Volume=%N:/var/lib/%N:z
 
 [Service]

@@ -9,6 +9,7 @@ ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=/run-healthcheck $COTURN_EXTERNAL_IP $COTURN_AUTH_SECRET
 Image=localhost/%N:latest
+Notify=healthy
 PublishPort=3478:3478
 PublishPort=3478:3478/udp
 PublishPort=3479:3479
@@ -17,7 +18,7 @@ PublishPort=5349:5349
 PublishPort=5349:5349/udp
 PublishPort=5350:5350
 PublishPort=5350:5350/udp
-PodmanArgs=--publish ${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}:${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}/udp --sdnotify=healthy
+PodmanArgs=--publish ${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}:${COTURN_RELAY_PORT_MIN}-${COTURN_RELAY_PORT_MAX}/udp
 Volume=%N:/var/lib/%N:z
 Volume=letsencrypt-certificates:/etc/ssl/private:z,ro
 
