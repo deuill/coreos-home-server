@@ -16,7 +16,6 @@ ignition:
       - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
       - local: service/rss2email/spec.ign
-      - local: service/navidrome/spec.ign
       - local: service/coturn/spec.ign
       - local: service/rclone/spec.ign
       - local: service/prometheus/spec.ign
@@ -111,14 +110,6 @@ systemd:
           contents: |
             [Service]
             Environment=UPSTREAM_HOST=radicale UPSTREAM_PORT=5232
-
-    - name: nginx-proxy-http@music.localhost.service
-      enabled: true
-      dropins:
-        - name: navidrome-upstream.conf
-          contents: |
-            [Service]
-            Environment=UPSTREAM_HOST=navidrome UPSTREAM_PORT=4533
 
     - name: nginx-proxy-http@metrics.localhost.service
       enabled: true
