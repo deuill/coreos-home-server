@@ -5,7 +5,7 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-r
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     python3 python3-pip python3-venv python3-pytz-deprecation-shim curl
 
-ARG VERSION=3.2.0 # renovate: datasource=github-releases depName=Kozea/Radicale extractVersion=^v(?<version>.*)$
+ARG VERSION=3.2.1 # renovate: datasource=github-releases depName=Kozea/Radicale extractVersion=^v(?<version>.*)$
 RUN python3 -m venv /venv && \
     /venv/bin/pip install https://github.com/Kozea/Radicale/archive/v${VERSION}.tar.gz && \
     /venv/bin/pip install --no-deps https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
