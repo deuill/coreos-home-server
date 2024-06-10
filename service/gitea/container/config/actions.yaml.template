@@ -11,7 +11,7 @@ runner:
   # The timeout for fetching the job from the Gitea instance.
   fetch_timeout: 5s
   # The interval for fetching the job from the Gitea instance.
-  fetch_interval: 2s
+  fetch_interval: 30s
   # The labels of a runner are used to determine which jobs the runner can run, and how to run them.
   labels:
     - "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
