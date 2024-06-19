@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:67f3931ad8cb1967beec602d8c0506af1e37e8d73c2a0b38b181ec5d8560d395 AS builder
-ARG VERSION=2.52.0 # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.*)$
+ARG VERSION=2.53.0 # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
 ADD https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz /src.tar.gz
