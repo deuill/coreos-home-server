@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim@sha256:67f3931ad8cb1967beec602d8c0506af1e37e
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
-ARG VERSION=3.7.10-0+deb12u1 # renovate: datasource=repology depName=debian_12/postfix versioning=loose
+ARG VERSION=3.7.11-0+deb12u1 # renovate: datasource=repology depName=debian_12/postfix versioning=loose
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     postfix=${VERSION}* postfix-mysql=${VERSION}* syslog-ng-core netcat-traditional
 
