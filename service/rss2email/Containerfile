@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.22-bookworm@sha256:96788441ff71144c93fc67577f2ea99fd4474f8e45c084e9445fe3454387de5b AS builder
+FROM docker.io/golang:1.22-bookworm@sha256:96645c4db9b0db506086504f79508e5e91cec782c6b035ccb7c80a14b8fa23bb AS builder
 ARG VERSION=aa3296fcc2883c345d3581ac670f652b2badedb5
 
 RUN GOBIN=/build/usr/bin go install github.com/skx/rss2email@${VERSION}
