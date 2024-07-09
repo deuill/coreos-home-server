@@ -8,6 +8,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 COPY container/config /etc/postfix
 COPY container/run-postfix /run-postfix
+COPY container/run-healthcheck /run-healthcheck
 
 RUN adduser --system --group --uid 5000 --home /var/mail/virtual virtual
 

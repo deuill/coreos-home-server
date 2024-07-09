@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+HOST="$1" PORT="$2"
+
+for msg in \
+    "EHLO localhost" \
+    "MAIL FROM: <healthcheck@localhost>" \
+    "RCPT TO: <root@localhost>" \
+    "RSET" \
+    "QUIT"
+do
+    sleep 0.1
+    printf '%s\r\n' "$msg"
+done | nc "$HOST" "$PORT" 2>&1 | grep -qE "^221[ ]+2.0.0[ ]+(Goodb|B)?ye"
