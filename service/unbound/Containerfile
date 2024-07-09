@@ -1,0 +1,26 @@
+FROM docker.io/debian:bookworm-slim@sha256:f528891ab1aa484bf7233dbcc84f3c806c3e427571d75510a9d74bb5ec535b33 AS builder
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates build-essential flex bison pkg-config git libssl-dev libexpat1-dev libhiredis-dev
+
+ARG VERSION=1.20.0 # renovate: datasource=github-releases depName=NLnetLabs/unbound extractVersion=^release-(?<version>.*)$
+RUN git clone --branch release-${VERSION} --depth=1 https://github.com/NLnetLabs/unbound.git /src && \
+    mkdir /build && cd /src && ./configure --prefix=/usr --enable-cachedb --with-libhiredis && \
+    make && make install DESTDIR=/build
+
+FROM docker.io/debian:bookworm-slim@sha256:f528891ab1aa484bf7233dbcc84f3c806c3e427571d75510a9d74bb5ec535b33
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    libssl3 libexpat1 libhiredis0.14 ldnsutils
+
+RUN adduser --system --group --uid 10000 --home /var/lib/unbound unbound
+
+COPY --from=builder /build /
+COPY container/config /etc/unbound
+
+ADD --chmod=0644 https://www.internic.net/domain/named.cache /etc/unbound/root.hints
+RUN install -d --owner unbound --group unbound /etc/unbound/trust && gosu unbound unbound-anchor -a /etc/unbound/trust/root.key || exit 0
+RUN unbound-checkconf /etc/unbound/unbound.conf
+
+ENTRYPOINT ["/usr/sbin/unbound", "-c", "/etc/unbound/unbound.conf"]

@@ -1,0 +1,19 @@
+[Unit]
+Description=Unbound Recursive DNS Resolver
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
+
+[Container]
+AutoUpdate=local
+ContainerName=%N
+HealthCmd=timeout 5s drill -Q example.com @localhost
+Image=localhost/%N:latest
+Network=internal
+Notify=healthy
+Volume=%N:/var/lib/%N:z
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

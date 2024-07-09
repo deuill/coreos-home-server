@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.3.0
+storage:
+  trees:
+    - path: /etc/coreos-home-server/unbound
+      local: service/unbound/
+    - path: /etc/containers/systemd
+      local: service/unbound/quadlet/

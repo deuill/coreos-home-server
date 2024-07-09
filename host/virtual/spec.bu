@@ -25,6 +25,7 @@ ignition:
       - local: service/lldap/spec.ign
       - local: service/gotosocial/spec.ign
       - local: service/shiori/spec.ign
+      - local: service/unbound/spec.ign
 
 passwd:
   users:
