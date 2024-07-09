@@ -1,7 +1,7 @@
 [Unit]
 Description=Unbound Recursive DNS Resolver
-Wants=container-build@%N.service container-volume@%N.service
-After=container-build@%N.service container-volume@%N.service
+Wants=container-build@%N.service container-volume@%N.service redis.service
+After=container-build@%N.service container-volume@%N.service redis.service
 
 [Container]
 AutoUpdate=local
