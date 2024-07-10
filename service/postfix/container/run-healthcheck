@@ -12,4 +12,4 @@ for msg in \
 do
     sleep 0.1
     printf '%s\r\n' "$msg"
-done | nc "$HOST" "$PORT" 2>&1 | grep -qE "^221[ ]+2.0.0[ ]+(Goodb|B)?ye"
+done | nc "$HOST" "$PORT" 2>&1 | grep -qE "^221[ ]+2.0.0"
