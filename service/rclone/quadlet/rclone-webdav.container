@@ -11,6 +11,8 @@ EnvironmentFile=%E/coreos-home-server/rclone/rclone.env
 Exec=serve webdav --addr :8080 --auth-proxy /usr/bin/ldap-auth-proxy
 Image=localhost/rclone:latest
 Network=internal
+Network=lldap
+Network=nginx
 Volume=%N:/var/lib/rclone-storage:z
 
 [Service]

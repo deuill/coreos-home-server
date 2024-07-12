@@ -1,7 +1,7 @@
 [Unit]
 Description=Postfix SMTP server
-Wants=container-build@%N.service dovecot.service
-After=container-build@%N.service dovecot.service
+Wants=container-build@%N.service dovecot.service rspamd.service
+After=container-build@%N.service dovecot.service rspamd.service
 
 [Container]
 AutoUpdate=local
@@ -10,6 +10,9 @@ EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=/run-healthcheck localhost 25
 Image=localhost/%N:latest
 Network=internal
+Network=postfix
+Network=dovecot
+Network=rspamd
 Notify=healthy
 PublishPort=25:25
 PublishPort=465:465

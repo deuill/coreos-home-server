@@ -9,6 +9,7 @@ ContainerName=%N
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost/cdn-cgi/health
 Image=localhost/%N:latest
 Network=internal
+Network=nginx
 Notify=healthy
 PublishPort=80:80
 PublishPort=443:443

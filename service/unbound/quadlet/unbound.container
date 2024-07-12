@@ -9,6 +9,8 @@ ContainerName=%N
 HealthCmd=timeout 5s drill -Q example.com @localhost
 Image=localhost/%N:latest
 Network=internal
+Network=unbound
+Network=redis
 Notify=healthy
 Volume=%N:/var/lib/%N:z
 

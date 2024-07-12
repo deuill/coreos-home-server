@@ -10,6 +10,9 @@ EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:8080/api/health
 Image=localhost/%N:latest
 Network=internal
+Network=lldap
+Network=nginx
+Network=prometheus
 Notify=healthy
 Volume=%N:/var/lib/%N:z
 

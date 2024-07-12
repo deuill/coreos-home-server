@@ -10,6 +10,7 @@ Entrypoint=/usr/bin/prometheus-smartctl-exporter
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9633
 Image=localhost/prometheus:latest
 Network=internal
+Network=prometheus
 Notify=healthy
 PodmanArgs=--privileged
 User=root

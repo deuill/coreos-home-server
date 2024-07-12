@@ -12,6 +12,7 @@ Exec=--collector.enable-all
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9882
 Image=localhost/prometheus:latest
 Network=internal
+Network=prometheus
 Notify=healthy
 SecurityLabelDisable=true
 User=root

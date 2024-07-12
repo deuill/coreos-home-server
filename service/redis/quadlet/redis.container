@@ -9,6 +9,7 @@ ContainerName=%N
 HealthCmd=sh -c 'redis-cli PING | grep -q PONG'
 Image=localhost/%N:latest
 Network=internal
+Network=redis
 Notify=true
 Volume=%N:/var/lib/%N:z
 

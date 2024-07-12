@@ -10,6 +10,7 @@ EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=mariadb-admin -uroot -p$MYSQL_ROOT_PASSWORD ping
 Image=localhost/%N:latest
 Network=internal
+Network=mariadb
 Notify=true
 Volume=%N:/var/lib/mysql:z
 

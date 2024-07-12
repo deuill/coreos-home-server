@@ -9,6 +9,7 @@ ContainerName=%N
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:9090
 Image=localhost/%N:latest
 Network=internal
+Network=prometheus
 Notify=healthy
 Volume=%N:/var/lib/%N:z
 Volume=%N-service:/etc/%N/service.d:z

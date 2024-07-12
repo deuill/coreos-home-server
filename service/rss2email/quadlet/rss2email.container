@@ -8,6 +8,7 @@ ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 Image=localhost/%N:latest
 Network=internal
+Network=postfix
 Volume=%E/coreos-home-server/%N/service/feeds:/etc/%N/feeds.d:z,ro
 Volume=%N:/var/lib/%N:z
 

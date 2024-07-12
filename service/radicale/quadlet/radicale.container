@@ -10,6 +10,8 @@ EnvironmentFile=%E/coreos-home-server/%N/%N.env
 HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:5232
 Image=localhost/%N:latest
 Network=internal
+Network=mail
+Network=nginx
 Notify=healthy
 Volume=%N:/var/lib/%N:z
 

@@ -11,7 +11,8 @@ SyslogIdentifier=%N
 Restart=on-failure
 Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%E/coreos-home-server/prosody/prosody.env
-ExecStart=/bin/podman run --replace --name %p-%i --net internal --sdnotify=conmon \
+ExecStart=/bin/podman run --replace --name %p-%i --sdnotify=conmon \
+                          --net internal --net prosody \
                           --entrypoint '["/venv/%i/bin/python", "-m", "slidge"]' \
                           --env-file %E/coreos-home-server/%p/%p.env \
                           --volume %p-%i:/var/lib/slidge:z \

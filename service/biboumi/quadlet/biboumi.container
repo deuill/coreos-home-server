@@ -9,6 +9,7 @@ ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
 Image=localhost/%N:latest
 Network=internal
+Network=prosody
 Volume=%N:/var/lib/%N:z
 
 [Service]
