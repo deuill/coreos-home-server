@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:f528891ab1aa484bf7233dbcc84f3c806c3e427571d75510a9d74bb5ec535b33 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:5f7d5664eae4a192c2d2d6cb67fc3f3c7891a8722cd2903cc35aa649a12b0c8d AS builder
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential flex bison pkg-config git libssl-dev libexpat1-dev libhiredis-dev
 
@@ -7,7 +7,7 @@ RUN git clone --branch release-${VERSION} --depth=1 https://github.com/NLnetLabs
     mkdir /build && cd /src && ./configure --prefix=/usr --enable-cachedb --with-libhiredis && \
     make && make install DESTDIR=/build
 
-FROM docker.io/debian:bookworm-slim@sha256:f528891ab1aa484bf7233dbcc84f3c806c3e427571d75510a9d74bb5ec535b33
+FROM docker.io/debian:bookworm-slim@sha256:5f7d5664eae4a192c2d2d6cb67fc3f3c7891a8722cd2903cc35aa649a12b0c8d
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
