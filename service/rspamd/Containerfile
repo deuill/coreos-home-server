@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim@sha256:5f7d5664eae4a192c2d2d6cb67fc3f3c7891a
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
-ARG VERSION=3.9.0 # renovate: datasource=github-releases depName=rspamd/rspamd
+ARG VERSION=3.9.1 # renovate: datasource=github-releases depName=rspamd/rspamd
 
 ADD --chown=_apt https://rspamd.com/apt-stable/gpg.key /etc/apt/trusted.gpg.d/rspamd.asc
 RUN echo "deb https://rspamd.com/apt-stable/ bookworm main" > /etc/apt/sources.list.d/rspamd.list && \
