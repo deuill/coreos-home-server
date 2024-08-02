@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:5f7d5664eae4a192c2d2d6cb67fc3f3c7891a8722cd2903cc35aa649a12b0c8d AS builder
-ARG VERSION=11.1.0 # renovate: datasource=github-releases depName=grafana/grafana extractVersion=^v(?<version>.*)$
+ARG VERSION=11.1.3 # renovate: datasource=github-releases depName=grafana/grafana extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
 
