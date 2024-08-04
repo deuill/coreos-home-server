@@ -8,12 +8,14 @@ CONF_DIR=/etc/rss2email/feeds.d
 
 # Parse invividual feed configuration directories.
 process() {
-    printf "Processing feeds for %s...\n" "$2"
-    install -D --owner rss2email --group rss2email --target-directory "$DATA_DIR/feeds/$2/.rss2email" "$1"/*
-    chown rss2email:rss2email "$DATA_DIR/feeds/$2/.rss2email"
-    gosu rss2email sh -c "HOME=$DATA_DIR/feeds/$2 rss2email cron -verbose $2"
+    echo "Processing feeds for $1..."
+
+    RSS2EMAIL_TO="$1" envsubst < "/etc/rss2email/rss2email.conf.template" > "/etc/rss2email/$1.conf"
+    cat "$CONF_DIR/$1.conf" >> "/etc/rss2email/$1.conf"
+
+    gosu rss2email r2e --config "/etc/rss2email/$1.conf" --data "$DATA_DIR/$1.json" run
 }
 
-for feed in "$CONF_DIR"/*/feeds.txt; do
-    process "$(dirname "$feed")" "$(basename "$(dirname "$feed")")"
+for feed in "$CONF_DIR"/*.conf; do
+    process "$(basename "$feed" .conf)"
 done

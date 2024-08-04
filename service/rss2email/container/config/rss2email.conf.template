@@ -1,0 +1,36 @@
+[DEFAULT]
+from = ${RSS2EMAIL_FROM}
+to = ${RSS2EMAIL_TO}
+user-agent = rss2email/1.0
+use-publisher-email = True
+date-header = True
+html-mail = True
+multipart-html = True
+use-css = True
+css =
+    html {
+        margin: 0 auto;
+        max-width: 900px;
+        padding: 1em 0;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0.5em 0;
+        text-decoration: none;
+    }
+    img {
+        max-width: 100%;
+    }
+    p, ul, ol {
+        color: #1d1d1d;
+        font-family: sans-serif;
+        line-height: 1.5;
+        margin-bottom: 1em;
+    }
+email-protocol = smtp
+smtp-auth = True
+smtp-username = ${RSS2EMAIL_SMTP_USERNAME}
+smtp-password = ${RSS2EMAIL_SMTP_PASSWORD}
+smtp-server = ${RSS2EMAIL_SMTP_HOST}
+smtp-port = ${RSS2EMAIL_SMTP_PORT}
+smtp-ssl = False
+verbose = info

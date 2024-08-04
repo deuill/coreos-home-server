@@ -208,12 +208,14 @@ storage:
           TEST_ENV=foobar
 
     # Feed configuration for RSS2Email.
-    - path: /etc/coreos-home-server/rss2email/service/feeds/test@localhost/feeds.txt
+    - path: /etc/coreos-home-server/rss2email/service/feeds/test@localhost.conf
       mode: 0644
       contents:
         inline: |
-          https://feeds.bbci.co.uk/news/world/rss.xml
-          https://pluralistic.net/feed/
+          [feed.bbc]
+          url = https://feeds.bbci.co.uk/news/world/rss.xml
+          [feed.pluralistic]
+          url = https://pluralistic.net/feed/
 
     # Include pre-generated certificates for localhost domain, as we're not using Let's Encrypt in
     # generating certificates for the virtual host.
