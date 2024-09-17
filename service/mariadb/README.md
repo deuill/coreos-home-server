@@ -31,7 +31,7 @@ Wants=container-build@example.service mariadb.service
 After=container-build@example.service mariadb.service
 ```
 
-MariaDB will then be guaranteed to be running before the example service is.
+MariaDB will then be guaranteed to be running before the example service is. Assuming, then, that both services are on the same network, connections to MariaDB can be made via the `mariadb` DNS name.
 
 ## Database Migrations
 
