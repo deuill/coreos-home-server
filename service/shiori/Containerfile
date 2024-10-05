@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:ad86386827b083b3d71139050b47ffb32bbd9559ea9b1345a739b14fec2d9ecf AS builder
-ARG VERSION=1.7.0 # renovate: datasource=github-releases depName=go-shiori/shiori extractVersion=^v(?<version>.*)$
+ARG VERSION=1.7.1 # renovate: datasource=github-releases depName=go-shiori/shiori extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
 
