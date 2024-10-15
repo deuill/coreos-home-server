@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:ad86386827b083b3d71139050b47ffb32bbd9559ea9b1345a739b14fec2d9ecf AS builder
-ARG VERSION=0.16.0 # renovate: datasource=github-releases depName=superseriousbusiness/gotosocial extractVersion=^v(?<version>.*)$
+ARG VERSION=0.17.0 # renovate: datasource=github-releases depName=superseriousbusiness/gotosocial extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
 ADD https://github.com/superseriousbusiness/gotosocial/releases/download/v${VERSION}/gotosocial_${VERSION}_linux_amd64.tar.gz /src.tar.gz
