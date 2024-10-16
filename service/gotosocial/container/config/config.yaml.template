@@ -2,6 +2,11 @@
 ##### GENERAL CONFIG ######
 ###########################
 
+# String. Log level to use throughout the application. Must be lower-case.
+# Options: ["trace","debug","info","warn","error","fatal"]
+# Default: "info"
+log-level: "${GOTOSOCIAL_LOG_LEVEL}"
+
 # Hostname that this server will be reachable at. Defaults to localhost for local testing,
 # but you should *definitely* change this when running for real, or your server won't work at all.
 # DO NOT change this after your server has already run once, or you will break things!
