@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:e46f120bae54335b5d53129123104b3d9d47321fbb2a5573db0617bbac028cd5 AS builder-gitea
+FROM docker.io/debian:bookworm-slim@sha256:36e591f228bb9b99348f584e83f16e012c33ba5cad44ef5981a1d7c0a93eca22 AS builder-gitea
 ARG VERSION=1.22.3 # renovate: datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
 
 ADD https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64 /src/gitea
@@ -10,7 +10,7 @@ ARG VERSION=0.2.11 # renovate: datasource=gitea-releases depName=gitea/act_runne
 ADD https://dl.gitea.com/act_runner/${VERSION}/act_runner-${VERSION}-linux-amd64 /src/act_runner
 RUN install -D --mode 0755 /src/act_runner /build/usr/bin/act_runner
 
-FROM docker.io/debian:bookworm-slim@sha256:e46f120bae54335b5d53129123104b3d9d47321fbb2a5573db0617bbac028cd5
+FROM docker.io/debian:bookworm-slim@sha256:36e591f228bb9b99348f584e83f16e012c33ba5cad44ef5981a1d7c0a93eca22
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
