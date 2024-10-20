@@ -2,12 +2,16 @@
 hosts = 0.0.0.0:5232
 
 [web]
-type = none
+type = internal
 
 [auth]
-type = radicale_imap
-imap_host = ${RADICALE_IMAP_AUTH_HOST}:${RADICALE_IMAP_AUTH_PORT}
-imap_security = starttls
+type = ldap
+ldap_uri = ${RADICALE_AUTH_LDAP_HOST}
+ldap_base = ou=people,dc=ldap,dc=local
+ldap_reader_dn = uid=${RADICALE_AUTH_LDAP_BIND_UID},ou=people,dc=ldap,dc=local
+ldap_secret = ${RADICALE_AUTH_LDAP_BIND_PASSWORD}
+ldap_filter = (&(memberof=cn=dav_user,ou=groups,dc=ldap,dc=local)(mail={0}))
+lc_username = True
 
 [logging]
 level = info

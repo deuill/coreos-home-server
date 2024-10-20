@@ -1,7 +1,7 @@
 [Unit]
 Description=Radicale CalDAV and CardDAV Server
-Wants=container-build@%N.service container-volume@%N.service dovecot.service
-After=container-build@%N.service container-volume@%N.service dovecot.service
+Wants=container-build@%N.service container-volume@%N.service lldap.service
+After=container-build@%N.service container-volume@%N.service lldap.service
 
 [Container]
 AutoUpdate=local

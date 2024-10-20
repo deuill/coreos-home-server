@@ -7,8 +7,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 ARG VERSION=3.3.0 # renovate: datasource=github-releases depName=Kozea/Radicale extractVersion=^v(?<version>.*)$
 RUN python3 -m venv /venv && \
-    /venv/bin/pip install https://github.com/Kozea/Radicale/archive/v${VERSION}.tar.gz && \
-    /venv/bin/pip install --no-deps https://github.com/Unrud/RadicaleIMAP/archive/master.tar.gz
+    /venv/bin/pip install ldap3 && \
+    /venv/bin/pip install https://github.com/Kozea/Radicale/archive/v${VERSION}.tar.gz
 
 RUN adduser --system --group --uid 10000 --home /var/lib/radicale radicale
 
