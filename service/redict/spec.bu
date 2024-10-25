@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.3.0
+storage:
+  trees:
+    - path: /etc/coreos-home-server/redict
+      local: service/redict/
+    - path: /etc/containers/systemd
+      local: service/redict/quadlet/

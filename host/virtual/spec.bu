@@ -5,7 +5,7 @@ ignition:
     merge:
       - local: host/base/spec.ign
       - local: host/base/logging.ign
-      - local: service/redis/spec.ign
+      - local: service/redict/spec.ign
       - local: service/mariadb/spec.ign
       - local: service/nginx/spec.ign
       - local: service/letsencrypt/spec.ign

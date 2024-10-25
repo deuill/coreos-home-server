@@ -1,12 +1,12 @@
 [Unit]
-Description=Redis Key-Value Store
+Description=Redict Key-Value Store
 Wants=container-build@%N.service container-volume@%N.service
 After=container-build@%N.service container-volume@%N.service
 
 [Container]
 AutoUpdate=local
 ContainerName=%N
-HealthCmd=sh -c 'redis-cli PING | grep -q PONG'
+HealthCmd=sh -c 'redict-cli PING | grep -q PONG'
 Image=localhost/%N:latest
 Network=internal
 Notify=true
