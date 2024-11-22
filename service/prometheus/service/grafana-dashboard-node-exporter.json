@@ -2688,9 +2688,9 @@
           "mappings": [
             {
               "options": {
-                "inactive": {
+                "0": {
                   "color": "#808080",
-                  "index": 0,
+                  "index": 5,
                   "text": "Inactive"
                 },
                 "activating": {
@@ -2712,6 +2712,11 @@
                   "color": "red",
                   "index": 4,
                   "text": "Failed"
+                },
+                "inactive": {
+                  "color": "#808080",
+                  "index": 0,
+                  "text": "Inactive"
                 }
               },
               "type": "value"
@@ -2743,7 +2748,7 @@
         "legend": {
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "mergeValues": true,
         "perPage": 0,
@@ -25241,6 +25246,6 @@
   "timezone": "browser",
   "title": "Node Metrics",
   "uid": "rYdddlPWk",
-  "version": 43,
+  "version": 44,
   "weekStart": ""
 }
