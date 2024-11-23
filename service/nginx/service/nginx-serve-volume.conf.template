@@ -1,3 +1,8 @@
+map $http_x_autoindex $autoindex_status {
+    default @autoindex_default;
+    on      @autoindex_on;
+}
+
 server {
     listen 8080;
     server_name ${SERVER_NAME};
@@ -6,7 +11,18 @@ server {
     include server.conf;
 
     location / {
+        try_files $uri $autoindex_status;
+    }
+
+    location @autoindex_default {
         autoindex ${AUTO_INDEX};
+        autoindex_format xml;
+        xslt_stylesheet autoindex.xslt;
+        xslt_string_param uri $uri;
+    }
+
+    location @autoindex_on {
+        autoindex on;
         autoindex_format xml;
         xslt_stylesheet autoindex.xslt;
         xslt_string_param uri $uri;
