@@ -6,7 +6,8 @@ ARG VERSION=1.27.2 # renovate: datasource=github-tags depName=nginx/nginx extrac
 
 ADD --chown=_apt https://nginx.org/keys/nginx_signing.key /etc/apt/trusted.gpg.d/nginx.asc
 RUN echo "deb https://nginx.org/packages/mainline/debian bookworm nginx" > /etc/apt/sources.list.d/nginx.list && \
-    apt-get update && apt-get install -y --no-install-recommends curl nginx="${VERSION}*" && \
+    apt-get update -y && apt-get install -y --no-install-recommends curl \
+    nginx="${VERSION}*" nginx-module-xslt="${VERSION}*" && \
     rm -Rf /etc/nginx
 
 RUN addgroup --system --gid 10000 nginx-shared

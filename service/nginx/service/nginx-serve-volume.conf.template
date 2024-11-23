@@ -4,4 +4,11 @@ server {
 
     root ${SERVER_ROOT};
     include server.conf;
+
+    location / {
+        autoindex ${AUTO_INDEX};
+        autoindex_format xml;
+        xslt_stylesheet autoindex.xslt;
+        xslt_string_param uri $uri;
+    }
 }

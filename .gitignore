@@ -2,6 +2,7 @@
 .DS_Store
 .idea
 .tmp/
+.mypy_cache/
 
 # Ignore custom hosts.
 host/*

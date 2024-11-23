@@ -4,6 +4,7 @@ server {
 
     root /srv;
     include server.conf;
+    include content-policy.conf;
 
     charset utf-8;
     index index.php index.html index.htm;
