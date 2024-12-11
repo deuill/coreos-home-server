@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim@sha256:1537a6a1cbc4b4fd401da800ee9480207e7dc
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential pkg-config git libevent-dev libssl-dev
 
-ARG VERSION=4.6.2 # renovate: datasource=github-releases depName=coturn/coturn
+ARG VERSION=4.6.3 # renovate: datasource=github-releases depName=coturn/coturn
 RUN git clone --branch ${VERSION} --depth=1 https://github.com/coturn/coturn.git /src && \
     mkdir /build && cd /src && ./configure --prefix=/usr --turndbdir=/var/lib/coturn && \
     make && make install DESTDIR=/build
