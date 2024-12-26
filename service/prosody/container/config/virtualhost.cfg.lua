@@ -31,8 +31,8 @@ Component(host_external) "muc"
 -- The component responsible for HTTP file uploads.
 Component(host_upload) "http_file_share"
   http_file_share_expire_after = 60 * 60 * 24 * 31
-  http_file_share_size_limit   = 1024 * 1024 * 32
-  http_file_share_daily_quota  = 1024 * 1024 * 128
+  http_file_share_size_limit   = 1024 * 1024 * 128
+  http_file_share_daily_quota  = 1024 * 1024 * 512
   http_file_share_global_quota = 1024 * 1024 * 1024 * 5
   http_host                    = host_external
   http_external_url            = "https://" .. host_external .. "/"
