@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim@sha256:d365f4920711a9074c4bcd178e8f457ee5925
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
-ARG VERSION=7.3.0 # renovate: datasource=repology depName=debian_12_backports/redict versioning=loose
+ARG VERSION=7.3.2+ds-1~bpo12+1 # renovate: datasource=repology depName=debian_12_backports/redict versioning=loose
 RUN echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
     apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports \
     redict-server="${VERSION}*"
