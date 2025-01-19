@@ -8,7 +8,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 RUN adduser --system --group --uid 10000 --home /var/lib/prosody prosody && \
     install --owner prosody --group prosody --directory /run/prosody
 
-ARG VERSION=0.12.4 # renovate: datasource=github-tags depName=bjc/prosody
+ARG VERSION=0.12.4 # renovate: datasource=deb depName=prosody registryUrl=https://packages.prosody.im/debian?release=bookworm&components=main&binaryArch=amd64
 ADD --chown=_apt https://prosody.im/files/prosody-debian-packages.key /etc/apt/trusted.gpg.d/prosody.gpg
 RUN echo "deb https://packages.prosody.im/debian bookworm main" > /etc/apt/sources.list.d/prosody.list && \
     apt-get update -y && apt-get install -y --no-install-recommends \
