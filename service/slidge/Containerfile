@@ -6,11 +6,12 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 ENV PATH=/venv/bin:/root/.local/bin:$PATH
 RUN python3 -m venv /venv && python3 -m pip install wheel
 RUN curl -fL https://install.python-poetry.org | python3 -
+RUN python3 -m pip install poetry-plugin-export
 
 FROM builder-base AS builder-discord
 
-ARG VERSION=095eba37fa63591adc35adcb228e75ce79bf6717 # renovate: datasource=git-refs depName=slidcord packageName=https://git.sr.ht/~nicoco/slidcord versioning=git
-RUN git clone https://git.sr.ht/~nicoco/slidcord /src && \
+ARG VERSION=095eba37fa63591adc35adcb228e75ce79bf6717
+RUN git clone https://codeberg.org/slidge/slidcord.git /src && \
     cd /src && git reset --hard ${VERSION}
 
 RUN cd /src && poetry export --without-hashes > requirements.txt && \
@@ -43,8 +44,8 @@ RUN go install github.com/go-python/gopy@latest && \
 
 RUN python3 -m pip install pybindgen
 
-ARG VERSION=b3831cb3c0692945998e5eaddd1c4d230097d5aa # renovate: datasource=git-refs depName=slidge-whatsapp packageName=https://git.sr.ht/~nicoco/slidge-whatsapp versioning=git
-RUN git clone https://git.sr.ht/~nicoco/slidge-whatsapp /src && \
+ARG VERSION=e592d5f6804b6f2e2482298e0993025c0a93bf2f
+RUN git clone https://codeberg.org/slidge/slidge-whatsapp.git /src && \
     cd /src && git reset --hard ${VERSION}
 
 RUN cd /src && poetry export --without-hashes > requirements.txt && \
