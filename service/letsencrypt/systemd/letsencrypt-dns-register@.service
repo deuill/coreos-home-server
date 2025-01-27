@@ -7,13 +7,13 @@ Before=letsencrypt-dns-renew@%i.timer
 [Service]
 Type=oneshot
 SyslogIdentifier=%N
+Environment=CERT_DOMAIN="%I"
 EnvironmentFile=%E/coreos-home-server/letsencrypt/letsencrypt.env
-ExecStart=/bin/podman run --replace --rm --name letsencrypt-register-%i \
-                          --env-file %E/coreos-home-server/letsencrypt/letsencrypt.env \
+ExecStart=/bin/podman run --rm --env-file %E/coreos-home-server/letsencrypt/letsencrypt.env \
                           --volume letsencrypt:/var/lib/letsencrypt:z \
                           --volume letsencrypt-certificates:/var/lib/letsencrypt-certificates:z \
                           localhost/letsencrypt:latest \
-                          --accept-tos --pem --path /var/lib/letsencrypt --domains "%i" \
+                          --accept-tos --pem --path /var/lib/letsencrypt --domains ${CERT_DOMAIN} \
                           --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} run \
                           --run-hook /run-hook
 
