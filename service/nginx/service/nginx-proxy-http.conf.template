@@ -21,7 +21,6 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-AutoIndex "${AUTO_INDEX}";
         proxy_pass $upstream_endpoint$request_uri;
-        proxy_redirect http://$upstream_endpoint /;
-        proxy_redirect http://${SERVER_NAME}:${UPSTREAM_PORT}${UPSTREAM_PATH} /;
+        proxy_redirect $upstream_endpoint /;
     }
 }
