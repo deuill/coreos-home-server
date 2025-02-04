@@ -31,51 +31,51 @@ plugin_paths = {"/usr/lib/prosody/modules", "/usr/lib/prosody/community-modules"
 -- Documentation for bundled modules can be found at: https://prosody.im/doc/modules
 modules_enabled = {
     -- Generally required
-    "roster"; -- Allow users to have a roster. Recommended ;)
+    "roster";   -- Allow users to have a roster. Recommended ;)
     "saslauth"; -- Authentication for clients and servers. Recommended if you want to log in.
-    "tls"; -- Add support for secure TLS on c2s/s2s connections
+    "tls";      -- Add support for secure TLS on c2s/s2s connections
     "dialback"; -- s2s dialback support
-    "disco"; -- Service discovery
-    "posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
+    "disco";    -- Service discovery
+    "posix";    -- POSIX functionality, sends server to background, enables syslog, etc.
 
     -- Not essential, but recommended
-    "carbons"; -- Keep multiple clients in sync
-    "pep"; -- Enables users to publish their mood, activity, playing music and more
-    "blocklist"; -- Allow users to block communications with other users
-    "vcard4"; -- Allow users to set vCards in v4 format.
+    "carbons";      -- Keep multiple clients in sync
+    "pep";          -- Enables users to publish their mood, activity, playing music and more
+    "blocklist";    -- Allow users to block communications with other users
+    "vcard4";       -- Allow users to set vCards in v4 format.
     "vcard_legacy"; -- Allow users to set vCards in legacy formats.
 
     -- Nice to have
-    "version"; -- Replies to server version requests
-    "uptime"; -- Report how long server has been running
-    "time"; -- Let others know the time here on this server
-    "ping"; -- Replies to XMPP pings with pongs
-    "mam"; -- Store messages in an archive and allow users to access it
-    "smacks"; -- Stream management for resuming dropped connections.
+    "version";    -- Replies to server version requests
+    "uptime";     -- Report how long server has been running
+    "time";       -- Let others know the time here on this server
+    "ping";       -- Replies to XMPP pings with pongs
+    "mam";        -- Store messages in an archive and allow users to access it
+    "smacks";     -- Stream management for resuming dropped connections.
     "csi_simple"; -- Enables simple traffic optimisation for clients that have reported themselves as inactive.
-    "privilege"; -- Allows components to have privileged access to the XMPP server.
+    "privilege";  -- Allows components to have privileged access to the XMPP server.
 
     -- Push notifications
-    "cloud_notify"; -- Support for push notifications.
-    "cloud_notify_filters"; -- Non-standard extensions for push notification filtering preferences.
+    "cloud_notify";            -- Support for push notifications.
+    "cloud_notify_filters";    -- Non-standard extensions for push notification filtering preferences.
     "cloud_notify_extensions"; -- Additional, non-standard extensions for push notification support.
 
     -- Spam/abuse management
-    "spam_reporting"; -- Allow users to report spam/abuse
+    "spam_reporting";     -- Allow users to report spam/abuse
     "watch_spam_reports"; -- Alert admins of spam/abuse reports by users
 
     -- Admin interfaces
     "admin_shell"; -- Allows for Prosody administration over a local shell
 
     -- HTTP modules
-    "websocket"; -- XMPP over WebSockets
+    "websocket";        -- XMPP over WebSockets
     "http_openmetrics"; -- Enables metrics collection in OpenMetrics-compatible format.
-    "http_health"; -- Enabled health-checks over HTTP.
+    "http_health";      -- Enabled health-checks over HTTP.
 
     -- Other specific functionality
-    "conversejs"; -- Web-based frontend for XMPP
-    "bookmarks"; -- Next-generation group-chat bookmarks
-    "turn_external"; -- Connect to TURN/STUN server
+    "conversejs";        -- Web -based frontend for XMPP
+    "bookmarks";         -- Next-generation group-chat bookmarks
+    "turn_external";     -- Connect to TURN/STUN server
     "reload_components"; -- Automatically reload components when they are added and removed.
 }
 
@@ -85,6 +85,9 @@ modules_disabled = {}
 
 -- Enable direct TLS connections for clients.
 c2s_direct_tls_ports = {5223}
+
+-- Enable direct TLS connections for servers.
+s2s_direct_tls_ports = {5270}
 
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
