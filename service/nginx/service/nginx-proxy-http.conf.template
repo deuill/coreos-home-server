@@ -22,5 +22,6 @@ server {
         proxy_set_header X-AutoIndex "${AUTO_INDEX}";
         proxy_pass $upstream_endpoint$request_uri;
         proxy_redirect $upstream_endpoint /;
+        proxy_redirect http://$host:${UPSTREAM_PORT}${UPSTREAM_PATH} /;
     }
 }
