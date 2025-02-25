@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:40b107342c492725bc7aacbe93a49945445191ae364184a6d24fedb28172f6f7 AS builder-base
+FROM docker.io/debian:bookworm-slim@sha256:12c396bd585df7ec21d5679bb6a83d4878bc4415ce926c9e5ea6426d23c60bdc AS builder-base
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
@@ -62,7 +62,7 @@ WORKDIR /src/slidge_whatsapp
 RUN gopy build -vm=python3 -output=generated -no-make=true .
 RUN cp -R /src/slidge_whatsapp /venv/lib/python3.11/site-packages/legacy_module
 
-FROM docker.io/debian:bookworm-slim@sha256:40b107342c492725bc7aacbe93a49945445191ae364184a6d24fedb28172f6f7
+FROM docker.io/debian:bookworm-slim@sha256:12c396bd585df7ec21d5679bb6a83d4878bc4415ce926c9e5ea6426d23c60bdc
 ENV PYTHONUNBUFFERED=1
 ENV SLIDGE_LEGACY_MODULE=legacy_module
 
