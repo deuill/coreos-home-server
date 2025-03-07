@@ -16,6 +16,7 @@ Volume=%N:/var/lib/%N:z
 [Service]
 TimeoutStartSec=180
 Restart=on-failure
+ExecReload=/bin/podman exec %N sh -c 'kill -HUP 1'
 
 [Install]
 WantedBy=multi-user.target
