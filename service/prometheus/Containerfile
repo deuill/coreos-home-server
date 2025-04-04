@@ -7,7 +7,7 @@ RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
     install -D --mode 0755 -t /build/usr/bin /src/prometheus /src/promtool
 
 FROM docker.io/debian:bookworm-slim@sha256:1209d8fd77def86ceb6663deef7956481cc6c14a25e1e64daec12c0ceffcc19d AS builder-node-exporter
-ARG VERSION=1.9.0 # renovate: datasource=github-releases depName=prometheus/node_exporter
+ARG VERSION=1.9.1 # renovate: datasource=github-releases depName=prometheus/node_exporter
 WORKDIR /src
 
 ADD https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/node_exporter-${VERSION}.linux-amd64.tar.gz /src.tar.gz
