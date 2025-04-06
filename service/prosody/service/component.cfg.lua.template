@@ -1,3 +1,6 @@
 Component "${PROSODY_COMPONENT_NAME}"
   component_secret = "${PROSODY_COMPONENT_PASSWORD}"
   modules_enabled = {"privilege"}
+
+Component "${PROSODY_HOST_UPLOAD}" "http_file_share"
+  http_file_share_access = {"${PROSODY_COMPONENT_NAME}"}
