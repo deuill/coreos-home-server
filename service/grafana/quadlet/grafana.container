@@ -14,7 +14,7 @@ Notify=healthy
 Volume=%N:/var/lib/%N:z
 
 [Service]
-TimeoutStartSec=180
+TimeoutStartSec=5m
 Restart=on-failure
 
 [Install]
