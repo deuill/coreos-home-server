@@ -9,6 +9,7 @@ RemainAfterExit=true
 SyslogIdentifier=%N
 Environment=PROSODY_COMPONENT_NAME=%i
 Environment=COMPONENT_CONF=%E/coreos-home-server/prosody/service/component.cfg.lua.template
+EnvironmentFile=%E/coreos-home-server/prosody/prosody.env
 EnvironmentFile=-%E/coreos-home-server/%i/%i.env
 ExecStartPre=/bin/install --mode 0700 --directory /tmp/%N
 ExecStartPre=/bin/sh -c "envsubst < ${COMPONENT_CONF} > /tmp/%N/component.cfg.lua"
