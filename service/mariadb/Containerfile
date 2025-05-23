@@ -1,3 +1,3 @@
-FROM docker.io/mariadb:10.11@sha256:96be0d3dfbeb07bc420e5fb8a6dc05c492676f1f89980a497a55e6fbbba3f1c4
+FROM docker.io/mariadb:10.11@sha256:7c8448601507c9c0d8889b117af9fd9c3c8fb976b95170f2f0572fd60a92c9bf
 ENV MARIADB_AUTO_UPGRADE=1
 USER mysql
