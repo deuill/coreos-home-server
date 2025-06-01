@@ -7,8 +7,7 @@ ENV PATH=/venv/bin:/root/.local/bin:$PATH
 ENV UV_PROJECT_ENVIRONMENT=/venv/
 
 RUN python3 -m venv /venv && python3 -m pip install wheel && \
-    curl -fL https://install.python-poetry.org | python3 - && \
-    python3 -m pip install uv poetry-plugin-export
+    python3 -m pip install uv
 
 FROM builder-base AS builder-discord
 
@@ -18,23 +17,8 @@ ARG VERSION=0.2.1 # renovate: datasource=git-tags depName=slidcord packageName=h
 RUN git clone https://codeberg.org/slidge/slidcord.git /src && \
     git reset --hard v${VERSION}
 
-RUN uv export > requirements.txt && \
-    uv pip install --requirement requirements.txt
-
+RUN uv sync --no-dev
 RUN cp -R /src/slidcord /venv/lib/python3.11/site-packages/legacy_module
-
-FROM builder-base AS builder-skype
-
-WORKDIR /src
-
-ARG VERSION=0.2.0 # renovate: datasource=git-tags depName=skidge packageName=https://codeberg.org/slidge/skidge extractVersion=^v(?<version>.*)$
-RUN git clone https://codeberg.org/slidge/skidge.git /src && \
-    git reset --hard v${VERSION}
-
-RUN uv export > requirements.txt && \
-    uv pip install --requirement requirements.txt
-
-RUN cp -R /src/skidge /venv/lib/python3.11/site-packages/legacy_module
 
 FROM builder-base AS builder-whatsapp
 
@@ -42,24 +26,26 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     gcc python3-dev
 
 RUN echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
-    apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports golang
+    apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports golang \
+    libmupdf-dev libgumbo-dev libfreetype6-dev libharfbuzz-dev libjbig2dec0-dev libjpeg62-turbo-dev \
+    libmujs-dev libopenjp2-7-dev
 
 ENV GOBIN=/usr/bin
-RUN go install github.com/go-python/gopy@latest && \
-    go install golang.org/x/tools/cmd/goimports@latest
+RUN go install github.com/go-python/gopy@master && \
+    go install golang.org/x/tools/cmd/goimports@master
 
-RUN uv pip install pybindgen
 WORKDIR /src
 
 ARG VERSION=0.2.6 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidge-whatsapp.git /src && \
     git reset --hard v${VERSION}
 
-RUN uv export > requirements.txt && \
-    uv pip install --requirement requirements.txt
+RUN uv sync --no-dev
+RUN uv pip install pybindgen
 
 WORKDIR /src/slidge_whatsapp
-RUN gopy build -vm=python3 -output=generated -no-make=true .
+RUN CGO_LDFLAGS="-lgumbo -lfreetype -ljbig2dec -lharfbuzz -ljpeg -lmujs -lopenjp2" \
+    gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib static" .
 RUN cp -R /src/slidge_whatsapp /venv/lib/python3.11/site-packages/legacy_module
 
 FROM docker.io/debian:bookworm-slim@sha256:90522eeb7e5923ee2b871c639059537b30521272f10ca86fdbbbb2b75a8c40cd
@@ -68,13 +54,12 @@ ENV SLIDGE_LEGACY_MODULE=legacy_module
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates python3 libpython3.11 python3-gdbm libidn12 libmagic1 media-types shared-mime-info \
-    ffmpeg
+    ffmpeg libgumbo1 libfreetype6 libharfbuzz0b libjbig2dec0 libjpeg62-turbo libmujs2 libopenjp2-7
 
 RUN addgroup --system --gid 10000 slidge
 RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
 
 COPY --from=builder-discord /venv /venv/discord
-COPY --from=builder-skype /venv /venv/skype
 COPY --from=builder-whatsapp /venv /venv/whatsapp
 
 WORKDIR /var/lib/slidge
