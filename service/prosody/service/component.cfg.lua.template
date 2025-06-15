@@ -1,5 +1,5 @@
-local host_base = "${PROSODY_HOST}" or "localhost"
-local host_upload = "${PROSODY_HOST_UPLOAD}" or "upload." .. host_base
+local host_base = "${PROSODY_HOST}" ~= "" and "${PROSODY_HOST}" or "localhost"
+local host_upload = "${PROSODY_HOST_UPLOAD}" ~= "" and "${PROSODY_HOST_UPLOAD}" or "upload." .. host_base
 
 Component "${PROSODY_COMPONENT_NAME}"
   component_secret = "${PROSODY_COMPONENT_PASSWORD}"
