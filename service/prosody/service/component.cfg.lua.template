@@ -1,9 +1,6 @@
-local host_base = "${PROSODY_HOST}" ~= "" and "${PROSODY_HOST}" or "localhost"
-local host_upload = "${PROSODY_HOST_UPLOAD}" ~= "" and "${PROSODY_HOST_UPLOAD}" or "upload." .. host_base
-
 Component "${PROSODY_COMPONENT_NAME}"
   component_secret = "${PROSODY_COMPONENT_PASSWORD}"
   modules_enabled = {"privilege"}
 
-Component(host_upload) "http_file_share"
+Component "${PROSODY_HOST_UPLOAD}" "http_file_share"
   http_file_share_access = {"${PROSODY_COMPONENT_NAME}"}
