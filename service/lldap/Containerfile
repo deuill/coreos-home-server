@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:6ac2c08566499cc2415926653cf2ed7c3aedac445675a013cc09469c9e118fdd AS builder
+FROM docker.io/debian:bookworm-slim@sha256:2424c1850714a4d94666ec928e24d86de958646737b1d113f5b2207be44d37d8 AS builder
 ARG VERSION=0.6.1 # renovate: datasource=github-releases depName=lldap/lldap extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
@@ -8,7 +8,7 @@ RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
     install -D --mode 0755 -t /build/usr/bin /src/lldap /src/lldap_migration_tool /src/lldap_set_password && \
     mkdir -p /build/usr/share/lldap/app && cp -R /src/app /build/usr/share/lldap
 
-FROM docker.io/debian:bookworm-slim@sha256:6ac2c08566499cc2415926653cf2ed7c3aedac445675a013cc09469c9e118fdd
+FROM docker.io/debian:bookworm-slim@sha256:2424c1850714a4d94666ec928e24d86de958646737b1d113f5b2207be44d37d8
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
