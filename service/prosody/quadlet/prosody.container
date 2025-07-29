@@ -17,7 +17,7 @@ PublishPort=5269:5269
 PublishPort=5270:5270
 PublishPort=5347:5347
 Volume=%N:/var/lib/%N:z
-Volume=prosody-conf:/etc/%N/conf.d:z
+Volume=%E/coreos-home-server/%N/service/conf.d:/etc/%N/conf.d:z
 Volume=letsencrypt-certificates:/etc/ssl/private:z,ro
 
 [Service]
