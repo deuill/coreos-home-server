@@ -7,7 +7,7 @@ ConditionPathExists=%E/coreos-home-server/%i/%i.env.template
 Type=oneshot
 SyslogIdentifier=%N
 EnvironmentFile=%E/coreos-home-server/host.env
-ExecStart=/bin/sh -c 'envsubst < %E/coreos-home-server/%i/*.env.template > %E/coreos-home-server/%i/%i.env'
+ExecStart=/bin/sh -c 'cat %E/coreos-home-server/%i/*.env.template | envsubst > %E/coreos-home-server/%i/%i.env'
 
 [Install]
 WantedBy=multi-user.target
