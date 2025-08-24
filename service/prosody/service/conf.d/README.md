@@ -5,7 +5,7 @@ Prosody's configuration; for example, a new component:
 
 ```lua
 Component "irc.example.com"
-  component_secret = Lua.os.getenv("PROSODY_BIBOUMI_PASSWORD") or ""
+  component_secret = ENV_PROSODY_BIBOUMI_PASSWORD or ""
   modules_enabled = {"privilege"}
 
 Component "upload.example.com" "http_file_share"

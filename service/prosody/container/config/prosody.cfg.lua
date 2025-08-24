@@ -163,16 +163,16 @@ conversejs_options = {
 }
 
 -- Configuration for LDAP authentication.
-ldap_server       = Lua.os.getenv("PROSODY_AUTH_LDAP_HOST") or "localhost"
+ldap_server       = ENV_PROSODY_AUTH_LDAP_HOST or "localhost"
 ldap_base         = "ou=people,dc=ldap,dc=local"
-ldap_rootdn       = "uid=" .. (Lua.os.getenv("PROSODY_AUTH_LDAP_BIND_UID") or "admin") .. ",ou=people,dc=ldap,dc=local"
-ldap_password     = Lua.os.getenv("PROSODY_AUTH_LDAP_BIND_PASSWORD") or ""
+ldap_rootdn       = "uid=" .. (ENV_PROSODY_AUTH_LDAP_BIND_UID or "admin") .. ",ou=people,dc=ldap,dc=local"
+ldap_password     = ENV_PROSODY_AUTH_LDAP_BIND_PASSWORD or ""
 ldap_filter       = "(&(memberof=cn=prosody_user,ou=groups,dc=ldap,dc=local)(|(uid=$user)(mail=$user@$host)))"
 ldap_admin_filter = "(memberof=cn=prosody_admin,ou=groups,dc=ldap,dc=local)"
 
 -- Configuration for TURN/STUN.
-turn_external_host   = Lua.os.getenv("PROSODY_TURN_HOST") or "localhost"
-turn_external_secret = Lua.os.getenv("PROSODY_TURN_SECRET") or ""
+turn_external_host   = ENV_PROSODY_TURN_HOST or "localhost"
+turn_external_secret = ENV_PROSODY_TURN_SECRET or ""
 
 -- Uncomment to enable statistics
 -- For more info see https://prosody.im/doc/statistics

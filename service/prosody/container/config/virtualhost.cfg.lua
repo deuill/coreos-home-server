@@ -3,9 +3,9 @@
 -- By default, this is configured  to run components required for compliance with modern clients,
 -- and evolves according to these requirements.
 
-local host_base = Lua.os.getenv("PROSODY_HOST") or "localhost"
-local host_external = Lua.os.getenv("PROSODY_HOST_EXTERNAL") or "external." .. host_base
-local host_upload = Lua.os.getenv("PROSODY_HOST_UPLOAD") or "upload." .. host_base
+local host_base = ENV_PROSODY_HOST or "localhost"
+local host_external = ENV_PROSODY_HOST_EXTERNAL or "external." .. host_base
+local host_upload = ENV_PROSODY_HOST_UPLOAD or "upload." .. host_base
 
 -- The primary virtual host, typically anchored to the root domain (e.g. "example.com"). User JIDs
 -- will need to match this domain name.
@@ -34,6 +34,7 @@ Component(host_upload) "http_file_share"
   http_file_share_size_limit   = 1024 * 1024 * 128
   http_file_share_daily_quota  = 1024 * 1024 * 512
   http_file_share_global_quota = 1024 * 1024 * 1024 * 5
+  http_file_share_access       = {}
   http_host                    = host_external
   http_external_url            = "https://" .. host_external .. "/"
   http_paths = {
