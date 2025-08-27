@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:b1a741487078b369e78119849663d7f1a5341ef2768798f7b7406c4240f86aef AS builder
-ARG VERSION=0.6.2 # renovate: datasource=github-releases depName=lldap/lldap extractVersion=^v(?<version>.*)$
+ARG VERSION=0.6.1 # renovate: datasource=github-releases depName=lldap/lldap extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
 
