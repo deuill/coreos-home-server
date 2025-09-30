@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:df52e55e3361a81ac1bead266f3373ee55d29aa50cf0975d440c2be3483d8ed3 AS builder-base
+FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0 AS builder-base
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
@@ -48,7 +48,7 @@ RUN CGO_LDFLAGS="-lgumbo -lfreetype -ljbig2dec -lharfbuzz -ljpeg -lmujs -lopenjp
     gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib static" .
 RUN cp -R /src/slidge_whatsapp /venv/lib/python3.11/site-packages/legacy_module
 
-FROM docker.io/debian:bookworm-slim@sha256:df52e55e3361a81ac1bead266f3373ee55d29aa50cf0975d440c2be3483d8ed3
+FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0
 ENV PYTHONUNBUFFERED=1
 ENV SLIDGE_LEGACY_MODULE=legacy_module
 
