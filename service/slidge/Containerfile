@@ -9,6 +9,18 @@ ENV UV_PROJECT_ENVIRONMENT=/venv/
 RUN python3 -m venv /venv && python3 -m pip install wheel && \
     python3 -m pip install uv
 
+FROM builder-base AS builder-go
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    gcc python3-dev
+
+RUN echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
+    apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports golang
+
+ENV GOBIN=/usr/bin
+RUN go install github.com/go-python/gopy@master && \
+    go install golang.org/x/tools/cmd/goimports@master
+
 FROM builder-base AS builder-discord
 
 WORKDIR /src
@@ -20,19 +32,10 @@ RUN git clone https://codeberg.org/slidge/slidcord.git /src && \
 RUN uv sync --no-dev
 RUN cp -R /src/slidcord /venv/lib/python3.11/site-packages/legacy_module
 
-FROM builder-base AS builder-whatsapp
+FROM builder-go AS builder-whatsapp
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    gcc python3-dev
-
-RUN echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
-    apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports golang \
-    libmupdf-dev libgumbo-dev libfreetype6-dev libharfbuzz-dev libjbig2dec0-dev libjpeg62-turbo-dev \
-    libmujs-dev libopenjp2-7-dev
-
-ENV GOBIN=/usr/bin
-RUN go install github.com/go-python/gopy@master && \
-    go install golang.org/x/tools/cmd/goimports@master
+RUN apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports libmupdf-dev libgumbo-dev \
+    libfreetype6-dev libharfbuzz-dev libjbig2dec0-dev libjpeg62-turbo-dev libmujs-dev libopenjp2-7-dev
 
 WORKDIR /src
 
@@ -44,9 +47,29 @@ RUN uv sync --no-dev
 RUN uv pip install pybindgen
 
 WORKDIR /src/slidge_whatsapp
+
 RUN CGO_LDFLAGS="-lgumbo -lfreetype -ljbig2dec -lharfbuzz -ljpeg -lmujs -lopenjp2" \
     gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib static" .
 RUN cp -R /src/slidge_whatsapp /venv/lib/python3.11/site-packages/legacy_module
+
+FROM builder-go AS builder-signal
+
+WORKDIR /src
+
+ARG VERSION=0.3.0beta1 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
+RUN git clone https://codeberg.org/slidge/slidgnal.git /src && \
+    git reset --hard v${VERSION}
+
+ARG SIGNAL_FFI_IMAGE=dock.mau.dev/tulir/gomuks-build-docker/signal:linux-amd64@sha256:987ea6c5e8c84e3a1859a108a1687ef6a6dcf7f2df1274ff003cb5870399efe8
+COPY --from=$SIGNAL_FFI_IMAGE /usr/lib/libsignal_ffi.a /usr/lib/libsignal_ffi.a
+
+RUN uv sync --no-dev
+RUN uv pip install pybindgen
+
+WORKDIR /src/slidgnal
+
+RUN gopy build -vm=python3 -output=generated -no-make=true .
+RUN cp -R /src/slidgnal /venv/lib/python3.11/site-packages/legacy_module
 
 FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0
 ENV PYTHONUNBUFFERED=1
@@ -61,6 +84,7 @@ RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
 
 COPY --from=builder-discord /venv /venv/discord
 COPY --from=builder-whatsapp /venv /venv/whatsapp
+COPY --from=builder-signal /venv /venv/signal
 
 WORKDIR /var/lib/slidge
 USER slidge
