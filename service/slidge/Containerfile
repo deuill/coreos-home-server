@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0 AS builder-base
+FROM docker.io/debian:trixie-slim@sha256:1caf1c703c8f7e15dcf2e7769b35000c764e6f50e4d7401c355fb0248f3ddfdb AS builder-base
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
@@ -12,10 +12,7 @@ RUN python3 -m venv /venv && python3 -m pip install wheel && \
 FROM builder-base AS builder-go
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    gcc python3-dev
-
-RUN echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list && \
-    apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports golang
+    gcc golang python3-dev
 
 ENV GOBIN=/usr/bin
 RUN go install github.com/go-python/gopy@master && \
@@ -30,16 +27,17 @@ RUN git clone https://codeberg.org/slidge/slidcord.git /src && \
     git reset --hard v${VERSION}
 
 RUN uv sync --no-dev
-RUN cp -R /src/slidcord /venv/lib/python3.11/site-packages/legacy_module
+RUN cp -R /src/slidcord /venv/lib/python3.13/site-packages/legacy_module
 
 FROM builder-go AS builder-whatsapp
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends -t bookworm-backports libmupdf-dev libgumbo-dev \
-    libfreetype6-dev libharfbuzz-dev libjbig2dec0-dev libjpeg62-turbo-dev libmujs-dev libopenjp2-7-dev
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    libmupdf-dev libgumbo-dev libfreetype6-dev libharfbuzz-dev libjbig2dec0-dev libjpeg62-turbo-dev \
+    libmujs-dev libopenjp2-7-dev
 
 WORKDIR /src
 
-ARG VERSION=0.3.2 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
+ARG VERSION=0.3.4 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidge-whatsapp.git /src && \
     git reset --hard v${VERSION}
 
@@ -48,9 +46,8 @@ RUN uv pip install pybindgen
 
 WORKDIR /src/slidge_whatsapp
 
-RUN CGO_LDFLAGS="-lgumbo -lfreetype -ljbig2dec -lharfbuzz -ljpeg -lmujs -lopenjp2" \
-    gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib static" .
-RUN cp -R /src/slidge_whatsapp /venv/lib/python3.11/site-packages/legacy_module
+RUN gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib" .
+RUN cp -R /src/slidge_whatsapp /venv/lib/python3.13/site-packages/legacy_module
 
 FROM builder-go AS builder-signal
 
@@ -69,18 +66,18 @@ RUN uv pip install pybindgen
 WORKDIR /src/slidgnal
 
 RUN gopy build -vm=python3 -output=generated -no-make=true .
-RUN cp -R /src/slidgnal /venv/lib/python3.11/site-packages/legacy_module
+RUN cp -R /src/slidgnal /venv/lib/python3.13/site-packages/legacy_module
 
-FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0
+FROM docker.io/debian:trixie-slim@sha256:1caf1c703c8f7e15dcf2e7769b35000c764e6f50e4d7401c355fb0248f3ddfdb
 ENV PYTHONUNBUFFERED=1
 ENV SLIDGE_LEGACY_MODULE=legacy_module
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    ca-certificates python3 libpython3.11 python3-gdbm libidn12 libmagic1 media-types shared-mime-info \
-    ffmpeg libgumbo1 libfreetype6 libharfbuzz0b libjbig2dec0 libjpeg62-turbo libmujs2 libopenjp2-7
+    ca-certificates python3 libpython3.13 python3-gdbm libidn12 libmagic1 libmupdf25.1 \
+    media-types shared-mime-info ffmpeg
 
-RUN addgroup --system --gid 10000 slidge
-RUN adduser --system --uid 10000 --ingroup slidge --home /var/lib/slidge slidge
+RUN groupadd --system --gid 10000 slidge && \
+    useradd --system --uid 10000 --gid 10000 --base-dir /var/lib/slidge slidge
 
 COPY --from=builder-discord /venv /venv/discord
 COPY --from=builder-whatsapp /venv /venv/whatsapp
