@@ -53,7 +53,7 @@ FROM builder-go AS builder-signal
 
 WORKDIR /src
 
-ARG VERSION=0.3.0beta3 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
+ARG VERSION=0.3.0beta4 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidgnal.git /src && \
     git reset --hard v${VERSION}
 
