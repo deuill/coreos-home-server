@@ -1,4 +1,4 @@
-FROM docker.io/debian:trixie-slim@sha256:9b6ccd28f4913155f35e10ecd4437347d86ebce4ecf5853b3568141468faec56 AS builder-base
+FROM docker.io/debian:trixie-slim@sha256:a347fd7510ee31a84387619a492ad6c8eb0af2f2682b916ff3e643eb076f925a AS builder-base
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
@@ -68,7 +68,7 @@ WORKDIR /src/slidgnal
 RUN gopy build -vm=python3 -output=generated -no-make=true .
 RUN cp -R /src/slidgnal /venv/lib/python3.13/site-packages/legacy_module
 
-FROM docker.io/debian:trixie-slim@sha256:9b6ccd28f4913155f35e10ecd4437347d86ebce4ecf5853b3568141468faec56
+FROM docker.io/debian:trixie-slim@sha256:a347fd7510ee31a84387619a492ad6c8eb0af2f2682b916ff3e643eb076f925a
 ENV PYTHONUNBUFFERED=1
 ENV SLIDGE_LEGACY_MODULE=legacy_module
 
