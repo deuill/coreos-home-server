@@ -22,7 +22,7 @@ FROM builder-base AS builder-discord
 
 WORKDIR /src
 
-ARG VERSION=0.3.0 # renovate: datasource=git-tags depName=slidcord packageName=https://codeberg.org/slidge/slidcord extractVersion=^v(?<version>.*)$
+ARG VERSION=0.3.1 # renovate: datasource=git-tags depName=slidcord packageName=https://codeberg.org/slidge/slidcord extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidcord.git /src && \
     git reset --hard v${VERSION}
 
