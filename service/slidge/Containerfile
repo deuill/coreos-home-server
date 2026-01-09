@@ -37,7 +37,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 WORKDIR /src
 
-ARG VERSION=0.3.9 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
+ARG VERSION=0.3.10 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidge-whatsapp.git /src && \
     git reset --hard v${VERSION}
 
