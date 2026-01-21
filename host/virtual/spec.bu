@@ -9,9 +9,6 @@ ignition:
       - local: service/mariadb/spec.ign
       - local: service/nginx/spec.ign
       - local: service/letsencrypt/spec.ign
-      - local: service/dovecot/spec.ign
-      - local: service/postfix/spec.ign
-      - local: service/rspamd/spec.ign
       - local: service/prosody/spec.ign
       - local: service/biboumi/spec.ign
       - local: service/radicale/spec.ign
@@ -26,6 +23,7 @@ ignition:
       - local: service/gotosocial/spec.ign
       - local: service/shiori/spec.ign
       - local: service/unbound/spec.ign
+      - local: service/stalwart/spec.ign
 
 passwd:
   users:
@@ -170,6 +168,14 @@ systemd:
             ExecStart=
             ExecStart=/bin/sh -c "V=$(podman volume mount letsencrypt-certificates) && cp -Rv /etc/ssl/private/. $V && chown -R 10000:10000 $V"
             ExecStartPost=/bin/podman volume unmount letsencrypt-certificates
+
+    - name: nginx-proxy-http@mail.localhost.service
+      enabled: true
+      dropins:
+        - name: stalwart-upstream.conf
+          contents: |
+            [Service]
+            Environment=UPSTREAM_HOST=stalwart UPSTREAM_PORT=8080
 
 storage:
   files:

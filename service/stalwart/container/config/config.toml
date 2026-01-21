@@ -1,0 +1,65 @@
+# General server.
+[server]
+hostname = "%{env:STALWART_HOSTNAME}%"
+
+# Mail delivery.
+[session.rcpt]
+catch-all = true
+
+# Listeners.
+[server.listener.smtp]
+bind     = ["[::]:8025"]
+protocol = "smtp"
+
+[server.listener.submissions]
+bind         = ["[::]:8465"]
+protocol     = "smtp"
+tls.implicit = true
+
+[server.listener.imaptls]
+bind         = ["[::]:8993"]
+protocol     = "imap"
+tls.implicit = true
+
+[server.listener.sieve]
+bind     = ["[::]:4190"]
+protocol = "managesieve"
+
+[server.listener.http]
+protocol = "http"
+bind     = ["[::]:8080"]
+
+# Certificates.
+[certificate.default]
+cert        = "%{file:/etc/ssl/private/%{env:STALWART_SSL_NAME}%/fullchain.pem}%"
+private-key = "%{file:/etc/ssl/private/%{env:STALWART_SSL_NAME}%/privkey.pem}%"
+default     = true
+
+# Storage.
+[storage]
+data      = "rocksdb"
+fts       = "rocksdb"
+blob      = "rocksdb"
+lookup    = "rocksdb"
+directory = "internal"
+
+[directory.internal]
+type  = "internal"
+store = "rocksdb"
+
+[store.rocksdb]
+type        = "rocksdb"
+path        = "/var/lib/stalwart/store"
+compression = "lz4"
+
+# Logging and other telemetry.
+[tracer.stdout]
+enable = true
+ansi   = false
+level  = "%{env:STALWART_LOG_LEVEL}%"
+type   = "stdout"
+
+# Admin access.
+[authentication.fallback-admin]
+user   = "%{env:STALWART_FALLBACK_ADMIN_USERNAME}%"
+secret = "%{env:STALWART_FALLBACK_ADMIN_SECRET}%"

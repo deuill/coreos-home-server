@@ -1,0 +1,22 @@
+FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0 AS builder
+ARG VERSION=0.15.3 # renovate: datasource=github-releases depName=stalwartlabs/stalwart extractVersion=^v(?<version>.*)$
+
+WORKDIR /src
+
+ADD https://github.com/stalwartlabs/stalwart/releases/download/v${VERSION}/stalwart-x86_64-unknown-linux-gnu.tar.gz /src.tar.gz
+ADD https://github.com/stalwartlabs/stalwart/releases/download/v${VERSION}/stalwart-cli-x86_64-unknown-linux-gnu.tar.gz /cli.tar.gz
+
+RUN tar --no-same-owner -xvzf /src.tar.gz && install -D --mode 0755 -t /build/usr/bin /src/stalwart
+RUN tar --no-same-owner -xvzf /cli.tar.gz && install -D --mode 0755 -t /build/usr/bin /src/stalwart-cli
+
+FROM docker.io/debian:bookworm-slim@sha256:7e490910eea2861b9664577a96b54ce68ea3e02ce7f51d89cb0103a6f9c386e0
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates gettext gosu curl
+
+RUN adduser --system --group --uid 10000 --home /var/lib/stalwart stalwart
+
+COPY --from=builder /build /
+COPY container/config /etc/stalwart
+
+USER stalwart
+ENTRYPOINT ["stalwart", "--config", "/etc/stalwart/config.toml"]
