@@ -4,6 +4,7 @@ Wants=container-build@%N.service container-volume@%N.service
 After=container-build@%N.service container-volume@%N.service
 
 [Container]
+AddCapability=NET_BIND_SERVICE
 AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
@@ -11,9 +12,9 @@ HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:80
 Image=localhost/%N:latest
 Network=internal
 Notify=healthy
-PublishPort=25:8025
-PublishPort=465:8465
-PublishPort=993:8993
+PublishPort=25:25
+PublishPort=465:465
+PublishPort=993:993
 PublishPort=4190:4190
 Volume=%N:/var/lib/%N:z
 Volume=letsencrypt-certificates:/etc/ssl/private:z,ro

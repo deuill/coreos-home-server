@@ -2,22 +2,18 @@
 [server]
 hostname = "%{env:STALWART_HOSTNAME}%"
 
-# Mail delivery.
-[session.rcpt]
-catch-all = true
-
 # Listeners.
 [server.listener.smtp]
-bind     = ["[::]:8025"]
+bind     = ["[::]:25"]
 protocol = "smtp"
 
 [server.listener.submissions]
-bind         = ["[::]:8465"]
+bind         = ["[::]:465"]
 protocol     = "smtp"
 tls.implicit = true
 
 [server.listener.imaptls]
-bind         = ["[::]:8993"]
+bind         = ["[::]:993"]
 protocol     = "imap"
 tls.implicit = true
 
