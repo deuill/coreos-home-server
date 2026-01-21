@@ -2,6 +2,10 @@
 [server]
 hostname = "%{env:STALWART_HOSTNAME}%"
 
+[http]
+url = "'https://%{env:STALWART_HOSTNAME}%'"
+use-x-forwarded = true
+
 # Listeners.
 [server.listener.smtp]
 bind     = ["[::]:25"]
