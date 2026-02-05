@@ -1,14 +1,14 @@
 [Unit]
 Description=Stalwart Mail and Collaboration Server
-Wants=container-build@%N.service container-volume@%N.service
-After=container-build@%N.service container-volume@%N.service
+Wants=container-build@%N.service container-volume@%N.service unbound.service
+After=container-build@%N.service container-volume@%N.service unbound.service
 
 [Container]
 AddCapability=NET_BIND_SERVICE
 AutoUpdate=local
 ContainerName=%N
 EnvironmentFile=%E/coreos-home-server/%N/%N.env
-HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null localhost:8080/healthz/live
+HealthCmd=timeout 5s curl --fail --silent --show-error -o /dev/null -H 'X-Forwarded-For: 127.0.0.1' localhost:8080/healthz/live
 Image=localhost/%N:latest
 Network=internal
 Notify=healthy

@@ -29,6 +29,10 @@ protocol = "managesieve"
 protocol = "http"
 bind     = ["[::]:8080"]
 
+# Outbound handlers.
+[resolver]
+custom = ["unbound", "1.1.1.1", "8.8.8.8"]
+
 # Certificates.
 [certificate.default]
 cert        = "%{file:/etc/ssl/private/%{env:STALWART_SSL_NAME}%/fullchain.pem}%"
