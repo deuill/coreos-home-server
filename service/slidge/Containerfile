@@ -49,7 +49,7 @@ WORKDIR /src/slidge_whatsapp
 RUN gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib" .
 RUN cp -R /src/slidge_whatsapp /venv/lib/python3.13/site-packages/legacy_module
 
-FROM docker.io/rust:slim-trixie@sha256:760ad1d638d70ebbd0c61e06210e1289cbe45ff6425e3ea6e01241de3e14d08e AS builder-libsignal
+FROM docker.io/rust:slim-trixie@sha256:3a160f8a47679176e99c8597993f9ea8f7a265333e648e37697395b45f94b2c3 AS builder-libsignal
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     git build-essential ca-certificates cmake protobuf-compiler libclang-dev
