@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:98f4b71de414932439ac6ac690d7060df1f27161073c5036a7553723881bffbe AS builder
-ARG VERSION=0.15.4 # renovate: datasource=github-releases depName=stalwartlabs/stalwart extractVersion=^v(?<version>.*)$
+ARG VERSION=0.15.5 # renovate: datasource=github-releases depName=stalwartlabs/stalwart extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
 
