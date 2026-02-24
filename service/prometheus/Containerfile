@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:98f4b71de414932439ac6ac690d7060df1f27161073c5036a7553723881bffbe AS builder
+FROM docker.io/debian:bookworm-slim@sha256:74d56e3931e0d5a1dd51f8c8a2466d21de84a271cd3b5a733b803aa91abf4421 AS builder
 ARG VERSION=3.9.1 # renovate: datasource=github-releases depName=prometheus/prometheus extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
@@ -6,7 +6,7 @@ ADD https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prome
 RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
     install -D --mode 0755 -t /build/usr/bin /src/prometheus /src/promtool
 
-FROM docker.io/debian:bookworm-slim@sha256:98f4b71de414932439ac6ac690d7060df1f27161073c5036a7553723881bffbe AS builder-node-exporter
+FROM docker.io/debian:bookworm-slim@sha256:74d56e3931e0d5a1dd51f8c8a2466d21de84a271cd3b5a733b803aa91abf4421 AS builder-node-exporter
 ARG VERSION=1.10.2 # renovate: datasource=github-releases depName=prometheus/node_exporter
 WORKDIR /src
 
@@ -30,7 +30,7 @@ ARG VERSION=0.14.0 # renovate: datasource=github-releases depName=prometheus-com
 RUN GOBIN=/src/bin go install github.com/prometheus-community/smartctl_exporter@v${VERSION} && \
     install -D --mode 0755 /src/bin/smartctl_exporter /build/usr/bin/prometheus-smartctl-exporter
 
-FROM docker.io/debian:bookworm-slim@sha256:98f4b71de414932439ac6ac690d7060df1f27161073c5036a7553723881bffbe
+FROM docker.io/debian:bookworm-slim@sha256:74d56e3931e0d5a1dd51f8c8a2466d21de84a271cd3b5a733b803aa91abf4421
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
