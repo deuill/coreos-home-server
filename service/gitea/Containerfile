@@ -4,7 +4,7 @@ ARG VERSION=1.25.4 # renovate: datasource=github-releases depName=go-gitea/gitea
 ADD https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64 /src/gitea
 RUN install -D --mode 0755 /src/gitea /build/usr/bin/gitea
 
-FROM docker.io/golang:1.26-bookworm@sha256:2af9fed1a36763c73c307787c27ef22ece46e2b646e3a8179f6e0b4b64b00cd7 AS builder-act-runner
+FROM docker.io/golang:1.26-bookworm@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c AS builder-act-runner
 ARG VERSION=0.3.0 # renovate: datasource=gitea-releases depName=gitea/act_runner extractVersion=^v(?<version>.*)$
 
 ADD https://dl.gitea.com/act_runner/${VERSION}/act_runner-${VERSION}-linux-amd64 /src/act_runner
