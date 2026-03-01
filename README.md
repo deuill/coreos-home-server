@@ -22,7 +22,7 @@ This is required for validating the signatures for installation media when deplo
 virtual hosts:
 
 ```sh
-curl -fL https://getfedora.org/static/fedora.gpg | gpg --import
+curl -fL https://fedoraproject.org/fedora.gpg | gpg --import
 ```
 
 ## Setup and Deployment
@@ -37,7 +37,7 @@ You can prepare host configuration for consumption by using the `deploy` target 
 Makefile, e.g.:
 
 ```
-make deploy HOST=example
+make deploy HOST=example TYPE=metal
 ```
 
 This will compile the host-specific `host/example/spec.bu` file to its corresponding Ignition format
