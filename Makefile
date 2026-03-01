@@ -76,7 +76,7 @@ deploy-virtual: $(TMPDIR)images/fedora-coreos-$(VERSION)-qemu.$(ARCH).qcow2 $(TM
 # Build container file locally using 'podman build'.
 $(CONTAINERFILES):
 	@printf "Building container for '$(notdir $(@D))'...\n"
-	$Q cd "$(abspath $(@D))" && $(PODMAN) build .
+	$Q cd "$(abspath $(@D))" && $(PODMAN) build --tag "coreos-home-server/$(notdir $(@D)):latest" .
 
 # Copy host configuration in plain-text. Mainly used for development hosts.
 $(TMPDIR)deploy/$(HOST).env: $(ROOTDIR)host/$(HOST)/$(HOST).env
