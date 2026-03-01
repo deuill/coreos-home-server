@@ -1,7 +1,7 @@
 [Unit]
 Description=RSS Feed to Email
-Wants=container-build@%N.service container-volume@%N.service postfix.service
-After=container-build@%N.service container-volume@%N.service postfix.service
+Wants=container-build@%N.service container-volume@%N.service
+After=container-build@%N.service container-volume@%N.service
 
 [Container]
 ContainerName=%N
