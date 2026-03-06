@@ -14,7 +14,7 @@ ADD https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/no
 RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
     install -D --mode 0755 /src/node_exporter /build/usr/bin/prometheus-node-exporter
 
-FROM docker.io/golang:1.26-bookworm@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c AS builder-podman-exporter
+FROM docker.io/golang:1.26-bookworm@sha256:c7a82e9e2df2fea5d8cb62a16aa6f796d2b2ed81ccad4ddd2bc9f0d22936c3f2 AS builder-podman-exporter
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
 
@@ -24,7 +24,7 @@ WORKDIR /src
 RUN git clone --branch v${VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && make binary && \
     install -D --mode 0755 /src/bin/prometheus-podman-exporter /build/usr/bin/prometheus-podman-exporter
 
-FROM docker.io/golang:1.26-bookworm@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c AS builder-smartctl-exporter
+FROM docker.io/golang:1.26-bookworm@sha256:c7a82e9e2df2fea5d8cb62a16aa6f796d2b2ed81ccad4ddd2bc9f0d22936c3f2 AS builder-smartctl-exporter
 ARG VERSION=0.14.0 # renovate: datasource=github-releases depName=prometheus-community/smartctl_exporter extractVersion=^v(?<version>.*)$
 
 RUN GOBIN=/src/bin go install github.com/prometheus-community/smartctl_exporter@v${VERSION} && \
