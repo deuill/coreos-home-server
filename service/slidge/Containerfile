@@ -12,7 +12,7 @@ RUN python3 -m venv /venv && python3 -m pip install wheel && \
 FROM builder-base AS builder-go
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    gcc golang python3-dev
+    gcc g++ golang python3-dev
 
 ENV GOBIN=/usr/bin
 RUN go install github.com/go-python/gopy@master && \
@@ -37,50 +37,22 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 WORKDIR /src
 
-ARG VERSION=0.3.10 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
+ARG VERSION=0.3.11beta1 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidge-whatsapp.git /src && \
     git reset --hard v${VERSION}
 
 RUN uv sync --no-dev
-RUN uv pip install pybindgen
-
-WORKDIR /src/slidge_whatsapp
-
-RUN gopy build -vm=python3 -output=generated -no-make=true -build-tags="mupdf extlib" .
 RUN cp -R /src/slidge_whatsapp /venv/lib/python3.13/site-packages/legacy_module
-
-FROM docker.io/rust:slim-trixie@sha256:7d3701660d2aa7101811ba0c54920021452aa60e5bae073b79c2b137a432b2f4 AS builder-libsignal
-
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    git build-essential ca-certificates cmake protobuf-compiler libclang-dev
-
-ENV RUSTFLAGS="-Ctarget-feature=-crt-static"
-ENV RUSTC_WRAPPER=""
-
-WORKDIR /src
-
-# Synchronize with latest supported version in https://codeberg.org/slidge/slidgnal
-ARG VERSION=v0.86.4
-RUN git clone --single-branch --branch ${VERSION} https://github.com/signalapp/libsignal.git
-RUN cd libsignal && cargo build -p libsignal-ffi --release && \
-    mv target/release/libsignal_ffi.a /lib
 
 FROM builder-go AS builder-signal
 
 WORKDIR /src
 
-ARG VERSION=0.3.0beta9 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
+ARG VERSION=0.3.0beta10 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidgnal.git /src && \
     git reset --hard v${VERSION}
 
-COPY --from=builder-libsignal /lib/libsignal_ffi.a /lib/libsignal_ffi.a
-
 RUN uv sync --no-dev
-RUN uv pip install pybindgen
-
-WORKDIR /src/slidgnal
-
-RUN gopy build -vm=python3 -output=generated -no-make=true .
 RUN cp -R /src/slidgnal /venv/lib/python3.13/site-packages/legacy_module
 
 FROM docker.io/debian:trixie-slim@sha256:26f98ccd92fd0a44d6928ce8ff8f4921b4d2f535bfa07555ee5d18f61429cf0c
