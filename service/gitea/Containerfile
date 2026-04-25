@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f9c6a2fd2ddbc23e336b6257a5245e31f996953ef06cd13a59fa0a1df2d5c252 AS builder-gitea
-ARG VERSION=1.26.0 # renovate: datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
+ARG VERSION=1.26.1 # renovate: datasource=github-releases depName=go-gitea/gitea extractVersion=^v(?<version>.*)$
 
 ADD https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64 /src/gitea
 RUN install -D --mode 0755 /src/gitea /build/usr/bin/gitea
