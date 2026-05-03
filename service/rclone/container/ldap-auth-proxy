@@ -58,7 +58,7 @@ def main():
         print(f"Error: Empty UID attribute returned for '{username}'", file=sys.stderr)
         return
 
-    uid = response["attributes"]["uid"][0]
+    uid = response["attributes"]["uid"]
     user_dn = f"uid={uid},{ldap_base_dn}"
 
     if not Connection(server, user=user_dn, password=password).bind():
