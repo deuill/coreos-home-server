@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:f9c6a2fd2ddbc23e336b6257a5245e31f996953ef06cd13a59fa0a1df2d5c252 AS builder
-ARG VERSION=1.73.5 # renovate: datasource=github-releases depName=rclone/rclone extractVersion=^v(?<version>.*)$
+ARG VERSION=1.74.0 # renovate: datasource=github-releases depName=rclone/rclone extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
