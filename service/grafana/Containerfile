@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:67b30a61dc87758f0caf819646104f29ecbda97d920aaf5edc834128ac8493d3 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:0104b334637a5f19aa9c983a91b54c89887c0984081f2068983107a6f6c21eeb AS builder
 ARG VERSION=12.4.3 # renovate: datasource=github-releases depName=grafana/grafana extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
@@ -8,7 +8,7 @@ RUN tar --no-same-owner --strip-components 1 -xvzf /src.tar.gz && \
     install -D --mode 0755 /src/bin/grafana /build/usr/bin/grafana && rm -Rf /src/bin && \
     mkdir -p /build/usr/share && cp -R /src /build/usr/share/grafana
 
-FROM docker.io/debian:bookworm-slim@sha256:67b30a61dc87758f0caf819646104f29ecbda97d920aaf5edc834128ac8493d3
+FROM docker.io/debian:bookworm-slim@sha256:0104b334637a5f19aa9c983a91b54c89887c0984081f2068983107a6f6c21eeb
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
