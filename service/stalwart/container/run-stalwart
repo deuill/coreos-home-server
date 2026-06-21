@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+# Start Stalwart in recovery mode if never run before.
+if ! test -f /var/lib/stalwart/.recovery.state; then
+    echo "Starting Stalwart in recovery mode, remember to restart service when set up is complete..."
+    export STALWART_RECOVERY_MODE=true
+    touch /var/lib/stalwart/.recovery.state
+else
+    unset STALWART_RECOVERY_ADMIN
+fi
+
+# Start Stalwart mail server.
+exec stalwart --config /etc/stalwart/config.json

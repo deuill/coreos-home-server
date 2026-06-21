@@ -1,22 +1,27 @@
 FROM docker.io/debian:bookworm-slim@sha256:0104b334637a5f19aa9c983a91b54c89887c0984081f2068983107a6f6c21eeb AS builder
-ARG VERSION=0.16.5 # renovate: datasource=github-releases depName=stalwartlabs/stalwart extractVersion=^v(?<version>.*)$
+
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends xz-utils
 
 WORKDIR /src
 
+ARG VERSION=0.16.8 # renovate: datasource=github-releases depName=stalwartlabs/stalwart extractVersion=^v(?<version>.*)$
 ADD https://github.com/stalwartlabs/stalwart/releases/download/v${VERSION}/stalwart-x86_64-unknown-linux-gnu.tar.gz /src.tar.gz
-ADD https://github.com/stalwartlabs/stalwart/releases/download/v${VERSION}/stalwart-cli-x86_64-unknown-linux-gnu.tar.gz /cli.tar.gz
+
+ARG CLI_VERSION=1.0.7 # renovate: datasource=github-releases depName=stalwartlabs/cli extractVersion=^v(?<version>.*)$
+ADD https://github.com/stalwartlabs/cli/releases/download/v${CLI_VERSION}/stalwart-cli-x86_64-unknown-linux-gnu.tar.xz /cli.tar.xz
 
 RUN tar --no-same-owner -xvzf /src.tar.gz && install -D --mode 0755 -t /build/usr/bin /src/stalwart
-RUN tar --no-same-owner -xvzf /cli.tar.gz && install -D --mode 0755 -t /build/usr/bin /src/stalwart-cli
+RUN tar --no-same-owner --strip-components 1 -xvJf /cli.tar.xz && install -D --mode 0755 -t /build/usr/bin /src/stalwart-cli
 
 FROM docker.io/debian:bookworm-slim@sha256:0104b334637a5f19aa9c983a91b54c89887c0984081f2068983107a6f6c21eeb
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    ca-certificates gettext gosu curl
+    ca-certificates curl
 
 RUN adduser --system --group --uid 10000 --home /var/lib/stalwart stalwart
 
 COPY --from=builder /build /
 COPY container/config /etc/stalwart
+COPY container/run-stalwart /run-stalwart
 
 USER stalwart
-ENTRYPOINT ["stalwart", "--config", "/etc/stalwart/config.toml"]
+ENTRYPOINT ["/run-stalwart"]
