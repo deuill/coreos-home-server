@@ -11,10 +11,10 @@ EnvironmentFile=%E/coreos-home-server/letsencrypt/letsencrypt.env
 ExecStart=/bin/podman run --rm --env-file %E/coreos-home-server/letsencrypt/letsencrypt.env \
                           --volume letsencrypt:/var/lib/letsencrypt:z \
                           --volume letsencrypt-certificates:/var/lib/letsencrypt-certificates:z \
-                          localhost/letsencrypt:latest \
+                          localhost/letsencrypt:latest run \
                           --pem --path /var/lib/letsencrypt --domains ${CERT_DOMAIN} \
-                          --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} renew \
-                          --renew-hook /run-hook
+                          --server ${ACME_SERVER} --email ${ACME_EMAIL} --dns ${ACME_DNS_PROVIDER} \
+                          --deploy-hook /deploy-hook
 
 [Install]
 WantedBy=multi-user.target

@@ -15,6 +15,6 @@ RUN adduser --system --group --uid 10000 --home /var/lib/letsencrypt letsencrypt
 
 COPY --from=builder /build /
 COPY container/run-lego /run-lego
-COPY container/run-hook /run-hook
+COPY container/deploy-hook /deploy-hook
 
 ENTRYPOINT ["/run-lego"]
