@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:96e378d7e6531ac9a15ad505478fcc2e69f371b10f5cdf87857c4b8188404716 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:60eac759739651111db372c07be67863818726f754804b8707c90979bda511df AS builder
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential cmake git libexpat1-dev libidn11-dev uuid-dev \
     libsqlite3-dev libudns-dev libbotan-2-dev
@@ -10,7 +10,7 @@ RUN git clone --branch ${VERSION} https://github.com/louiz/biboumi.git /src && \
              -DWITH_LIBIDN=1 -DWITHOUT_SYSTEMD=1 -Wno-dev && \
     make && make install DESTDIR=/build
 
-FROM docker.io/debian:bookworm-slim@sha256:96e378d7e6531ac9a15ad505478fcc2e69f371b10f5cdf87857c4b8188404716
+FROM docker.io/debian:bookworm-slim@sha256:60eac759739651111db372c07be67863818726f754804b8707c90979bda511df
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
