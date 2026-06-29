@@ -18,17 +18,6 @@ ENV GOBIN=/usr/bin
 RUN go install github.com/go-python/gopy@master && \
     go install golang.org/x/tools/cmd/goimports@master
 
-FROM builder-base AS builder-discord
-
-WORKDIR /src
-
-ARG VERSION=0.3.1 # renovate: datasource=git-tags depName=slidcord packageName=https://codeberg.org/slidge/slidcord extractVersion=^v(?<version>.*)$
-RUN git clone https://codeberg.org/slidge/slidcord.git /src && \
-    git reset --hard v${VERSION}
-
-RUN uv sync --no-dev
-RUN cp -R /src/slidcord /venv/lib/python3.13/site-packages/legacy_module
-
 FROM builder-go AS builder-whatsapp
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
@@ -37,7 +26,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 WORKDIR /src
 
-ARG VERSION=0.3.11beta1 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
+ARG VERSION=0.4.0beta1 # renovate: datasource=git-tags depName=slidge-whatsapp packageName=https://codeberg.org/slidge/slidge-whatsapp extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidge-whatsapp.git /src && \
     git reset --hard v${VERSION}
 
@@ -48,7 +37,7 @@ FROM builder-go AS builder-signal
 
 WORKDIR /src
 
-ARG VERSION=0.3.0beta11 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
+ARG VERSION=0.4.0beta1 # renovate: datasource=git-tags depName=slidgnal packageName=https://codeberg.org/slidge/slidgnal extractVersion=^v(?<version>.*)$
 RUN git clone https://codeberg.org/slidge/slidgnal.git /src && \
     git reset --hard v${VERSION}
 
@@ -66,7 +55,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 RUN groupadd --system --gid 10000 slidge && \
     useradd --system --uid 10000 --gid 10000 --base-dir /var/lib/slidge slidge
 
-COPY --from=builder-discord /venv /venv/discord
 COPY --from=builder-whatsapp /venv /venv/whatsapp
 COPY --from=builder-signal /venv /venv/signal
 
