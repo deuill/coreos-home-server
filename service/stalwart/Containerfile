@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:60eac759739651111db372c07be67863818726f754804b8707c90979bda511df AS builder
+FROM docker.io/debian:bookworm-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7ea838a042bbd5acbfca6ec875818 AS builder
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends xz-utils
 
@@ -13,7 +13,7 @@ ADD https://github.com/stalwartlabs/cli/releases/download/v${CLI_VERSION}/stalwa
 RUN tar --no-same-owner -xvzf /src.tar.gz && install -D --mode 0755 -t /build/usr/bin /src/stalwart
 RUN tar --no-same-owner --strip-components 1 -xvJf /cli.tar.xz && install -D --mode 0755 -t /build/usr/bin /src/stalwart-cli
 
-FROM docker.io/debian:bookworm-slim@sha256:60eac759739651111db372c07be67863818726f754804b8707c90979bda511df
+FROM docker.io/debian:bookworm-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7ea838a042bbd5acbfca6ec875818
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates curl
 
