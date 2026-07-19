@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7ea838a042bbd5acbfca6ec875818 AS builder
-ARG VERSION=0.21.2 # renovate: datasource=forgejo-releases depName=superseriousbusiness/gotosocial registryUrl=https://codeberg.org extractVersion=^v(?<version>.*)$
+ARG VERSION=0.22.0 # renovate: datasource=forgejo-releases depName=superseriousbusiness/gotosocial registryUrl=https://codeberg.org extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
 ADD https://codeberg.org/superseriousbusiness/gotosocial/releases/download/v${VERSION}/gotosocial_${VERSION}_linux_amd64.tar.gz /src.tar.gz
