@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7e
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates build-essential flex bison pkg-config git libssl-dev libexpat1-dev libhiredis-dev
 
-ARG VERSION=1.25.1 # renovate: datasource=github-releases depName=NLnetLabs/unbound extractVersion=^release-(?<version>.*)$
+ARG VERSION=1.25.2 # renovate: datasource=github-releases depName=NLnetLabs/unbound extractVersion=^release-(?<version>.*)$
 RUN git clone --branch release-${VERSION} --depth=1 https://github.com/NLnetLabs/unbound.git /src && \
     mkdir /build && cd /src && ./configure --prefix=/usr --enable-cachedb --with-libhiredis && \
     make && make install DESTDIR=/build
