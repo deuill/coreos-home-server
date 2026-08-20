@@ -2,7 +2,7 @@ FROM docker.io/debian:bookworm-slim@sha256:abd67ffcfa541b485a3dff59865ab629aa048
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
-ARG VERSION=1.31.3 # renovate: datasource=github-tags depName=nginx/nginx extractVersion=^release-(?<version>.*)$
+ARG VERSION=1.31.4 # renovate: datasource=github-tags depName=nginx/nginx extractVersion=^release-(?<version>.*)$
 
 ADD --chown=_apt https://nginx.org/keys/nginx_signing.key /etc/apt/trusted.gpg.d/nginx.asc
 RUN echo "deb https://nginx.org/packages/mainline/debian bookworm nginx" > /etc/apt/sources.list.d/nginx.list && \
