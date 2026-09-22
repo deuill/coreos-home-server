@@ -18,5 +18,7 @@ RUN adduser --system --group --uid 10000 --home /var/lib/grafana grafana
 COPY --from=builder /build /
 COPY container/config /etc/grafana
 
+RUN chmod --recursive grafana:grafana /usr/share/grafana/data/plugins-bundled
+
 USER grafana
 ENTRYPOINT ["/usr/bin/grafana", "server", "--config", "/etc/grafana/grafana.ini", "--homepath", "/usr/share/grafana", "web"]
