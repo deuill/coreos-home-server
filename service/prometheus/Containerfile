@@ -18,7 +18,7 @@ FROM docker.io/golang:1.27-bookworm@sha256:69a7b9788769bec032d238959b61854e9ae87
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     libgpgme-dev libbtrfs-dev libdevmapper-dev libassuan-dev pkg-config
 
-ARG VERSION=1.21.2 # renovate: datasource=github-releases depName=containers/prometheus-podman-exporter extractVersion=^v(?<version>.*)$
+ARG VERSION=2.0.0 # renovate: datasource=github-releases depName=containers/prometheus-podman-exporter extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
 RUN git clone --branch v${VERSION} --depth 1 https://github.com/containers/prometheus-podman-exporter.git /src && make binary && \
