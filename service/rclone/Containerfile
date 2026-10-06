@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251 AS builder
+FROM docker.io/debian:bookworm-slim@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587 AS builder
 ARG VERSION=1.75.1 # renovate: datasource=github-releases depName=rclone/rclone extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
@@ -8,7 +8,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 ADD https://github.com/rclone/rclone/releases/download/v${VERSION}/rclone-v${VERSION}-linux-amd64.zip /src.zip
 RUN unzip -j /src.zip && install -D --mode 0755 /src/rclone /build/usr/bin/rclone
 
-FROM docker.io/debian:bookworm-slim@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251
+FROM docker.io/debian:bookworm-slim@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
