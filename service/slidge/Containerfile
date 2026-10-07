@@ -1,4 +1,4 @@
-FROM docker.io/debian:trixie-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a AS builder-base
+FROM docker.io/debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS builder-base
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     ca-certificates git curl python3 python3-pip python3-venv
@@ -44,7 +44,7 @@ RUN git clone https://codeberg.org/slidge/slidgnal.git /src && \
 RUN uv sync --no-dev
 RUN cp -R /src/slidgnal /venv/lib/python3.13/site-packages/legacy_module
 
-FROM docker.io/debian:trixie-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a
+FROM docker.io/debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
 ENV PYTHONUNBUFFERED=1
 ENV SLIDGE_LEGACY_MODULE=legacy_module
 
