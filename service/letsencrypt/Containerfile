@@ -1,5 +1,5 @@
 FROM docker.io/debian:bookworm-slim@sha256:99c0b25c46d0214d5a2091092e7908907dcaecd6a962cde0ac700acee222b6f3 AS builder
-ARG VERSION=5.5.2 # renovate: datasource=github-releases depName=go-acme/lego extractVersion=^v(?<version>.*)$
+ARG VERSION=5.6.0 # renovate: datasource=github-releases depName=go-acme/lego extractVersion=^v(?<version>.*)$
 
 WORKDIR /src
 
