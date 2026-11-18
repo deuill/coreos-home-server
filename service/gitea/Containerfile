@@ -5,7 +5,7 @@ ADD https://dl.gitea.io/gitea/${VERSION}/gitea-${VERSION}-linux-amd64 /src/gitea
 RUN install -D --mode 0755 /src/gitea /build/usr/bin/gitea
 
 FROM docker.io/golang:1.27-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea AS builder-runner
-ARG VERSION=5.4.1 # renovate: datasource=gitea-releases depName=gitea/runner extractVersion=^v(?<version>.*)$
+ARG VERSION=6.0.0 # renovate: datasource=gitea-releases depName=gitea/runner extractVersion=^v(?<version>.*)$
 
 ADD https://dl.gitea.com/gitea-runner/${VERSION}/gitea-runner-${VERSION}-linux-amd64 /src/gitea-runner
 RUN install -D --mode 0755 /src/gitea-runner /build/usr/bin/gitea-runner
