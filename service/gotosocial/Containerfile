@@ -1,4 +1,4 @@
-FROM docker.io/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc AS builder
+FROM docker.io/debian:bookworm-slim@sha256:e67eeead736ff7bbe258ef088bff683635c561b1fcfefad0806c1df4ab49ce0e AS builder
 ARG VERSION=0.22.3 # renovate: datasource=forgejo-releases depName=superseriousbusiness/gotosocial registryUrl=https://codeberg.org extractVersion=^v(?<version>.*)$
 WORKDIR /src
 
@@ -7,7 +7,7 @@ RUN tar --no-same-owner -xvzf /src.tar.gz && \
     install -D --mode 0755 /src/gotosocial /build/usr/bin/gotosocial && \
     mkdir -p /build/usr/share/gotosocial && cp -R /src/web /build/usr/share/gotosocial/web
 
-FROM docker.io/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+FROM docker.io/debian:bookworm-slim@sha256:e67eeead736ff7bbe258ef088bff683635c561b1fcfefad0806c1df4ab49ce0e
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     ca-certificates gettext gosu
 
